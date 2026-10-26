@@ -1,998 +1,518 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jenna AI OS — Executive Suite</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<!-- Three.js: offline local bundle with fallback -->
-<script src="three.min.js"></script>
-<script>
-  if (typeof THREE === 'undefined') {
-    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
-  }
-</script>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Jenna — Intuitive AI Companion</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Newsreader & Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-container": "#fffbff",
+            "secondary-fixed-dim": "#ffb59c",
+            "tertiary": "#9f3c1a",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#fbf2ee",
+            "outline-variant": "#dec0b7",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#ffb59c",
+            "surface-dim": "#e1d8d5",
+            "surface-container-highest": "#e9e1dd",
+            "outline": "#8a726a",
+            "secondary-fixed": "#ffdbcf",
+            "on-secondary-fixed": "#390c00",
+            "inverse-primary": "#ffb59c",
+            "surface-variant": "#e9e1dd",
+            "surface": "#fff8f5",
+            "background": "#fff8f5",
+            "primary-container": "#bf542c",
+            "primary-fixed": "#ffdbcf",
+            "on-primary-fixed": "#390c00",
+            "on-secondary-fixed-variant": "#802a05",
+            "on-error-container": "#93000a",
+            "surface-container": "#f5ece9",
+            "on-primary-container": "#fffbff",
+            "surface-bright": "#fff8f5",
+            "tertiary-fixed-dim": "#ffb59e",
+            "on-primary": "#ffffff",
+            "on-background": "#1e1b19",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#342f2d",
+            "secondary": "#a0401c",
+            "on-surface-variant": "#57423b",
+            "error-container": "#ffdad6",
+            "surface-container-high": "#efe6e3",
+            "secondary-container": "#fe875d",
+            "tertiary-container": "#bf5430",
+            "on-tertiary-fixed-variant": "#822806",
+            "primary": "#9f3c16",
+            "error": "#ba1a1a",
+            "inverse-on-surface": "#f8efeb",
+            "on-error": "#ffffff",
+            "tertiary-fixed": "#ffdbd0",
+            "on-tertiary-fixed": "#3a0b00",
+            "on-surface": "#1e1b19",
+            "on-secondary-container": "#722200",
+            "surface-tint": "#a23e18",
+            "on-primary-fixed-variant": "#822801"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter-sm": "1rem",
+            "space-xs": "0.25rem",
+            "gutter": "1.5rem",
+            "margin-sm": "1.25rem",
+            "margin": "3rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-2xl": "4rem",
+            "space-xl": "2.5rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Newsreader", "serif"],
+            "headline-md": ["Newsreader", "serif"],
+            "headline-lg-mobile": ["Newsreader", "serif"],
+            "display-lg-mobile": ["Newsreader", "serif"],
+            "label-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-lg": ["Newsreader", "serif"],
+            "display-lg": ["Newsreader", "serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "label-md": ["Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "label-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "body-sm": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "0", "fontWeight": "500" }],
+            "headline-md": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "display-lg-mobile": ["38px", { "lineHeight": "44px", "letterSpacing": "-0.015em", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.015em", "fontWeight": "400" }],
+            "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+            "body-md": ["15px", { "lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "body-sm": ["13px", { "lineHeight": "20px", "letterSpacing": "0.005em", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
 <style>
-  :root {
-    --bg-dark: #070b14;
-    --card-bg: rgba(14, 20, 36, 0.72);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --card-hover: rgba(26, 36, 62, 0.85);
-    --accent-cyan: #00f0ff;
-    --accent-violet: #8b5cf6;
-    --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
-    --accent-rose: #f43f5e;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-dim: #64748b;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  
-  body {
-    width: 100vw; height: 100vh;
-    background-color: var(--bg-dark);
-    background-image: 
-      radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 45%),
-      radial-gradient(circle at 15% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 45%);
-    color: var(--text-primary);
-    font-family: 'Outfit', -apple-system, sans-serif;
-    display: flex; flex-direction: column;
-    overflow: hidden;
-    user-select: none;
-  }
-
-  /* ─── Top Telemetry Header ────────────────────────────────────────────── */
-  header {
-    height: 72px; padding: 0 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(11, 17, 32, 0.75);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--card-border);
-    z-index: 10;
-  }
-
-  .brand {
-    display: flex; align-items: center; gap: 14px;
-  }
-
-  .brand-glyph {
-    width: 44px; height: 44px; border-radius: 12px;
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border: 1px solid rgba(0, 240, 255, 0.3);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: 800; color: var(--accent-cyan);
-  }
-
-  .brand-text h1 {
-    font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
-    background: linear-gradient(90deg, #fff 0%, #cbd5e1 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-
-  .brand-text p {
-    font-size: 11px; color: var(--text-dim); letter-spacing: 0.3px;
-  }
-
-  .telemetry-cluster {
-    display: flex; align-items: center; gap: 20px;
-  }
-
-  .meter-pill {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--card-border);
-    border-radius: 10px; padding: 6px 14px;
-    display: flex; align-items: center; gap: 12px;
-  }
-
-  .meter-dial {
-    width: 32px; height: 32px; position: relative;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 9px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
-  }
-
-  .meter-dial svg {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    transform: rotate(-90deg);
-  }
-
-  .meter-label {
-    display: flex; flex-direction: column;
-  }
-
-  .meter-label span:first-child {
-    font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 600;
-  }
-
-  .meter-label span:last-child {
-    font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--accent-cyan);
-  }
-
-  .engine-badges {
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  .engine-pill {
-    padding: 5px 10px; border-radius: 8px;
-    font-size: 11px; font-weight: 600;
-    display: flex; align-items: center; gap: 6px;
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid var(--card-border);
-    transition: all 0.3s;
-  }
-
-  .engine-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--text-dim);
-  }
-
-  .engine-pill.online {
-    border-color: rgba(16, 185, 129, 0.3);
-  }
-  .engine-pill.online .engine-dot {
-    background: var(--accent-emerald);
-    box-shadow: 0 0 8px var(--accent-emerald);
-  }
-
-  .engine-pill.lmstudio.online {
-    border-color: rgba(139, 92, 246, 0.3);
-  }
-  .engine-pill.lmstudio.online .engine-dot {
-    background: var(--accent-violet);
-    box-shadow: 0 0 8px var(--accent-violet);
-  }
-
-  /* ─── Main Tri-Column Layout ─────────────────────────────────────────── */
-  main {
-    flex: 1; display: grid;
-    grid-template-columns: 290px 1fr 340px;
-    gap: 16px; padding: 16px 20px;
-    overflow: hidden;
-  }
-
-  .glass-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    backdrop-filter: blur(24px);
-    border-radius: 18px;
-    display: flex; flex-direction: column;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-  }
-
-  .card-header {
-    padding: 14px 18px; border-bottom: 1px solid var(--card-border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-
-  .card-header h2 {
-    font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
-    text-transform: uppercase; color: var(--text-secondary);
-  }
-
-  /* ─── Left Column: Squad Roster ──────────────────────────────────────── */
-  .squad-list {
-    flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 10px;
-    overflow-y: auto;
-  }
-
-  .squad-card {
-    padding: 12px 14px; border-radius: 12px;
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid var(--card-border);
-    display: flex; flex-direction: column; gap: 6px;
-    cursor: pointer; transition: all 0.25s ease;
-  }
-
-  .squad-card:hover {
-    background: var(--card-hover);
-    border-color: rgba(0, 240, 255, 0.25);
-    transform: translateY(-2px);
-  }
-
-  .squad-card.active {
-    background: rgba(0, 240, 255, 0.08);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 16px rgba(0, 240, 255, 0.15);
-  }
-
-  .squad-top {
-    display: flex; align-items: center; justify-content: space-between;
-  }
-
-  .squad-identity {
-    display: flex; align-items: center; gap: 10px;
-  }
-
-  .squad-icon {
-    width: 30px; height: 30px; border-radius: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--card-border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-  }
-
-  .squad-name {
-    font-size: 13px; font-weight: 700; color: #fff;
-  }
-
-  .squad-badge {
-    font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 6px;
-    background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-
-  .squad-model {
-    font-size: 11px; font-family: 'JetBrains Mono', monospace;
-    color: var(--accent-cyan); background: rgba(0, 0, 0, 0.25);
-    padding: 4px 8px; border-radius: 6px; width: fit-content;
-  }
-
-  .squad-desc {
-    font-size: 11px; color: var(--text-dim); line-height: 1.35;
-  }
-
-  /* ─── Center Column: 3D Core & Stage ─────────────────────────────────── */
-  .center-stage {
-    position: relative; display: flex; flex-direction: column;
-    align-items: center; justify-content: space-between;
-    padding: 16px;
-  }
-
-  #canvas-container {
-    position: absolute; top: 0; left: 0; width: 100%; height: 70%;
-    z-index: 1; pointer-events: none;
-  }
-
-  .core-status-pill {
-    z-index: 2; margin-top: 12px;
-    padding: 6px 16px; border-radius: 20px;
-    background: rgba(11, 17, 32, 0.7);
-    border: 1px solid rgba(0, 240, 255, 0.25);
-    backdrop-filter: blur(16px);
-    display: flex; align-items: center; gap: 8px;
-    font-size: 12px; font-weight: 600; letter-spacing: 1px;
-    text-transform: uppercase; color: var(--accent-cyan);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
-  }
-
-  .status-pulse-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent-cyan);
-    box-shadow: 0 0 10px var(--accent-cyan);
-    animation: corePulse 1.8s infinite;
-  }
-
-  @keyframes corePulse {
-    0%, 100% { transform: scale(0.9); opacity: 0.7; }
-    50% { transform: scale(1.3); opacity: 1; }
-  }
-
-  /* Live Turn Dialogue Box */
-  .dialogue-stream {
-    z-index: 2; width: 100%; max-height: 180px;
-    margin-bottom: 12px; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 8px;
-    padding: 0 12px;
-  }
-
-  .bubble {
-    padding: 10px 14px; border-radius: 12px;
-    font-size: 13px; line-height: 1.45; max-width: 85%;
-    backdrop-filter: blur(16px);
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .bubble.user {
-    align-self: flex-end;
-    background: rgba(0, 240, 255, 0.12);
-    border: 1px solid rgba(0, 240, 255, 0.25);
-    color: #e2e8f0; border-bottom-right-radius: 2px;
-  }
-
-  .bubble.assistant {
-    align-self: flex-start;
-    background: rgba(139, 92, 246, 0.14);
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    color: #f1f5f9; border-bottom-left-radius: 2px;
-  }
-
-  .chat-input-bar {
-    z-index: 2; width: 100%; display: flex; gap: 8px;
-  }
-
-  .chat-input-bar input {
-    flex: 1; padding: 12px 16px; border-radius: 12px;
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid var(--card-border);
-    color: #fff; font-family: inherit; font-size: 13px;
-    outline: none; transition: border-color 0.2s;
-  }
-
-  .chat-input-bar input:focus {
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
-  }
-
-  .chat-input-bar button {
-    padding: 12px 18px; border-radius: 12px;
-    background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
-    border: none; color: #070b14; font-weight: 700;
-    font-size: 13px; cursor: pointer; transition: all 0.2s;
-  }
-
-  .chat-input-bar button:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
-  }
-
-  /* ─── Right Column: Obsidian Wiki & Knowledge Graph ──────────────────── */
-  .obsidian-panel {
-    display: flex; flex-direction: column;
-  }
-
-  .tab-bar {
-    display: flex; padding: 4px; background: rgba(11, 17, 32, 0.6);
-    border-radius: 10px; margin: 12px 14px 6px; gap: 4px;
-  }
-
-  .tab-btn {
-    flex: 1; padding: 6px 8px; border-radius: 8px;
-    background: transparent; border: none;
-    font-size: 11px; font-weight: 600; color: var(--text-dim);
-    cursor: pointer; transition: all 0.2s;
-  }
-
-  .tab-btn.active {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-primary);
-  }
-
-  .tab-content {
-    flex: 1; padding: 12px 14px; overflow-y: auto;
-    display: flex; flex-direction: column; gap: 10px;
-  }
-
-  .obsidian-log-item {
-    padding: 8px 10px; border-radius: 8px;
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid var(--card-border);
-    font-size: 11.5px; line-height: 1.4; color: var(--text-secondary);
-  }
-
-  .obsidian-log-item strong {
-    color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
-  }
-
-  /* Interactive Graph SVG */
-  .graph-container {
-    width: 100%; height: 200px; border-radius: 12px;
-    background: rgba(10, 15, 28, 0.7);
-    border: 1px solid var(--card-border);
-    position: relative; overflow: hidden;
-  }
-
-  .graph-container svg {
-    width: 100%; height: 100%;
-  }
-
-  .obsidian-quick-log {
-    padding: 10px 14px; border-top: 1px solid var(--card-border);
-    display: flex; gap: 8px;
-  }
-
-  .obsidian-quick-log input {
-    flex: 1; padding: 8px 12px; border-radius: 8px;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid var(--card-border);
-    color: #fff; font-size: 12px; outline: none;
-  }
-
-  .obsidian-quick-log button {
-    padding: 8px 14px; border-radius: 8px;
-    background: rgba(139, 92, 246, 0.25);
-    border: 1px solid rgba(139, 92, 246, 0.4);
-    color: #e2e8f0; font-size: 12px; font-weight: 600; cursor: pointer;
-  }
-
-  /* ─── Bottom Control Dock ────────────────────────────────────────────── */
-  footer {
-    height: 90px; padding: 0 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(11, 17, 32, 0.85);
-    backdrop-filter: blur(24px);
-    border-top: 1px solid var(--card-border);
-    z-index: 10;
-  }
-
-  .ptt-cluster {
-    display: flex; align-items: center; gap: 16px;
-  }
-
-  .ptt-button {
-    width: 60px; height: 60px; border-radius: 50%;
-    background: linear-gradient(135deg, #0ea5e9, #0284c7);
-    border: 2px solid rgba(0, 240, 255, 0.4);
-    box-shadow: 0 0 24px rgba(0, 240, 255, 0.35);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .ptt-button:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 32px rgba(0, 240, 255, 0.55);
-  }
-
-  .ptt-button:active, .ptt-button.recording {
-    background: linear-gradient(135deg, #f43f5e, #e11d48);
-    border-color: rgba(244, 63, 94, 0.6);
-    box-shadow: 0 0 36px rgba(244, 63, 94, 0.7);
-    transform: scale(0.96);
-  }
-
-  .ptt-button svg {
-    width: 24px; height: 24px; fill: #fff;
-  }
-
-  /* Frequency Spectrum Visualizer Bars */
-  .spectrum-visualizer {
-    display: flex; align-items: center; gap: 3px; height: 36px;
-  }
-
-  .spectrum-bar {
-    width: 4px; height: 8px; border-radius: 2px;
-    background: linear-gradient(to top, var(--accent-cyan), var(--accent-violet));
-    transition: height 0.08s ease;
-  }
-
-  .dock-actions {
-    display: flex; align-items: center; gap: 10px;
-  }
-
-  .dock-btn {
-    padding: 10px 14px; border-radius: 10px;
-    background: rgba(15, 23, 42, 0.65);
-    border: 1px solid var(--card-border);
-    color: var(--text-secondary); font-size: 12px; font-weight: 600;
-    display: flex; align-items: center; gap: 8px; cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .dock-btn:hover {
-    background: var(--card-hover);
-    color: #fff; border-color: rgba(255, 255, 255, 0.15);
-  }
-
-  /* Terminal Drawer */
-  #terminal-drawer {
-    display: none; position: fixed; bottom: 92px; left: 24px; right: 24px;
-    height: 220px; background: rgba(7, 11, 20, 0.95);
-    backdrop-filter: blur(24px); border: 1px solid var(--accent-cyan);
-    border-radius: 14px; padding: 14px; z-index: 20;
-    flex-direction: column; gap: 10px;
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
-  }
-
-  #terminal-output {
-    flex: 1; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; color: #a5f3fc; white-space: pre-wrap;
-  }
-
-  #terminal-input {
-    padding: 8px 12px; border-radius: 8px;
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid var(--card-border);
-    color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    outline: none;
-  }
-
-  /* ─── Model & Voice Selectors in Header ────────────────────────────── */
-  .picker-pill {
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid var(--card-border);
-    border-radius: 10px; padding: 6px 12px;
-    display: flex; align-items: center; gap: 8px;
-    font-size: 11.5px; font-weight: 600; cursor: pointer;
-    transition: all 0.2s; color: var(--text-primary);
-  }
-
-  .picker-pill:hover {
-    background: var(--card-hover);
-    border-color: var(--accent-cyan);
-    box-shadow: 0 0 14px rgba(0, 240, 255, 0.25);
-  }
-
-  .pill-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-  }
-
-  .pill-dot.green { background: #10b981; box-shadow: 0 0 8px #10b981; }
-  .pill-dot.yellow { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
-  .pill-dot.cyan { background: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
-
-  /* ─── Privacy Vision Toggles ────────────────────────────────────────── */
-  .vision-toggle-cluster {
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  .vision-pill {
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid var(--card-border);
-    border-radius: 10px; padding: 6px 12px;
-    display: flex; align-items: center; gap: 8px;
-    font-size: 11px; font-weight: 600; cursor: pointer;
-    transition: all 0.2s; color: var(--text-secondary);
-  }
-
-  .vision-pill.active {
-    background: rgba(16, 185, 129, 0.12);
-    border-color: rgba(16, 185, 129, 0.4);
-    color: #34d399;
-  }
-
-  .vision-pill.blocked {
-    background: rgba(244, 63, 94, 0.08);
-    border-color: rgba(244, 63, 94, 0.25);
-    color: #fb7185;
-  }
-
-  .vision-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #64748b;
-  }
-
-  .vision-pill.active .vision-dot {
-    background: #10b981; box-shadow: 0 0 8px #10b981;
-  }
-
-  .vision-pill.blocked .vision-dot {
-    background: #f43f5e; box-shadow: 0 0 8px #f43f5e;
-  }
-
-  /* ─── Modals (Model & Voice Selectors) ──────────────────────────────── */
-  .modal-backdrop {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(12px);
-    z-index: 100;
-    align-items: center; justify-content: center;
-  }
-
-  .picker-modal {
-    width: 580px; max-width: 90vw; max-height: 80vh;
-    background: rgba(11, 17, 32, 0.95);
-    border: 1px solid var(--accent-cyan);
-    border-radius: 16px; padding: 22px;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 240, 255, 0.15);
-    display: flex; flex-direction: column; gap: 14px;
-    overflow: hidden;
-  }
-
-  .modal-header {
-    display: flex; justify-content: space-between; align-items: center;
-  }
-
-  .modal-header h3 {
-    font-size: 16px; font-weight: 700; color: #fff;
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  .modal-close-btn {
-    background: none; border: none; color: var(--text-dim);
-    font-size: 18px; cursor: pointer; transition: color 0.2s;
-  }
-
-  .modal-close-btn:hover { color: #fff; }
-
-  .modal-scroll-area {
-    flex: 1; overflow-y: auto; padding-right: 4px;
-    display: flex; flex-direction: column; gap: 16px;
-  }
-
-  .picker-category {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
-    text-transform: uppercase; color: var(--accent-cyan);
-    margin-bottom: 6px;
-  }
-
-  .picker-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 8px;
-  }
-
-  .picker-item {
-    padding: 10px 14px; border-radius: 10px;
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid var(--card-border);
-    cursor: pointer; transition: all 0.2s;
-    display: flex; flex-direction: column; gap: 3px;
-  }
-
-  .picker-item:hover {
-    background: var(--card-hover);
-    border-color: var(--accent-cyan);
-    transform: translateY(-1px);
-  }
-
-  .picker-item.selected {
-    border-color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
-  }
-
-  .item-title {
-    font-size: 12.5px; font-weight: 600; color: #fff;
-  }
-
-  .item-sub {
-    font-size: 10.5px; color: var(--text-dim);
-  }
-
-  /* ─── Webcam Live Sight PIP HUD ────────────────────────────────────── */
-  #webcam-pip {
-    display: none; position: fixed; bottom: 84px; right: 24px;
-    width: 260px; height: 195px; border-radius: 16px;
-    background: #000; border: 2px solid var(--accent-cyan);
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.3);
-    overflow: hidden; z-index: 50; flex-direction: column;
-  }
-
-  #webcam-video {
-    width: 100%; height: 100%; object-fit: cover;
-  }
-
-  .webcam-hud-bar {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 6px 10px; background: rgba(7, 11, 20, 0.85);
-    backdrop-filter: blur(8px);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-
-  .live-indicator {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 10px; font-weight: 700; color: #f43f5e;
-    letter-spacing: 0.5px;
-  }
-
-  .live-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #f43f5e; animation: pulse 1.2s infinite;
-  }
-
-  .hud-btn {
-    padding: 3px 8px; border-radius: 6px;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff; font-size: 10px; font-weight: 600;
-    cursor: pointer;
-  }
-
-  .hud-btn:hover { background: var(--accent-cyan); color: #000; }
-</style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-warm-shadow {
+      box-shadow: 0 4px 20px -2px rgba(42, 38, 36, 0.05), 0 2px 8px -1px rgba(42, 38, 36, 0.03);
+    }
+    .custom-card-shadow {
+      box-shadow: 0 8px 30px -4px rgba(42, 38, 36, 0.04), 0 2px 6px -1px rgba(42, 38, 36, 0.02);
+    }
+  </style>
 </head>
-<body>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col justify-between selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TOP APP BAR (Shared Components JSON Anchor) -->
+<header class="w-full bg-background dark:bg-inverse-surface border-b border-outline-variant dark:border-outline sticky top-0 z-40 transition-colors">
+<div class="flex justify-between items-center w-full px-6 md:px-12 py-4 max-w-7xl mx-auto">
+<!-- Brand Logo / Product Name -->
+<div class="flex items-center gap-3">
+<a class="font-headline-md text-headline-md font-medium text-on-surface dark:text-inverse-on-surface tracking-tight flex items-center gap-2 hover:text-primary transition-colors" href="#">
+<span class="w-2.5 h-2.5 rounded-full bg-primary inline-block"></span>
+          Jenna
+        </a>
+</div>
+<!-- Navigation Links (Centered Editorial Nav) -->
+<nav class="hidden md:flex items-center space-x-8">
+<!-- Journal (Active - Home Dashboard / Reflection view) -->
+<a class="text-primary dark:text-inverse-primary font-medium border-b-2 border-primary dark:border-inverse-primary pb-1 font-label-md text-label-md transition-all duration-200" href="#journal">
+          Journal
+        </a>
+<!-- Threads -->
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors font-label-md text-label-md pb-1" href="#threads">
+          Threads
+        </a>
+<!-- Archive -->
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors font-label-md text-label-md pb-1" href="#archive">
+          Archive
+        </a>
+</nav>
+<!-- Trailing Action & Controls -->
+<div class="flex items-center space-x-4">
+  <!-- Model Picker Button -->
+  <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/80 text-on-surface font-label-md text-label-md hover:border-primary hover:text-primary transition-all active:scale-95" id="btn-model-picker" onclick="openModelPicker()" title="Switch AI Brain Model">
+    <span class="material-symbols-outlined text-primary" style="font-size: 15px;">psychology</span>
+    <span id="model-pill-label">Qwen3.5-0.8B</span>
+    <span class="material-symbols-outlined text-outline" style="font-size: 14px;">expand_more</span>
+  </button>
+  <!-- Voice Picker Button -->
+  <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/80 text-on-surface font-label-md text-label-md hover:border-primary hover:text-primary transition-all active:scale-95" id="btn-voice-picker" onclick="openVoicePicker()" title="Change Voice">
+    <span class="material-symbols-outlined text-primary" style="font-size: 15px;">record_voice_over</span>
+    <span id="voice-pill-label">Asteria (Aura)</span>
+    <span class="material-symbols-outlined text-outline" style="font-size: 14px;">expand_more</span>
+  </button>
+  <!-- Vision Privacy Toggles -->
+  <div class="flex items-center gap-2">
+    <button class="vision-pill blocked inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/80 text-on-surface font-label-md text-label-md hover:border-primary hover:text-primary transition-all active:scale-95" id="pill-screen-vision" onclick="toggleVisionPermission('screen')" title="Toggle Screen Sight">
+      <span class="material-symbols-outlined" style="font-size: 15px;">visibility</span>
+      <span>Screen</span>
+    </button>
+    <button class="vision-pill blocked inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low border border-outline-variant/80 text-on-surface font-label-md text-label-md hover:border-primary hover:text-primary transition-all active:scale-95" id="pill-camera-vision" onclick="toggleVisionPermission('camera')" title="Toggle Webcam Sight">
+      <span class="material-symbols-outlined" style="font-size: 15px;">videocam</span>
+      <span>Webcam</span>
+    </button>
+  </div>
+  <!-- Notification Icon Action -->
+  <button aria-label="Notifications" class="text-on-surface-variant hover:text-primary transition-colors duration-200 p-1.5 rounded-full hover:bg-surface-container-low transition-all active:scale-95">
+    <span class="material-symbols-outlined" data-icon="notifications_none">notifications_none</span>
+  </button>
+  <!-- User Portrait Avatar -->
+  <div class="flex items-center pl-1 border-l border-outline-variant">
+    <button aria-label="User profile" class="rounded-full ring-2 ring-outline-variant/60 ring-offset-2 ring-offset-background transition-transform active:scale-95 focus:outline-none">
+      <img alt="User profile portrait" class="w-8 h-8 rounded-full object-cover" data-alt="Intimate soft-lit profile portrait of a creative writer in a warm sunlit architectural studio with terracotta ceramics and natural linen textiles, exuding serene focus and mindful presence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE7nCXxGMXADBNdcfRudzgBHqdWO6-PpWSz496SERECLkDe6Fz9A2PlcWEDEhqcuRHxd7UgO5vQMNw7r1Nz85A0Qv_3NbMlSbbQwzn_bXZjUjwHDRpACeoFhp_SK8jO-RLXJJe1voAWl-ovzfzu6ouo9yCPFm6r_a4HHbRn5a-BwsxZ04joJsFze1QFwQ6LxstNqPRMTyU2IzAxLkPgj1jD1f8iUqv0kYvwRLjjfjQhER1Qb5b5_MJYx2zGqigIIwOipYrdEdFwe8"/>
+    </button>
+  </div>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="flex-grow flex flex-col items-center justify-start w-full px-5 md:px-8 pt-8 pb-16 max-w-4xl mx-auto">
+<!-- HERO SECTION -->
+<section class="w-full text-center mt-6 mb-8 flex flex-col items-center">
+<!-- Status Badge -->
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-low border border-outline-variant text-on-surface-variant mb-6 transition-all duration-200">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm tracking-wider uppercase text-on-surface-variant">PRESENCE & CLARITY</span>
+</div>
+<!-- Hero Serif Wordmark & Warm Greeting -->
+<h1 class="font-display-lg text-display-lg text-primary tracking-tight font-headline-md mb-4 select-none">
+      Jenna
+    </h1>
+<p class="font-headline-sm text-headline-sm text-on-surface-variant max-w-xl mx-auto leading-relaxed font-headline-sm font-normal">
+      Good morning, Elena. What would you like to reflect on or organize today?
+    </p>
+</section>
 
-  <!-- ─── Header: Telemetry & Engine Status ─────────────────────────────── -->
-  <header>
-    <div class="brand">
-      <div class="brand-glyph">J</div>
-      <div class="brand-text">
-        <h1>Jenna AI OS</h1>
-        <p>Advanced Multi-Agent Desktop Suite</p>
-      </div>
+<!-- CENTER STAGE: Core Sphere & Transcript -->
+<section class="w-full flex flex-col justify-between px-4 py-6 relative overflow-hidden bg-transparent max-w-3xl mx-auto" style="flex:1; min-height:300px;">
+  <!-- Core Status Pill -->
+  <div class="flex items-center justify-center mb-6">
+    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-lowest border border-outline-variant custom-warm-shadow">
+      <div class="w-2.5 h-2.5 rounded-full bg-primary" id="core-dot" style="box-shadow: 0 0 10px #c85a32;"></div>
+      <span id="core-status-text" class="font-label-md text-label-md text-primary font-medium tracking-wider uppercase">Ready to listen</span>
     </div>
-
-    <div class="telemetry-cluster">
-      <div class="meter-pill">
-        <div class="meter-dial">
-          <svg viewBox="0 0 36 36">
-            <path stroke="rgba(255,255,255,0.08)" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <path id="cpu-ring" stroke="#00f0ff" stroke-width="3" stroke-dasharray="25, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-          </svg>
-          <span id="cpu-val">12%</span>
-        </div>
-        <div class="meter-label">
-          <span>CPU Load</span>
-          <span id="cpu-sub">Intel Core</span>
-        </div>
-      </div>
-
-      <div class="meter-pill">
-        <div class="meter-dial">
-          <svg viewBox="0 0 36 36">
-            <path stroke="rgba(255,255,255,0.08)" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <path id="ram-ring" stroke="#8b5cf6" stroke-width="3" stroke-dasharray="65, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-          </svg>
-          <span id="ram-val">65%</span>
-        </div>
-        <div class="meter-label">
-          <span>RAM Pool</span>
-          <span id="ram-sub">5.1 / 7.8 GB</span>
-        </div>
-      </div>
-
-      <!-- AI Brain Model Selector -->
-      <div class="picker-pill" id="btn-model-picker" onclick="openModelPicker()" title="Click to Switch AI Brain Model">
-        <span class="pill-dot green"></span>
-        <span id="model-pill-label">🧠 qwen3.5:0.8b</span>
-        <span style="font-size: 10px; color: var(--text-dim);">▾</span>
-      </div>
-
-      <!-- Spoken Voice Selector -->
-      <div class="picker-pill" id="btn-voice-picker" onclick="openVoicePicker()" title="Click to Change Voice (Deepgram Aura / Local)">
-        <span class="pill-dot yellow"></span>
-        <span id="voice-pill-label">🔊 Asteria (Aura)</span>
-        <span style="font-size: 10px; color: var(--text-dim);">▾</span>
-      </div>
-
-      <!-- Privacy-Gated Vision Controls -->
-      <div class="vision-toggle-cluster">
-        <div class="vision-pill blocked" id="pill-screen-vision" onclick="toggleVisionPermission('screen')" title="Toggle Screen Sight Permission">
-          <span class="vision-dot"></span>
-          <span>👁️ Screen</span>
-        </div>
-        <div class="vision-pill blocked" id="pill-camera-vision" onclick="toggleVisionPermission('camera')" title="Toggle Webcam Sight Permission">
-          <span class="vision-dot"></span>
-          <span>📷 Webcam</span>
-        </div>
-      </div>
-
-      <div class="engine-badges">
-        <div class="engine-pill online" id="badge-ollama">
-          <div class="engine-dot"></div>
-          <span>Ollama (:11434)</span>
-        </div>
-        <div class="engine-pill lmstudio online" id="badge-lmstudio">
-          <div class="engine-dot"></div>
-          <span>LM Studio (:1234)</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- ─── Main Tri-Column Layout ───────────────────────────────────────── -->
-  <main>
-    <!-- Left: Squad Roster -->
-    <div class="glass-card">
-      <div class="card-header">
-        <h2>Multi-Agent Squad</h2>
-        <span style="font-size: 11px; color: var(--accent-cyan);">5 Active Roles</span>
-      </div>
-      <div class="squad-list" id="squad-roster">
-        <div class="squad-card active">
-          <div class="squad-top">
-            <div class="squad-identity">
-              <div class="squad-icon">⚡</div>
-              <div class="squad-name">Commander</div>
-            </div>
-            <span class="squad-badge">Active</span>
-          </div>
-          <div class="squad-model">qwen3.5:0.8b (Ollama)</div>
-          <div class="squad-desc">Executive coordinator, voice conversationalist & task router.</div>
-        </div>
-
-        <div class="squad-card">
-          <div class="squad-top">
-            <div class="squad-identity">
-              <div class="squad-icon">💻</div>
-              <div class="squad-name">Engineer</div>
-            </div>
-            <span class="squad-badge">Standby</span>
-          </div>
-          <div class="squad-model">qwen2.5-coder:3b</div>
-          <div class="squad-desc">Code generation, refactoring, script testing & sandbox shell.</div>
-        </div>
-
-        <div class="squad-card">
-          <div class="squad-top">
-            <div class="squad-identity">
-              <div class="squad-icon">🧠</div>
-              <div class="squad-name">Planner</div>
-            </div>
-            <span class="squad-badge">Standby</span>
-          </div>
-          <div class="squad-model">Nemotron 30B MoE (LM Studio)</div>
-          <div class="squad-desc">Strategic reasoning, decomposition, and architectural review.</div>
-        </div>
-
-        <div class="squad-card">
-          <div class="squad-top">
-            <div class="squad-identity">
-              <div class="squad-icon">📚</div>
-              <div class="squad-name">Scholar</div>
-            </div>
-            <span class="squad-badge">Standby</span>
-          </div>
-          <div class="squad-model">Ministral-3B / Qwen-2B</div>
-          <div class="squad-desc">Fact retrieval, synthesis, literature review & summaries.</div>
-        </div>
-
-        <div class="squad-card">
-          <div class="squad-top">
-            <div class="squad-identity">
-              <div class="squad-icon">📡</div>
-              <div class="squad-name">Communicator</div>
-            </div>
-            <span class="squad-badge">Standby</span>
-          </div>
-          <div class="squad-model">AgentPhone & AgentMail</div>
-          <div class="squad-desc">Telephony call handling, SMS dispatch & email pipeline.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Center: 3D WebGL Audio-Reactive Core -->
-    <div class="glass-card center-stage">
-      <div class="core-status-pill">
-        <div class="status-pulse-dot" id="core-dot"></div>
-        <span id="core-status-text">Core Ready · LangGraph Squad</span>
-      </div>
-
-      <div id="canvas-container"></div>
-
-      <!-- Dialogue Stream -->
-      <div class="dialogue-stream" id="dialogue-stream">
-        <div class="bubble assistant">
-          Welcome back! I am Jenna, your unified AI agent. Your LangGraph multi-agent squad, local Ollama models, and Obsidian knowledge vault are connected.
-        </div>
-      </div>
-
-      <!-- Text Chat Fallback -->
-      <div class="chat-input-bar">
-        <input type="text" id="chat-input" placeholder="Type a task or question, or hold Push-to-Talk..." />
-        <button id="btn-send">Send</button>
-      </div>
-    </div>
-
-    <!-- Right: Obsidian Wiki & Memory Stream -->
-    <div class="glass-card obsidian-panel">
-      <div class="card-header">
-        <h2>Obsidian Memory Stream</h2>
-        <span style="font-size: 11px; color: var(--accent-violet);">~/wiki</span>
-      </div>
-
-      <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchObsidianTab('daily')">Daily Log</button>
-        <button class="tab-btn" onclick="switchObsidianTab('notes')">Recent Notes</button>
-        <button class="tab-btn" onclick="switchObsidianTab('graph')">Graph Nodes</button>
-        <button class="tab-btn" onclick="switchObsidianTab('learnings')">Hermes Learnings</button>
-      </div>
-
-      <div class="tab-content" id="obsidian-content">
-        <!-- Rendered via JS -->
-      </div>
-
-      <!-- Interactive Graph Container (Tab: graph) -->
-      <div class="graph-container" id="graph-wrapper" style="display: none;">
-        <svg id="knowledge-graph-svg">
-          <defs>
-            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.6"/>
-            </linearGradient>
-          </defs>
-          <!-- Dynamic SVG graph generated in JS -->
-        </svg>
-      </div>
-
-      <div class="obsidian-quick-log">
-        <input type="text" id="log-input" placeholder="Quick log to ~/wiki/log.md..." />
-        <button id="btn-quick-log">Add</button>
-      </div>
-    </div>
-  </main>
-
-  <!-- ─── Terminal Drawer (Hidden by default) ───────────────────────────── -->
-  <div id="terminal-drawer">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:700; color:var(--accent-cyan);">⚡ Sandboxed Execution Terminal (./sandbox)</span>
-      <button onclick="toggleTerminal()" style="background:none; border:none; color:#94a3b8; cursor:pointer;">✕ Close</button>
-    </div>
-    <div id="terminal-output">[Sandbox Terminal Ready. Enter safe shell commands below]</div>
-    <input type="text" id="terminal-input" placeholder="python script.py, ls, pytest..." />
   </div>
 
-  <!-- ─── Webcam PIP HUD ────────────────────────────────────────────────── -->
-  <div id="webcam-pip">
-    <video id="webcam-video" autoplay playsinline muted></video>
-    <div class="webcam-hud-bar">
-      <div class="live-indicator">
-        <div class="live-dot"></div>
-        <span>LIVE SIGHT</span>
+  <!-- Canvas Container for Three.js Sphere -->
+  <div class="my-auto flex flex-col items-center justify-center relative">
+    <div class="relative w-[280px] h-[280px] flex items-center justify-center" id="canvas-container"></div>
+  </div>
+
+  <!-- Dialogue Stream -->
+  <div class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl p-4 mt-6 max-w-2xl mx-auto custom-warm-shadow">
+    <div class="flex items-center justify-between pb-2 mb-2 border-b border-surface-container-low">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary" style="font-size: 16px;">waveform</span>
+        <span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">VOICE STREAM & CONTEXT</span>
       </div>
-      <div style="display:flex; gap:6px;">
-        <button class="hud-btn" onclick="takeWebcamSnapshot()">Snapshot</button>
-        <button class="hud-btn" onclick="toggleWebcamSight()">✕</button>
+      <span class="font-label-sm text-label-sm text-on-surface-variant">16 kHz · Whisper.cpp (tiny.en)</span>
+    </div>
+    <div class="dialogue-stream" id="dialogue-stream" style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding:0 8px;">
+      <div class="bubble assistant" style="padding:12px 16px; border-radius:12px; font-size:14px; line-height:1.5; max-width:85%; align-self:flex-start; background:#fbf2ee; border:1px solid #dec0b7; color:#1e1b19;">
+        Welcome back. I'm Jenna — your local AI companion. Ready to think, write, or organize with you.
       </div>
     </div>
   </div>
 
-  <!-- ─── Model Picker Modal ────────────────────────────────────────────── -->
-  <div class="modal-backdrop" id="modal-model-picker" onclick="if(event.target===this)closeModelPicker()">
-    <div class="picker-modal">
-      <div class="modal-header">
-        <h3><span>🧠</span> Select AI Brain Model</h3>
-        <button class="modal-close-btn" onclick="closeModelPicker()">✕</button>
-      </div>
-      <div class="modal-scroll-area" id="model-picker-list">
-        <!-- Rendered via JS -->
-      </div>
+  <!-- Chat Input Bar -->
+  <div class="chat-input-bar" style="width:100%; max-w-2xl; margin-top:12px; display:flex; gap:8px;">
+    <input type="text" id="chat-input" placeholder="Type a task or question, or hold Push-to-Talk..." style="flex:1; padding:14px 18px; border-radius:14px; background:#fbf2ee; border:1px solid #dec0b7; color:#1e1b19; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; outline:none; transition:border-color 0.2s;">
+    <button id="btn-send" style="padding:14px 22px; border-radius:14px; background:linear-gradient(135deg, #c85a32, #d96b43); border:none; color:#fff; font-weight:700; font-size:14px; cursor:pointer; transition:all 0.2s;">Send</button>
+  </div>
+</section>
+
+<!-- QUICK PROMPT SUGGESTIONS / PILL BUTTONS -->
+<section class="w-full flex flex-wrap items-center justify-center gap-2.5 mb-14">
+<button class="bg-surface-container-lowest hover:bg-surface-container-low text-on-surface border border-outline-variant hover:border-primary hover:text-primary px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-150 active:scale-95 flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">edit_note</span>
+        Draft weekly summary
+      </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-low text-on-surface border border-outline-variant hover:border-primary hover:text-primary px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-150 active:scale-95 flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">light_mode</span>
+        Morning contemplation
+      </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-low text-on-surface border border-outline-variant hover:border-primary hover:text-primary px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-150 active:scale-95 flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">menu_book</span>
+        Synthesize book notes
+      </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-low text-on-surface border border-outline-variant hover:border-primary hover:text-primary px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-150 active:scale-95 flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">local_cafe</span>
+        Plan dinner menu
+      </button>
+</section>
+
+<!-- RECENT RESONANCES SECTION (Cards Grid) -->
+<section class="w-full" id="obsidian-section">
+<div class="flex items-center justify-between mb-5 px-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-size: 18px;">history</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-headline-sm font-medium">
+            Recent Resonances
+          </h2>
+</div>
+<div class="flex items-center gap-1" data-tab="journal" style="cursor:pointer;">
+  <span class="font-label-md text-label-md text-primary active">Journal</span>
+</div>
+<div class="flex items-center gap-1" data-tab="notes" style="cursor:pointer;">
+  <span class="font-label-md text-label-md text-on-surface-variant">Notes</span>
+</div>
+<div class="flex items-center gap-1" data-tab="memory" style="cursor:pointer;">
+  <span class="font-label-md text-label-md text-on-surface-variant">Memory</span>
+</div>
+</div>
+<!-- Obsidian Content -->
+<div id="obsidian-content" class="space-y-3" style="max-height:280px; overflow-y:auto;">
+  <div style="font-size:13px; color:#8a726a; padding:16px; text-align:center;">Loading recent entries...</div>
+</div>
+<!-- Quick Add -->
+<div class="mt-6">
+  <div class="flex gap-2">
+    <input type="text" id="log-input" placeholder="Quick add to journal..." style="flex:1; padding:12px 16px; border-radius:12px; background:#fbf2ee; border:1px solid #dec0b7; color:#1e1b19; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; outline:none;">
+    <button id="btn-quick-log" style="padding:12px 20px; border-radius:12px; background:#c85a32; border:none; color:#fff; font-weight:600; font-size:14px; cursor:pointer;">Add</button>
+  </div>
+</div>
+</section>
+<div class="flex items-center justify-between text-on-surface-variant mb-3">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Concept Study</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80">2 hours ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors mb-2">
+              Spring project outline
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+              Drafted architectural concepts and tactile material references including glazed ceramic tiles and unbleached Belgian linen.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-4 mt-4 border-t border-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<span class="inline-flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-size: 15px;">forum</span> 4 reflections
+            </span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" style="font-size: 16px;">north_east</span>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest hover:bg-surface-bright border border-outline-variant hover:border-primary/50 rounded-lg p-5 transition-all duration-200 custom-card-shadow flex flex-col justify-between group cursor-pointer">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant mb-3">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Daily Protocol</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80">Yesterday</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors mb-2">
+              Mindful routine notes
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+              Observations on circadian sunlight exposure, tea rituals, and dedicated 90-minute digital sabbaticals during the afternoon.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-4 mt-4 border-t border-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<span class="inline-flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-size: 15px;">wb_sunny</span> Clarified
+            </span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" style="font-size: 16px;">north_east</span>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-lowest hover:bg-surface-bright border border-outline-variant hover:border-primary/50 rounded-lg p-5 transition-all duration-200 custom-card-shadow flex flex-col justify-between group cursor-pointer">
+<div>
+<div class="flex items-center justify-between text-on-surface-variant mb-3">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Synthesis</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant/80">3 days ago</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors mb-2">
+              Design review transcript
+            </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed line-clamp-3">
+              Extracted action items and tactile brand tone consensus. Formulated editorial design guardrails for upcoming artifact releases.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-4 mt-4 border-t border-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<span class="inline-flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-size: 15px;">check_circle</span> Archived
+            </span>
+<span class="material-symbols-outlined text-outline group-hover:translate-x-1 transition-transform" style="font-size: 16px;">north_east</span>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- EDITORIAL FOOTER -->
+<footer class="w-full bg-background border-t border-outline-variant py-6 px-6 md:px-12 text-on-surface-variant">
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 font-body-sm text-body-sm">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary/40"></span>
+<span class="font-label-md text-label-md text-on-surface">Jenna v2.4</span>
+<span class="text-outline">/</span>
+<span class="text-on-surface-variant">Private Local Session</span>
+</div>
+<div class="flex items-center space-x-6">
+<a class="hover:text-primary transition-colors" href="#workspace">Workspace Settings</a>
+<a class="hover:text-primary transition-colors" href="#privacy">Privacy Principles</a>
+<a class="hover:text-primary transition-colors" href="#keys">Keybindings</a>
+</div>
+</div>
+</footer>
+
+<!-- Theme Switcher CSS -->
+<link rel="stylesheet" href="/static/theme_switcher.css">
+
+<!-- Interactive Elements (Chat, PTT, Modals, Terminal, Webcam) -->
+<div id="terminal-drawer" style="display:none; position:fixed; bottom:120px; left:1.5rem; right:1.5rem; height:220px; background:rgba(250,247,242,0.98); backdrop-filter:blur(24px); border:1px solid #c85a32; border-radius:16px; padding:16px; z-index:20; flex-direction:column; gap:12px; box-shadow:0 -8px 32px rgba(42,38,36,0.15);">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:600; color:#c85a32;">⚡ Sandboxed Terminal (./sandbox)</span>
+    <button onclick="toggleTerminal()" style="background:none; border:none; color:#8a726a; cursor:pointer;">✕ Close</button>
+  </div>
+  <div id="terminal-output" style="flex:1; overflow-y:auto; font-family:'JetBrains Mono',monospace; font-size:12px; color:#2a2624; white-space:pre-wrap;">[Sandbox Terminal Ready. Enter safe shell commands below]</div>
+  <input type="text" id="terminal-input" placeholder="python script.py, ls, pytest..." style="padding:10px 14px; border-radius:10px; background:#fbf2ee; border:1px solid #dec0b7; color:#1e1b19; font-family:'JetBrains Mono',monospace; font-size:12px; outline:none; width:100%;">
+</div>
+
+<div id="webcam-pip" style="display:none; position:fixed; bottom:120px; right:1.5rem; width:280px; height:210px; border-radius:16px; background:#000; border:2px solid #c85a32; box-shadow:0 12px 36px rgba(42,38,36,0.3), 0 0 20px rgba(200,90,50,0.2); overflow:hidden; z-index:50; flex-direction:column;">
+  <video id="webcam-video" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
+  <div style="position:absolute; bottom:0; left:0; right:0; padding:8px 12px; background:rgba(30,27,25,0.9); backdrop-filter:blur(8px); display:flex; justify-content:space-between; align-items:center;">
+    <div class="live-indicator" style="display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; color:#ba1a1a; letter-spacing:0.5px;">
+      <div class="live-dot" style="width:6px; height:6px; border-radius:50%; background:#ba1a1a; animation:pulse 1.2s infinite;"></div>
+      <span>LIVE SIGHT</span>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="hud-btn" onclick="takeWebcamSnapshot()" style="padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:11px; font-weight:600; cursor:pointer;">Snapshot</button>
+      <button class="hud-btn" onclick="toggleWebcamSight()" style="padding:4px 10px; border-radius:8px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:11px; font-weight:600; cursor:pointer;">✕</button>
     </div>
   </div>
+</div>
 
-  <!-- ─── Voice Picker Modal ────────────────────────────────────────────── -->
-  <div class="modal-backdrop" id="modal-voice-picker" onclick="if(event.target===this)closeVoicePicker()">
-    <div class="picker-modal">
-      <div class="modal-header">
-        <h3><span>🔊</span> Select Spoken Voice (Deepgram Aura & Local)</h3>
-        <button class="modal-close-btn" onclick="closeVoicePicker()">✕</button>
+<!-- Floating PTT Dock -->
+<footer style="position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); z-index:40;">
+  <div style="display:flex; align-items:center; gap:1.5rem; background:rgba(255,251,247,0.92); backdrop-filter:blur(20px); border:1px solid #dec0b7; border-radius:1.5rem; padding:0.75rem 1.5rem; box-shadow:0 8px 32px rgba(42,38,36,0.12);">
+    <!-- Push-to-Talk Orb -->
+    <button id="btn-ptt" class="relative flex items-center justify-center" style="width:56px; height:56px; border-radius:50%; background:#fbf2ee; border:2px solid #c85a32; cursor:pointer; transition:all 0.2s; box-shadow:0 0 16px rgba(200,90,50,0.2);" title="Push-to-Talk (Ctrl+Alt+Space)">
+      <span class="material-symbols-outlined text-primary" style="font-size:24px;">mic</span>
+      <span class="absolute inset-0 rounded-full border-2 border-primary opacity-40 animate-ping"></span>
+    </button>
+    <div class="flex flex-col">
+      <span class="font-label-sm text-label-sm text-on-surface font-medium uppercase tracking-wider">Push to Talk</span>
+      <span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container-low border border-outline-variant px-2 py-0.5 rounded-full inline-block w-fit">Ctrl+Alt+Space</span>
+    </div>
+
+    <!-- Spectrum Visualizer -->
+    <div class="flex flex-col items-center gap-2">
+      <div id="spectrum-bars" class="flex items-end gap-1 h-10 px-3 py-2 bg-surface-container-low/80 border border-outline-variant rounded-lg">
+        <!-- 24 bars generated by JS -->
       </div>
-      <div class="modal-scroll-area" id="voice-picker-list">
-        <!-- Rendered via JS -->
-      </div>
+      <span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">60 HZ · AUDIO SPECTRUM</span>
+    </div>
+
+    <!-- Quick Tools -->
+    <div class="flex items-center gap-3 border-l border-outline-variant pl-4">
+      <button onclick="triggerAgentAction('phone')" class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-low hover:bg-surface-container hover:border-primary/50 border border-outline-variant rounded-lg transition-all active:scale-95" title="AgentPhone">
+        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size:22px;">phone</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-primary mt-0.5">Phone</span>
+      </button>
+      <button onclick="triggerAgentAction('mail')" class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-low hover:bg-surface-container hover:border-primary/50 border border-outline-variant rounded-lg transition-all active:scale-95" title="AgentMail">
+        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size:22px;">mail</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-primary mt-0.5">Mail</span>
+      </button>
+      <button onclick="toggleTerminal()" class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-low hover:bg-surface-container hover:border-primary/50 border border-outline-variant rounded-lg transition-all active:scale-95" title="Sandbox Terminal">
+        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size:22px;">terminal</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-primary mt-0.5">Terminal</span>
+      </button>
+      <button onclick="triggerVisionSnapshot()" class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-low hover:bg-surface-container hover:border-primary/50 border border-outline-variant rounded-lg transition-all active:scale-95" title="Screen Vision">
+        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size:22px;">monitor</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-primary mt-0.5">Vision</span>
+      </button>
+      <button onclick="toggleWebcamSight()" class="flex flex-col items-center justify-center w-12 h-12 bg-surface-container-low hover:bg-surface-container hover:border-primary/50 border border-outline-variant rounded-lg transition-all active:scale-95" title="Webcam Live Sight">
+        <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary" style="font-size:22px;">videocam</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant group-hover:text-primary mt-0.5">Webcam</span>
+      </button>
     </div>
   </div>
+</footer>
 
-  <!-- ─── Footer: PTT & Quick Actions ───────────────────────────────────── -->
-  <footer>
-    <div class="ptt-cluster">
-      <div class="ptt-button" id="btn-ptt" title="Push-to-Talk (Hold to speak or Ctrl+Alt+Space)">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-        </svg>
-      </div>
-      <div class="spectrum-visualizer" id="spectrum-bars">
-        <!-- 24 audio bars -->
-      </div>
+<!-- Model Picker Modal -->
+<div class="modal-backdrop" id="modal-model-picker" onclick="if(event.target===this)closeModelPicker()" style="display:none; position:fixed; inset:0; background:rgba(30,27,25,0.7); backdrop-filter:blur(12px); z-index:100; align-items:center; justify-content:center;">
+  <div class="picker-modal" style="width:580px; max-width:90vw; max-height:80vh; background:rgba(255,251,247,0.98); border:1px solid #c85a32; border-radius:16px; padding:24px; box-shadow:0 16px 48px rgba(42,38,36,0.2), 0 0 24px rgba(200,90,50,0.1); display:flex; flex-direction:column; gap:16px; overflow:hidden;">
+    <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-size:18px; font-weight:700; color:#1e1b19; display:flex; align-items:center; gap:8px;"><span>🧠</span> Select AI Brain Model</h3>
+      <button class="modal-close-btn" onclick="closeModelPicker()" style="background:none; border:none; color:#8a726a; font-size:20px; cursor:pointer; transition:color 0.2s;">✕</button>
     </div>
-
-    <div class="dock-actions">
-      <div class="dock-btn" onclick="triggerAgentAction('phone')">
-        <span>📞</span> AgentPhone
-      </div>
-      <div class="dock-btn" onclick="triggerAgentAction('mail')">
-        <span>✉️</span> AgentMail
-      </div>
-      <div class="dock-btn" onclick="toggleTerminal()">
-        <span>💻</span> Sandbox Shell
-      </div>
-      <div class="dock-btn" onclick="triggerVisionSnapshot()">
-        <span>📷</span> Screen Vision
-      </div>
-      <div class="dock-btn" onclick="toggleWebcamSight()">
-        <span>🔴</span> See Me Live
-      </div>
-      <div class="dock-btn" onclick="quitApp()" style="color:var(--accent-rose); border-color:rgba(244,63,94,0.3);">
-        <span>✕</span> Quit
-      </div>
+    <div class="modal-scroll-area" id="model-picker-list" style="flex:1; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-size:12px; color:#8a726a;">Querying installed models from Ollama & LM Studio...</div>
     </div>
-  </footer>
+  </div>
+</div>
 
-  <!-- ─── Logic & 3D WebGL Engine ──────────────────────────────────────── -->
-  <script>
-    let api = (window.pywebview && window.pywebview.api) ? window.pywebview.api : null;
-    window.addEventListener('pywebviewready', () => {
-      api = window.pywebview.api;
-      refreshTelemetry();
-    });
+<!-- Voice Picker Modal -->
+<div class="modal-backdrop" id="modal-voice-picker" onclick="if(event.target===this)closeVoicePicker()" style="display:none; position:fixed; inset:0; background:rgba(30,27,25,0.7); backdrop-filter:blur(12px); z-index:100; align-items:center; justify-content:center;">
+  <div class="picker-modal" style="width:580px; max-width:90vw; max-height:80vh; background:rgba(255,251,247,0.98); border:1px solid #c85a32; border-radius:16px; padding:24px; box-shadow:0 16px 48px rgba(42,38,36,0.2), 0 0 24px rgba(200,90,50,0.1); display:flex; flex-direction:column; gap:16px; overflow:hidden;">
+    <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-size:18px; font-weight:700; color:#1e1b19; display:flex; align-items:center; gap:8px;"><span>🔊</span> Select Spoken Voice (Deepgram Aura & Local)</h3>
+      <button class="modal-close-btn" onclick="closeVoicePicker()" style="background:none; border:none; color:#8a726a; font-size:20px; cursor:pointer; transition:color 0.2s;">✕</button>
+    </div>
+    <div class="modal-scroll-area" id="voice-picker-list" style="flex:1; overflow-y:auto; padding-right:4px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-size:12px; color:#8a726a;">Loading available voices...</div>
+    </div>
+  </div>
+</div>
 
-    // ── Generate Spectrum Bars ──────────────────────────────────────────
-    const spectrumContainer = document.getElementById('spectrum-bars');
-    const barCount = 28;
+<!-- Dynamic JS: Theme Switcher, Chat, PTT, Telemetry, Squad, Obsidian -->
+<script src="/static/theme_switcher.js"></script>
+<script>
+  let api = (window.pywebview && window.pywebview.api) ? window.pywebview.api : null;
+  window.addEventListener('pywebviewready', () => {
+    api = window.pywebview.api;
+    refreshTelemetry();
+  });
+
+  // ── Generate Spectrum Bars (for PTT button) ────────────────────────────────
+  const spectrumContainer = document.getElementById('spectrum-bars');
+  if (spectrumContainer) {
+    const barCount = 24;
     const bars = [];
     for (let i = 0; i < barCount; i++) {
       const bar = document.createElement('div');
       bar.className = 'spectrum-bar';
+      bar.style.width = '2px';
+      bar.style.background = 'linear-gradient(to top, #c85a32, #d96b43)';
+      bar.style.borderRadius = '0';
+      bar.style.height = '6px';
+      bar.style.transition = 'height 0.08s ease';
       spectrumContainer.appendChild(bar);
       bars.push(bar);
     }
@@ -1010,466 +530,200 @@
       requestAnimationFrame(animateAudioVisualizer);
     }
     animateAudioVisualizer();
+  }
 
-    // ── 3D Procedural Particle Sphere (Three.js) ────────────────────────
-    let scene, camera, renderer, particles, particleGeo, positions, originalPositions;
-    let particleCount = 2400;
-    let coreState = 'idle';
-
-    function init3DCore() {
-      const container = document.getElementById('canvas-container');
-      const w = container.clientWidth || 600;
-      const h = container.clientHeight || 400;
-
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 1000);
-      camera.position.z = 240;
-
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setSize(w, h);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      container.appendChild(renderer.domElement);
-
-      // Particle Sphere
-      particleGeo = new THREE.BufferGeometry();
-      positions = new Float32Array(particleCount * 3);
-      originalPositions = new Float32Array(particleCount * 3);
-      const colors = new Float32Array(particleCount * 3);
-
-      const color1 = new THREE.Color(0x00f0ff);
-      const color2 = new THREE.Color(0x8b5cf6);
-
-      for (let i = 0; i < particleCount; i++) {
-        // Uniform sphere distribution
-        const u = Math.random();
-        const v = Math.random();
-        const theta = u * 2.0 * Math.PI;
-        const phi = Math.acos(2.0 * v - 1.0);
-        const r = 70 + (Math.random() - 0.5) * 8;
-
-        const x = r * Math.sin(phi) * Math.cos(theta);
-        const y = r * Math.sin(phi) * Math.sin(theta);
-        const z = r * Math.cos(phi);
-
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y;
-        positions[i * 3 + 2] = z;
-
-        originalPositions[i * 3] = x;
-        originalPositions[i * 3 + 1] = y;
-        originalPositions[i * 3 + 2] = z;
-
-        const mixed = color1.clone().lerp(color2, Math.random());
-        colors[i * 3] = mixed.r;
-        colors[i * 3 + 1] = mixed.g;
-        colors[i * 3 + 2] = mixed.b;
-      }
-
-      particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-      // Particle Material
-      const pMaterial = new THREE.PointsMaterial({
-        size: 2.2,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.85,
-        blending: THREE.AdditiveBlending,
-      });
-
-      particles = new THREE.Points(particleGeo, pMaterial);
-      scene.add(particles);
-
-      window.addEventListener('resize', onWindowResize);
-      animateCore();
-    }
-
-    function onWindowResize() {
-      const container = document.getElementById('canvas-container');
-      if (!container || !renderer || !camera) return;
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    }
-
-    let clock = new THREE.Clock();
-
-    function animateCore() {
-      requestAnimationFrame(animateCore);
-      const t = clock.getElapsedTime();
-
-      if (particles) {
-        particles.rotation.y = t * 0.25;
-        particles.rotation.x = t * 0.12;
-
-        const pos = particleGeo.attributes.position.array;
-        let speed = 1.0;
-        let amp = 3.5;
-
-        if (coreState === 'listening') {
-          speed = 2.5;
-          amp = 9.0;
-        } else if (coreState === 'thinking') {
-          speed = 3.5;
-          amp = 6.0;
-        } else if (coreState === 'speaking') {
-          speed = 2.0;
-          amp = 12.0;
-        }
-
-        for (let i = 0; i < particleCount; i++) {
-          const idx = i * 3;
-          const ox = originalPositions[idx];
-          const oy = originalPositions[idx + 1];
-          const oz = originalPositions[idx + 2];
-
-          // Dynamic radial harmonic displacement
-          const wave = Math.sin(t * speed + ox * 0.05) * Math.cos(t * speed + oy * 0.05) * amp;
-          pos[idx] = ox + (ox / 70) * wave;
-          pos[idx + 1] = oy + (oy / 70) * wave;
-          pos[idx + 2] = oz + (oz / 70) * wave;
-        }
-        particleGeo.attributes.position.needsUpdate = true;
-      }
-
-      renderer.render(scene, camera);
-    }
-
-    function initFallbackCanvasCore() {
-      const container = document.getElementById('canvas-container');
-      if (!container) return;
-      container.innerHTML = '';
-      const canvas = document.createElement('canvas');
-      canvas.width = container.clientWidth || 500;
-      canvas.height = container.clientHeight || 350;
-      canvas.style.width = '100%';
-      canvas.style.height = '100%';
-      container.appendChild(canvas);
-      const ctx = canvas.getContext('2d');
-      const dots = [];
-      for (let i = 0; i < 200; i++) {
-        dots.push({
-          angle: Math.random() * Math.PI * 2,
-          radius: 35 + Math.random() * 70,
-          speed: (Math.random() * 0.02 + 0.008) * (Math.random() > 0.5 ? 1 : -1),
-          size: Math.random() * 2.5 + 1.2,
-          color: Math.random() > 0.4 ? '#00f0ff' : '#8b5cf6'
-        });
-      }
-
-      function drawFallback() {
-        requestAnimationFrame(drawFallback);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-
-        let multiplier = 1;
-        if (coreState === 'listening') multiplier = 2.4;
-        else if (coreState === 'thinking') multiplier = 3.2;
-        else if (coreState === 'speaking') multiplier = 2.0;
-
-        // Core central glow
-        const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 100);
-        glow.addColorStop(0, coreState === 'listening' ? 'rgba(244,63,94,0.35)' : (coreState === 'thinking' ? 'rgba(245,158,11,0.35)' : 'rgba(0,240,255,0.25)'));
-        glow.addColorStop(1, 'transparent');
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(cx, cy, 100, 0, Math.PI * 2);
-        ctx.fill();
-
-        dots.forEach(d => {
-          d.angle += d.speed * multiplier;
-          const x = cx + Math.cos(d.angle) * d.radius;
-          const y = cy + Math.sin(d.angle) * (d.radius * 0.72);
-          ctx.fillStyle = d.color;
-          ctx.beginPath();
-          ctx.arc(x, y, d.size, 0, Math.PI * 2);
-          ctx.fill();
-        });
-      }
-      drawFallback();
-    }
-
-    // Initialize 3D Core safely
-    try {
-      if (typeof THREE !== 'undefined') {
-        init3DCore();
-      } else {
-        initFallbackCanvasCore();
-      }
-    } catch (e) {
-      console.warn("WebGL 3D Core initialization fallback:", e);
-      initFallbackCanvasCore();
-    }
-
-    // ── Global State Updates ────────────────────────────────────────────
-    function setState(state) {
-      coreState = state;
-      const statusText = document.getElementById('core-status-text');
-      const coreDot = document.getElementById('core-dot');
-      const btnPtt = document.getElementById('btn-ptt');
-
-      const labels = {
-        idle: 'Core Ready · LangGraph Squad',
-        listening: 'Listening… (Speak now)',
-        thinking: 'Squad Thinking & Routing…',
-        speaking: 'Neural Speech Output',
-        loading: 'Loading model weights…'
-      };
-
-      statusText.textContent = labels[state] || state;
-      isAudioActive = (state === 'listening' || state === 'speaking');
-
-      if (state === 'listening') {
-        btnPtt.classList.add('recording');
-        coreDot.style.background = '#f43f5e';
-        coreDot.style.boxShadow = '0 0 12px #f43f5e';
-      } else if (state === 'thinking') {
-        btnPtt.classList.remove('recording');
-        coreDot.style.background = '#f59e0b';
-        coreDot.style.boxShadow = '0 0 12px #f59e0b';
-      } else if (state === 'speaking') {
-        btnPtt.classList.remove('recording');
-        coreDot.style.background = '#10b981';
-        coreDot.style.boxShadow = '0 0 12px #10b981';
-      } else {
-        btnPtt.classList.remove('recording');
-        coreDot.style.background = '#00f0ff';
-        coreDot.style.boxShadow = '0 0 10px #00f0ff';
-      }
-    }
-    window.setState = setState;
-
-    // ── Dialogue Chat Stream ────────────────────────────────────────────
-    function appendUserTurn(text) {
-      const stream = document.getElementById('dialogue-stream');
-      const b = document.createElement('div');
-      b.className = 'bubble user';
-      b.textContent = text;
-      stream.appendChild(b);
-      stream.scrollTop = stream.scrollHeight;
-    }
-    window.appendUserTurn = appendUserTurn;
-
-    function appendAssistantTurn(text) {
-      const stream = document.getElementById('dialogue-stream');
-      const b = document.createElement('div');
-      b.className = 'bubble assistant';
-      b.textContent = text;
-      stream.appendChild(b);
-      stream.scrollTop = stream.scrollHeight;
-    }
-    window.appendAssistantTurn = appendAssistantTurn;
-
-    // ── Input & PTT Actions ─────────────────────────────────────────────
+  // ── Global State Updates ──────────────────────────────────────────────────
+  function setState(state) {
+    coreState = state;
+    const statusText = document.getElementById('core-status-text');
+    const coreDot = document.getElementById('core-dot');
     const pttBtn = document.getElementById('btn-ptt');
+
+    const labels = {
+      idle: 'Ready to listen',
+      listening: 'Listening…',
+      thinking: 'Thinking…',
+      speaking: 'Speaking…',
+      loading: 'Loading…'
+    };
+
+    if (statusText) statusText.textContent = labels[state] || state;
+    isAudioActive = (state === 'listening' || state === 'speaking');
+
+    if (state === 'listening') {
+      if (pttBtn) pttBtn.classList.add('recording');
+      if (coreDot) { coreDot.style.background = '#c85a32'; coreDot.style.boxShadow = '0 0 12px #c85a32'; }
+    } else if (state === 'thinking') {
+      if (pttBtn) pttBtn.classList.remove('recording');
+      if (coreDot) { coreDot.style.background = '#d96b43'; coreDot.style.boxShadow = '0 0 12px #d96b43'; }
+    } else if (state === 'speaking') {
+      if (pttBtn) pttBtn.classList.remove('recording');
+      if (coreDot) { coreDot.style.background = '#a6e3a1'; coreDot.style.boxShadow = '0 0 12px #a6e3a1'; }
+    } else {
+      if (pttBtn) pttBtn.classList.remove('recording');
+      if (coreDot) { coreDot.style.background = '#c85a32'; coreDot.style.boxShadow = '0 0 10px #c85a32'; }
+    }
+  }
+  window.setState = setState;
+
+  // ── Dialogue Chat Stream ──────────────────────────────────────────────────
+  function appendUserTurn(text) {
+    const stream = document.getElementById('dialogue-stream');
+    if (!stream) return;
+    const b = document.createElement('div');
+    b.className = 'bubble user';
+    b.textContent = text;
+    stream.appendChild(b);
+    stream.scrollTop = stream.scrollHeight;
+  }
+  window.appendUserTurn = appendUserTurn;
+
+  function appendAssistantTurn(text) {
+    const stream = document.getElementById('dialogue-stream');
+    if (!stream) return;
+    const b = document.createElement('div');
+    b.className = 'bubble assistant';
+    b.textContent = text;
+    stream.appendChild(b);
+    stream.scrollTop = stream.scrollHeight;
+  }
+  window.appendAssistantTurn = appendAssistantTurn;
+
+  // ── Input & PTT Actions ───────────────────────────────────────────────────
+  const pttBtn = document.getElementById('btn-ptt');
+  if (pttBtn) {
     pttBtn.addEventListener('click', () => {
       setState('listening');
       if (api && api.trigger_voice_record) {
         api.trigger_voice_record();
       }
     });
+  }
 
-    const chatInput = document.getElementById('chat-input');
-    const sendBtn = document.getElementById('btn-send');
+  const chatInput = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('btn-send');
 
-    async function sendTurn() {
-      const text = chatInput.value.trim();
-      if (!text) return;
-      chatInput.value = '';
-      appendUserTurn(text);
+  async function sendTurn() {
+    const text = chatInput?.value?.trim();
+    if (!text) return;
+    chatInput.value = '';
+    appendUserTurn(text);
 
-      if (api && api.send_chat_turn) {
-        setState('thinking');
-        try {
-          const res = await api.send_chat_turn(text);
-          if (res && res.reply) {
-            appendAssistantTurn(res.reply);
-          }
-        } catch (e) {
-          appendAssistantTurn("Error processing request: " + e);
+    if (api && api.send_chat_turn) {
+      setState('thinking');
+      try {
+        const res = await api.send_chat_turn(text);
+        if (res && res.reply) {
+          appendAssistantTurn(res.reply);
         }
+      } catch (e) {
+        appendAssistantTurn("Error: " + e);
+      }
+      setState('idle');
+    } else {
+      setState('thinking');
+      setTimeout(() => {
+        appendAssistantTurn("Understood. Task processed through local pipeline.");
         setState('idle');
-      } else {
-        // Simulated local fallback
-        setState('thinking');
-        setTimeout(() => {
-          appendAssistantTurn("Understood. Task processed through local LangGraph pipeline.");
-          setState('idle');
-        }, 800);
-      }
+      }, 800);
     }
+  }
 
-    sendBtn.addEventListener('click', sendTurn);
-    chatInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') sendTurn();
-    });
+  if (sendBtn) sendBtn.addEventListener('click', sendTurn);
+  if (chatInput) chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTurn(); }
+  });
 
-    // ── Obsidian Integration ────────────────────────────────────────────
-    let currentObsidianTab = 'daily';
-    let obsidianDataCache = { recent_logs: [], recent_notes: [] };
+  // ── Obsidian Integration ──────────────────────────────────────────────────
+  let currentObsidianTab = 'journal';
+  let obsidianDataCache = { recent_logs: [], recent_notes: [] };
 
-    function switchObsidianTab(tab) {
-      currentObsidianTab = tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(tab));
-      if (activeBtn) activeBtn.classList.add('active');
+  function switchObsidianTab(tab) {
+    currentObsidianTab = tab;
+    document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+    const activeBtn = Array.from(document.querySelectorAll('[data-tab]')).find(b => b.dataset.tab === tab);
+    if (activeBtn) activeBtn.classList.add('active');
+    renderObsidianContent(tab);
+  }
 
-      const graphWrapper = document.getElementById('graph-wrapper');
-      const content = document.getElementById('obsidian-content');
+  document.querySelectorAll('[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => switchObsidianTab(btn.dataset.tab));
+  });
 
-      if (tab === 'graph') {
-        graphWrapper.style.display = 'block';
-        content.style.display = 'none';
-        renderGraphNodes();
-      } else {
-        graphWrapper.style.display = 'none';
-        content.style.display = 'flex';
-        renderObsidianContent(tab);
+  function renderObsidianContent(tab) {
+    const container = document.getElementById('obsidian-content');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (tab === 'journal' || tab === 'daily') {
+      if (!obsidianDataCache.recent_logs.length) {
+        container.innerHTML = '<div style="font-size:13px; color:#8a726a; padding:16px;">No recent entries. Type below to add one.</div>';
+        return;
       }
-    }
-
-    function renderObsidianContent(tab) {
-      const container = document.getElementById('obsidian-content');
-      container.innerHTML = '';
-
-      if (tab === 'daily') {
-        if (!obsidianDataCache.recent_logs.length) {
-          container.innerHTML = '<div style="font-size:11.5px; color:#64748b;">No recent entries in ~/wiki/log.md. Type below to add one.</div>';
-          return;
-        }
-        obsidianDataCache.recent_logs.forEach(log => {
-          const item = document.createElement('div');
-          item.className = 'obsidian-log-item';
-          item.innerHTML = log.replace(/^###\s+([0-9-:\s]+)/, '<strong>[$1]</strong>');
-          container.appendChild(item);
-        });
-      } else if (tab === 'notes') {
-        if (!obsidianDataCache.recent_notes.length) {
-          container.innerHTML = '<div style="font-size:11.5px; color:#64748b;">No markdown notes found in ~/wiki.</div>';
-          return;
-        }
-        obsidianDataCache.recent_notes.forEach(note => {
-          const item = document.createElement('div');
-          item.className = 'obsidian-log-item';
-          item.style.cursor = 'pointer';
-          item.innerHTML = `📄 <strong>[[${note}]]</strong>`;
-          item.onclick = () => {
-            chatInput.value = `Read obsidian note ${note}`;
-            sendTurn();
-          };
-          container.appendChild(item);
-        });
-      } else if (tab === 'learnings') {
-        if (!obsidianDataCache.learnings) {
-          container.innerHTML = '<div style="font-size:11.5px; color:#64748b;">Querying Hermes self-evolution log (~/wiki/learnings.md)...</div>';
-          if (api && api.get_hermes_learnings) {
-            api.get_hermes_learnings().then(res => {
-              obsidianDataCache.learnings = res || "No learnings recorded yet. Jenna logs reflections here.";
-              renderObsidianContent('learnings');
-            });
-          }
-          return;
-        }
+      obsidianDataCache.recent_logs.forEach(log => {
         const item = document.createElement('div');
         item.className = 'obsidian-log-item';
-        item.style.whiteSpace = 'pre-wrap';
-        item.style.fontFamily = "'JetBrains Mono', monospace";
-        item.style.fontSize = "11px";
-        item.style.lineHeight = "1.6";
-        item.textContent = obsidianDataCache.learnings;
+        item.style.padding = '12px 14px';
+        item.style.borderRadius = '10px';
+        item.style.background = '#fbf2ee';
+        item.style.border = '1px solid #dec0b7';
+        item.style.fontSize = '13px';
+        item.style.lineHeight = '1.5';
+        item.style.color = '#57423b';
+        item.innerHTML = log.replace(/^###\s+([0-9-:\\s]+)/, '<strong>[$1]</strong>');
         container.appendChild(item);
-      }
-    }
-
-    function renderGraphNodes() {
-      const svg = document.getElementById('knowledge-graph-svg');
-      svg.innerHTML = `
-        <defs>
-          <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.4"/>
-            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.4"/>
-          </linearGradient>
-        </defs>
-      `;
-
-      const centralNode = { id: '~/wiki', fullName: 'Vault Index', x: 175, y: 110, r: 10, color: '#00f0ff' };
-      const rawNotes = (obsidianDataCache && obsidianDataCache.recent_notes && obsidianDataCache.recent_notes.length)
-        ? obsidianDataCache.recent_notes.slice(0, 6)
-        : ['Schema.md', 'log.md', 'Hermes.md', 'Agent.md', 'Notes.md'];
-
-      const colors = ['#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#38bdf8', '#a855f7'];
-      const nodes = [centralNode];
-
-      const R = 75;
-      const step = (Math.PI * 2) / rawNotes.length;
-      rawNotes.forEach((note, i) => {
-        const cleanName = note.replace(/\.md$/, '').split('/').pop();
-        const angle = i * step - Math.PI / 2;
-        nodes.push({
-          id: cleanName,
-          fullName: note,
-          x: Math.round(centralNode.x + R * Math.cos(angle)),
-          y: Math.round(centralNode.y + R * Math.sin(angle)),
-          r: 6.5,
-          color: colors[i % colors.length]
-        });
       });
-
-      // Draw Edges
-      for (let i = 1; i < nodes.length; i++) {
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', nodes[0].x);
-        line.setAttribute('y1', nodes[0].y);
-        line.setAttribute('x2', nodes[i].x);
-        line.setAttribute('y2', nodes[i].y);
-        line.setAttribute('stroke', 'url(#lineGrad)');
-        line.setAttribute('stroke-width', '1.5');
-        line.setAttribute('stroke-dasharray', '3,3');
-        svg.appendChild(line);
+    } else if (tab === 'notes') {
+      if (!obsidianDataCache.recent_notes.length) {
+        container.innerHTML = '<div style="font-size:13px; color:#8a726a; padding:16px;">No markdown notes found.</div>';
+        return;
       }
-
-      // Draw Nodes
-      nodes.forEach((n, idx) => {
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.style.cursor = 'pointer';
-        g.onclick = () => {
-          if (idx === 0) {
-            chatInput.value = "Search my Obsidian vault notes";
-          } else {
-            chatInput.value = `Read obsidian note ${n.fullName || n.id}`;
-          }
-          sendTurn();
+      obsidianDataCache.recent_notes.forEach(note => {
+        const item = document.createElement('div');
+        item.className = 'obsidian-log-item';
+        item.style.padding = '12px 14px';
+        item.style.borderRadius = '10px';
+        item.style.background = '#fbf2ee';
+        item.style.border = '1px solid #dec0b7';
+        item.style.fontSize = '13px';
+        item.style.cursor = 'pointer';
+        item.innerHTML = `📄 <strong>[[${note}]]</strong>`;
+        item.onclick = () => {
+          if (chatInput) { chatInput.value = `Read obsidian note ${note}`; sendTurn(); }
         };
-
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', n.x);
-        circle.setAttribute('cy', n.y);
-        circle.setAttribute('r', n.r);
-        circle.setAttribute('fill', n.color);
-        circle.setAttribute('filter', 'drop-shadow(0px 0px 5px ' + n.color + ')');
-        g.appendChild(circle);
-
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', n.x);
-        text.setAttribute('y', n.y + (idx === 0 ? 18 : 14));
-        text.setAttribute('fill', '#cbd5e1');
-        text.setAttribute('font-size', idx === 0 ? '11px' : '9.5px');
-        text.setAttribute('font-weight', idx === 0 ? '700' : '500');
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('font-family', 'Outfit');
-        text.textContent = n.id;
-        g.appendChild(text);
-
-        svg.appendChild(g);
+        container.appendChild(item);
       });
+    } else if (tab === 'memory') {
+      if (!obsidianDataCache.learnings) {
+        container.innerHTML = '<div style="font-size:13px; color:#8a726a; padding:16px;">Querying cross-agent memory...</div>';
+        if (api && api.get_hermes_learnings) {
+          api.get_hermes_learnings().then(res => {
+            obsidianDataCache.learnings = res || "No learnings recorded yet.";
+            renderObsidianContent('memory');
+          });
+        }
+        return;
+      }
+      const item = document.createElement('div');
+      item.className = 'obsidian-log-item';
+      item.style.padding = '16px';
+      item.style.borderRadius = '10px';
+      item.style.background = '#fbf2ee';
+      item.style.border = '1px solid #dec0b7';
+      item.style.fontFamily = "'JetBrains Mono', monospace";
+      item.style.fontSize = "12px";
+      item.style.lineHeight = "1.6";
+      item.style.whiteSpace = 'pre-wrap';
+      item.textContent = obsidianDataCache.learnings;
+      container.appendChild(item);
     }
+  }
 
-    document.getElementById('btn-quick-log').addEventListener('click', async () => {
+  const quickLogBtn = document.getElementById('btn-quick-log');
+  if (quickLogBtn) {
+    quickLogBtn.addEventListener('click', async () => {
       const input = document.getElementById('log-input');
-      const val = input.value.trim();
+      const val = input?.value?.trim();
       if (!val) return;
       input.value = '';
 
@@ -1481,22 +735,25 @@
         renderObsidianContent(currentObsidianTab);
       }
     });
+  }
 
-    // ── Quick Terminal Shell Drawer ─────────────────────────────────────
-    function toggleTerminal() {
-      const drawer = document.getElementById('terminal-drawer');
-      drawer.style.display = (drawer.style.display === 'flex') ? 'none' : 'flex';
-      if (drawer.style.display === 'flex') {
-        document.getElementById('terminal-input').focus();
-      }
+  // ── Quick Terminal Shell Drawer ───────────────────────────────────────────
+  function toggleTerminal() {
+    const drawer = document.getElementById('terminal-drawer');
+    if (!drawer) return;
+    drawer.style.display = (drawer.style.display === 'flex') ? 'none' : 'flex';
+    if (drawer.style.display === 'flex') {
+      document.getElementById('terminal-input')?.focus();
     }
+  }
 
-    document.getElementById('terminal-input').addEventListener('keydown', async (e) => {
+  const termInput = document.getElementById('terminal-input');
+  if (termInput) {
+    termInput.addEventListener('keydown', async (e) => {
       if (e.key === 'Enter') {
-        const input = document.getElementById('terminal-input');
-        const cmd = input.value.trim();
+        const cmd = termInput.value.trim();
         if (!cmd) return;
-        input.value = '';
+        termInput.value = '';
         const output = document.getElementById('terminal-output');
         output.textContent += `\n$ ${cmd}\nRunning...`;
 
@@ -1513,393 +770,396 @@
         output.scrollTop = output.scrollHeight;
       }
     });
+  }
 
-    function triggerAgentAction(action) {
-      if (action === 'phone') {
-        chatInput.value = "Check my phone SMS logs and pending notifications.";
-        sendTurn();
-      } else if (action === 'mail') {
-        chatInput.value = "Review my AgentMail outbox and staged drafts.";
-        sendTurn();
-      }
-    }
-
-    function triggerVisionSnapshot() {
-      chatInput.value = "Capture current screen and describe what you see.";
+  function triggerAgentAction(action) {
+    if (action === 'phone') {
+      chatInput.value = "Check my phone SMS logs and pending notifications.";
+      sendTurn();
+    } else if (action === 'mail') {
+      chatInput.value = "Review my AgentMail outbox and staged drafts.";
       sendTurn();
     }
+  }
 
-    function quitApp() {
-      if (api && api.quit) {
-        api.quit();
+  function triggerVisionSnapshot() {
+    chatInput.value = "Capture current screen and describe what you see.";
+    sendTurn();
+  }
+
+  function quitApp() {
+    if (api && api.quit) {
+      api.quit();
+    }
+  }
+
+  // ── Model Picker Modal ────────────────────────────────────────────────────
+  let cachedModels = null;
+  async function openModelPicker() {
+    const modal = document.getElementById('modal-model-picker');
+    const list = document.getElementById('model-picker-list');
+    if (!modal || !list) return;
+    modal.style.display = 'flex';
+    list.innerHTML = '<div style="font-size:13px; color:#8a726a;">Querying installed models from Ollama & LM Studio...</div>';
+
+    if (api && api.get_models) {
+      try {
+        cachedModels = await api.get_models();
+        renderModelPickerList(cachedModels);
+      } catch (e) {
+        list.innerHTML = `<div style="color:#ba1a1a;">Error querying models: ${e}</div>`;
       }
+    } else {
+      list.innerHTML = `<div style="color:#d96b43;">Connecting to local AI engine bridge...</div>`;
+    }
+  }
+
+  function closeModelPicker() {
+    document.getElementById('modal-model-picker')?.style.display = 'none';
+  }
+
+  function renderModelPickerList(data) {
+    const list = document.getElementById('model-picker-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (data.ollama && data.ollama.length) {
+      const cat = document.createElement('div');
+      cat.style.fontSize = '11px'; cat.style.fontWeight = '700'; cat.style.letterSpacing = '0.8px';
+      cat.style.textTransform = 'uppercase'; cat.style.color = '#c85a32'; cat.style.marginBottom = '8px';
+      cat.textContent = `Ollama Local Models (${data.ollama.length})`;
+      list.appendChild(cat);
+
+      const grid = document.createElement('div');
+      grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))'; grid.style.gap = '8px';
+      data.ollama.forEach(m => {
+        const item = document.createElement('div');
+        item.style.padding = '12px 16px'; item.style.borderRadius = '10px';
+        item.style.background = '#fbf2ee'; item.style.border = '1px solid #dec0b7';
+        item.style.cursor = 'pointer'; item.style.transition = 'all 0.2s';
+        item.style.display = 'flex'; item.style.flexDirection = 'column'; item.style.gap = '4px';
+        item.innerHTML = `
+          <div style="font-size:13px; font-weight:600; color:#1e1b19;">${m.name}</div>
+          <div style="font-size:11px; color:#8a726a;">${m.size_gb ? m.size_gb + ' GB · Local Ollama' : 'Local Engine'}</div>
+        `;
+        item.onclick = () => selectModel(m.name, 'ollama');
+        grid.appendChild(item);
+      });
+      list.appendChild(grid);
     }
 
-    // ── Model Picker Modal ──────────────────────────────────────────────
-    let cachedModels = null;
-    async function openModelPicker() {
-      const modal = document.getElementById('modal-model-picker');
-      const list = document.getElementById('model-picker-list');
-      modal.style.display = 'flex';
-      list.innerHTML = '<div style="font-size:12px; color:var(--text-dim);">Querying installed models from Ollama & LM Studio...</div>';
+    if (data.lmstudio && data.lmstudio.length) {
+      const cat = document.createElement('div');
+      cat.style.fontSize = '11px'; cat.style.fontWeight = '700'; cat.style.letterSpacing = '0.8px';
+      cat.style.textTransform = 'uppercase'; cat.style.color = '#c85a32'; cat.style.marginBottom = '8px'; cat.style.marginTop = '16px';
+      cat.textContent = `LM Studio Models (:1234)`;
+      list.appendChild(cat);
 
-      if (api && api.get_models) {
-        try {
-          cachedModels = await api.get_models();
-          renderModelPickerList(cachedModels);
-        } catch (e) {
-          list.innerHTML = `<div style="color:var(--accent-rose);">Error querying models: ${e}</div>`;
-        }
-      } else {
-        list.innerHTML = `<div style="color:var(--accent-amber);">Connecting to local AI engine bridge...</div>`;
-      }
+      const grid = document.createElement('div');
+      grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))'; grid.style.gap = '8px';
+      data.lmstudio.forEach(m => {
+        const item = document.createElement('div');
+        item.style.padding = '12px 16px'; item.style.borderRadius = '10px';
+        item.style.background = '#fbf2ee'; item.style.border = '1px solid #dec0b7';
+        item.style.cursor = 'pointer'; item.style.transition = 'all 0.2s';
+        item.style.display = 'flex'; item.style.flexDirection = 'column'; item.style.gap = '4px';
+        item.innerHTML = `
+          <div style="font-size:13px; font-weight:600; color:#1e1b19;">${m.name}</div>
+          <div style="font-size:11px; color:#8a726a;">${m.role_hint || 'Local GGUF · LM Studio'}</div>
+        `;
+        item.onclick = () => selectModel(m.name, 'lmstudio');
+        grid.appendChild(item);
+      });
+      list.appendChild(grid);
     }
 
-    function closeModelPicker() {
-      document.getElementById('modal-model-picker').style.display = 'none';
+    if (data.cloud && data.cloud.length) {
+      const cat = document.createElement('div');
+      cat.style.fontSize = '11px'; cat.style.fontWeight = '700'; cat.style.letterSpacing = '0.8px';
+      cat.style.textTransform = 'uppercase'; cat.style.color = '#c85a32'; cat.style.marginBottom = '8px'; cat.style.marginTop = '16px';
+      cat.textContent = `Cloud Providers (NVIDIA / OpenAI)`;
+      list.appendChild(cat);
+
+      const grid = document.createElement('div');
+      grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))'; grid.style.gap = '8px';
+      data.cloud.forEach(m => {
+        const item = document.createElement('div');
+        item.style.padding = '12px 16px'; item.style.borderRadius = '10px';
+        item.style.background = '#fbf2ee'; item.style.border = '1px solid #dec0b7';
+        item.style.cursor = 'pointer'; item.style.transition = 'all 0.2s';
+        item.style.display = 'flex'; item.style.flexDirection = 'column'; item.style.gap = '4px';
+        item.innerHTML = `
+          <div style="font-size:13px; font-weight:600; color:#1e1b19;">${m.name}</div>
+          <div style="font-size:11px; color:#8a726a;">${(m.provider || 'Cloud').toUpperCase()} API</div>
+        `;
+        item.onclick = () => selectModel(m.name, m.provider);
+        grid.appendChild(item);
+      });
+      list.appendChild(grid);
     }
+  }
 
-    function renderModelPickerList(data) {
-      const list = document.getElementById('model-picker-list');
-      list.innerHTML = '';
+  async function selectModel(name, provider) {
+    closeModelPicker();
+    const modelLabel = document.getElementById('model-pill-label');
+    if (modelLabel) modelLabel.textContent = `🧠 ${name}`;
+    appendAssistantTurn(`Active brain switched to **${name}** (${provider}).`);
+    if (api && api.switch_model) {
+      await api.switch_model(name, provider);
+      refreshTelemetry();
+    }
+  }
 
-      // Ollama
-      if (data.ollama && data.ollama.length) {
-        const cat = document.createElement('div');
-        cat.className = 'picker-category';
-        cat.textContent = `Ollama Local Models (${data.ollama.length})`;
-        list.appendChild(cat);
+  // ── Voice Picker Modal ────────────────────────────────────────────────────
+  async function openVoicePicker() {
+    const modal = document.getElementById('modal-voice-picker');
+    const list = document.getElementById('voice-picker-list');
+    if (!modal || !list) return;
+    modal.style.display = 'flex';
+    list.innerHTML = '<div style="font-size:13px; color:#8a726a;">Loading available voices...</div>';
 
-        const grid = document.createElement('div');
-        grid.className = 'picker-grid';
-        data.ollama.forEach(m => {
-          const item = document.createElement('div');
-          item.className = 'picker-item';
-          item.innerHTML = `
-            <div class="item-title">${m.name}</div>
-            <div class="item-sub">${m.size_gb ? m.size_gb + ' GB · Local Ollama' : 'Local Engine'}</div>
-          `;
-          item.onclick = () => selectModel(m.name, 'ollama');
-          grid.appendChild(item);
-        });
-        list.appendChild(grid);
-      }
-
-      // LM Studio
-      if (data.lmstudio && data.lmstudio.length) {
-        const cat = document.createElement('div');
-        cat.className = 'picker-category';
-        cat.textContent = `LM Studio Models (:1234)`;
-        cat.style.marginTop = '14px';
-        list.appendChild(cat);
-
-        const grid = document.createElement('div');
-        grid.className = 'picker-grid';
-        data.lmstudio.forEach(m => {
-          const item = document.createElement('div');
-          item.className = 'picker-item';
-          item.innerHTML = `
-            <div class="item-title">${m.name}</div>
-            <div class="item-sub">${m.role_hint || 'Local GGUF · LM Studio'}</div>
-          `;
-          item.onclick = () => selectModel(m.name, 'lmstudio');
-          grid.appendChild(item);
-        });
-        list.appendChild(grid);
-      }
-
-      // Cloud Providers
-      if (data.cloud && data.cloud.length) {
-        const cat = document.createElement('div');
-        cat.className = 'picker-category';
-        cat.textContent = `Cloud Providers (NVIDIA / OpenAI)`;
-        cat.style.marginTop = '14px';
-        list.appendChild(cat);
-
-        const grid = document.createElement('div');
-        grid.className = 'picker-grid';
-        data.cloud.forEach(m => {
-          const item = document.createElement('div');
-          item.className = 'picker-item';
-          item.innerHTML = `
-            <div class="item-title">${m.name}</div>
-            <div class="item-sub">${(m.provider || 'Cloud').toUpperCase()} API</div>
-          `;
-          item.onclick = () => selectModel(m.name, m.provider);
-          grid.appendChild(item);
-        });
-        list.appendChild(grid);
+    if (api && api.get_available_voices) {
+      try {
+        const data = await api.get_available_voices();
+        renderVoicePickerList(data.voices || [], data.current);
+      } catch (e) {
+        list.innerHTML = `<div style="color:#ba1a1a;">Error querying voices: ${e}</div>`;
       }
     }
+  }
 
-    async function selectModel(name, provider) {
-      closeModelPicker();
-      document.getElementById('model-pill-label').textContent = `🧠 ${name}`;
-      appendAssistantTurn(`Active brain switched to **${name}** (${provider}). LangGraph routing updated.`);
-      if (api && api.switch_model) {
-        await api.switch_model(name, provider);
-        const roster = document.getElementById('squad-roster');
-        if (roster) delete roster.dataset.rendered;
-        refreshTelemetry();
-      }
+  function closeVoicePicker() {
+    document.getElementById('modal-voice-picker')?.style.display = 'none';
+  }
+
+  function renderVoicePickerList(voices, current) {
+    const list = document.getElementById('voice-picker-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    const deepgramVoices = voices.filter(v => v.engine === 'deepgram');
+    const localVoices = voices.filter(v => v.engine !== 'deepgram');
+
+    if (deepgramVoices.length) {
+      const cat = document.createElement('div');
+      cat.style.fontSize = '11px'; cat.style.fontWeight = '700'; cat.style.letterSpacing = '0.8px';
+      cat.style.textTransform = 'uppercase'; cat.style.color = '#c85a32'; cat.style.marginBottom = '8px';
+      cat.textContent = `Deepgram Aura Neural Voices (${deepgramVoices.length})`;
+      list.appendChild(cat);
+
+      const grid = document.createElement('div');
+      grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))'; grid.style.gap = '8px';
+      deepgramVoices.forEach(v => {
+        const item = document.createElement('div');
+        item.style.padding = '12px 16px'; item.style.borderRadius = '10px';
+        item.style.background = '#fbf2ee'; item.style.border = '1px solid #dec0b7';
+        item.style.cursor = 'pointer'; item.style.transition = 'all 0.2s';
+        item.style.display = 'flex'; item.style.flexDirection = 'column'; item.style.gap = '4px';
+        item.innerHTML = `
+          <div style="font-size:13px; font-weight:600; color:#1e1b19;">${v.name} (${v.gender}, ${v.accent})</div>
+          <div style="font-size:11px; color:#8a726a;">${v.style} · Deepgram Cloud</div>
+        `;
+        item.onclick = () => selectVoice(v.id, v.name, v.engine);
+        grid.appendChild(item);
+      });
+      list.appendChild(grid);
     }
 
-    // ── Voice Picker Modal ──────────────────────────────────────────────
-    let cachedVoices = null;
-    async function openVoicePicker() {
-      const modal = document.getElementById('modal-voice-picker');
-      const list = document.getElementById('voice-picker-list');
-      modal.style.display = 'flex';
-      list.innerHTML = '<div style="font-size:12px; color:var(--text-dim);">Loading available voices...</div>';
+    if (localVoices.length) {
+      const cat = document.createElement('div');
+      cat.style.fontSize = '11px'; cat.style.fontWeight = '700'; cat.style.letterSpacing = '0.8px';
+      cat.style.textTransform = 'uppercase'; cat.style.color = '#c85a32'; cat.style.marginBottom = '8px'; cat.style.marginTop = '16px';
+      cat.textContent = `Local Offline Neural Voices`;
+      list.appendChild(cat);
 
-      if (api && api.get_available_voices) {
-        try {
-          const data = await api.get_available_voices();
-          cachedVoices = data.voices || [];
-          renderVoicePickerList(cachedVoices, data.current);
-        } catch (e) {
-          list.innerHTML = `<div style="color:var(--accent-rose);">Error querying voices: ${e}</div>`;
-        }
-      }
+      const grid = document.createElement('div');
+      grid.style.display = 'grid'; grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(240px, 1fr))'; grid.style.gap = '8px';
+      localVoices.forEach(v => {
+        const item = document.createElement('div');
+        item.style.padding = '12px 16px'; item.style.borderRadius = '10px';
+        item.style.background = '#fbf2ee'; item.style.border = '1px solid #dec0b7';
+        item.style.cursor = 'pointer'; item.style.transition = 'all 0.2s';
+        item.style.display = 'flex'; item.style.flexDirection = 'column'; item.style.gap = '4px';
+        item.innerHTML = `
+          <div style="font-size:13px; font-weight:600; color:#1e1b19;">${v.name} (${v.gender})</div>
+          <div style="font-size:11px; color:#8a726a;">${v.style} · Offline Local</div>
+        `;
+        item.onclick = () => selectVoice(v.id, v.name, v.engine);
+        grid.appendChild(item);
+      });
+      list.appendChild(grid);
     }
+  }
 
-    function closeVoicePicker() {
-      document.getElementById('modal-voice-picker').style.display = 'none';
+  async function selectVoice(voiceId, voiceName, engine) {
+    closeVoicePicker();
+    const voiceLabel = document.getElementById('voice-pill-label');
+    if (voiceLabel) voiceLabel.textContent = `🔊 ${voiceName}`;
+    appendAssistantTurn(`TTS Voice updated to **${voiceName}** (${engine.toUpperCase()}).`);
+    if (api && api.set_voice) {
+      await api.set_voice(voiceId, engine);
     }
+  }
 
-    function renderVoicePickerList(voices, current) {
-      const list = document.getElementById('voice-picker-list');
-      list.innerHTML = '';
+  // ── Vision Privacy & Webcam Live Sight PIP ────────────────────────────────
+  let currentPermissions = { screen: false, camera: false };
+  let webcamStream = null;
 
-      const deepgramVoices = voices.filter(v => v.engine === 'deepgram');
-      const localVoices = voices.filter(v => v.engine !== 'deepgram');
-
-      // Deepgram Aura Voices
-      if (deepgramVoices.length) {
-        const cat = document.createElement('div');
-        cat.className = 'picker-category';
-        cat.textContent = `Deepgram Aura Neural Voices (${deepgramVoices.length})`;
-        list.appendChild(cat);
-
-        const grid = document.createElement('div');
-        grid.className = 'picker-grid';
-        deepgramVoices.forEach(v => {
-          const item = document.createElement('div');
-          item.className = 'picker-item' + ((current && current.voice === v.id) ? ' selected' : '');
-          item.innerHTML = `
-            <div class="item-title">${v.name} (${v.gender}, ${v.accent})</div>
-            <div class="item-sub">${v.style} · Deepgram Cloud</div>
-          `;
-          item.onclick = () => selectVoice(v.id, v.name, v.engine);
-          grid.appendChild(item);
-        });
-        list.appendChild(grid);
-      }
-
-      // Local Offline Voices
-      if (localVoices.length) {
-        const cat = document.createElement('div');
-        cat.className = 'picker-category';
-        cat.textContent = `Local Offline Neural Voices`;
-        cat.style.marginTop = '14px';
-        list.appendChild(cat);
-
-        const grid = document.createElement('div');
-        grid.className = 'picker-grid';
-        localVoices.forEach(v => {
-          const item = document.createElement('div');
-          item.className = 'picker-item' + ((current && current.voice === v.id) ? ' selected' : '');
-          item.innerHTML = `
-            <div class="item-title">${v.name} (${v.gender})</div>
-            <div class="item-sub">${v.style} · Offline Local</div>
-          `;
-          item.onclick = () => selectVoice(v.id, v.name, v.engine);
-          grid.appendChild(item);
-        });
-        list.appendChild(grid);
-      }
+  async function toggleVisionPermission(target) {
+    const newVal = !currentPermissions[target];
+    currentPermissions[target] = newVal;
+    updateVisionUI();
+    if (api && api.set_vision_permission) {
+      await api.set_vision_permission(target, newVal);
     }
+    const status = newVal ? "GRANTED" : "REVOKED";
+    appendAssistantTurn(`Privacy: ${target.toUpperCase()} sight ${status}.`);
+  }
 
-    async function selectVoice(voiceId, voiceName, engine) {
-      closeVoicePicker();
-      document.getElementById('voice-pill-label').textContent = `🔊 ${voiceName}`;
-      appendAssistantTurn(`TTS Voice updated to **${voiceName}** (${engine.toUpperCase()}).`);
-      if (api && api.set_voice) {
-        await api.set_voice(voiceId, engine);
-      }
+  function updateVisionUI() {
+    const screenPill = document.getElementById('pill-screen-vision');
+    const cameraPill = document.getElementById('pill-camera-vision');
+    if (screenPill) {
+      screenPill.className = 'vision-pill ' + (currentPermissions.screen ? 'active' : 'blocked');
+      screenPill.style.background = currentPermissions.screen ? 'rgba(166,227,161,0.15)' : 'rgba(186,26,26,0.08)';
+      screenPill.style.borderColor = currentPermissions.screen ? '#a6e3a1' : '#ba1a1a';
+      screenPill.style.color = currentPermissions.screen ? '#22c55e' : '#ba1a1a';
     }
+    if (cameraPill) {
+      cameraPill.className = 'vision-pill ' + (currentPermissions.camera ? 'active' : 'blocked');
+      cameraPill.style.background = currentPermissions.camera ? 'rgba(166,227,161,0.15)' : 'rgba(186,26,26,0.08)';
+      cameraPill.style.borderColor = currentPermissions.camera ? '#a6e3a1' : '#ba1a1a';
+      cameraPill.style.color = currentPermissions.camera ? '#22c55e' : '#ba1a1a';
+    }
+  }
 
-    // ── Vision Privacy & Webcam Live Sight PIP ──────────────────────────
-    let currentPermissions = { screen: false, camera: false };
-    let webcamStream = null;
+  async function toggleWebcamSight() {
+    const pip = document.getElementById('webcam-pip');
+    const video = document.getElementById('webcam-video');
 
-    async function toggleVisionPermission(target) {
-      const newVal = !currentPermissions[target];
-      currentPermissions[target] = newVal;
+    if (webcamStream) {
+      webcamStream.getTracks().forEach(t => t.stop());
+      webcamStream = null;
+      if (video) video.srcObject = null;
+      if (pip) pip.style.display = 'none';
+      currentPermissions.camera = false;
       updateVisionUI();
       if (api && api.set_vision_permission) {
-        await api.set_vision_permission(target, newVal);
+        await api.set_vision_permission('camera', false);
       }
-      const status = newVal ? "GRANTED" : "REVOKED";
-      appendAssistantTurn(`Privacy update: ${target.toUpperCase()} sight permission is now **${status}**.`);
-    }
-
-    function updateVisionUI() {
-      const screenPill = document.getElementById('pill-screen-vision');
-      const cameraPill = document.getElementById('pill-camera-vision');
-      if (screenPill) {
-        screenPill.className = 'vision-pill ' + (currentPermissions.screen ? 'active' : 'blocked');
-      }
-      if (cameraPill) {
-        cameraPill.className = 'vision-pill ' + (currentPermissions.camera ? 'active' : 'blocked');
-      }
-    }
-
-    async function toggleWebcamSight() {
-      const pip = document.getElementById('webcam-pip');
-      const video = document.getElementById('webcam-video');
-
-      if (webcamStream) {
-        // Stop stream and hide
-        webcamStream.getTracks().forEach(t => t.stop());
-        webcamStream = null;
-        video.srcObject = null;
-        pip.style.display = 'none';
-        currentPermissions.camera = false;
+    } else {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 480, height: 360 } });
+        webcamStream = stream;
+        if (video) video.srcObject = stream;
+        if (pip) pip.style.display = 'flex';
+        currentPermissions.camera = true;
         updateVisionUI();
         if (api && api.set_vision_permission) {
-          await api.set_vision_permission('camera', false);
+          await api.set_vision_permission('camera', true);
         }
-      } else {
-        // Start stream
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 480, height: 360 } });
-          webcamStream = stream;
-          video.srcObject = stream;
-          pip.style.display = 'flex';
-          currentPermissions.camera = true;
+        appendAssistantTurn("Webcam live sight engaged.");
+      } catch (err) {
+        appendAssistantTurn(`Camera access failed: ${err}`);
+      }
+    }
+  }
+
+  function takeWebcamSnapshot() {
+    const video = document.getElementById('webcam-video');
+    if (!video || !webcamStream) {
+      appendAssistantTurn("Webcam not active. Click 'See Me Live' first.");
+      return;
+    }
+    chatInput.value = "Inspect what you see from my webcam snapshot and describe it.";
+    sendTurn();
+  }
+
+  // ── Polling Hardware Telemetry & Squad Info ──────────────────────────────
+  let coreState = 'idle';
+  async function refreshTelemetry() {
+    api = api || ((window.pywebview && window.pywebview.api) ? window.pywebview.api : null);
+    if (!api) return;
+    try {
+      if (api.get_telemetry) {
+        const telem = await api.get_telemetry();
+        if (telem && !telem.error) {
+          const cpuVal = document.getElementById('cpu-val');
+          const cpuSub = document.getElementById('cpu-sub');
+          const ramVal = document.getElementById('ram-val');
+          const ramSub = document.getElementById('ram-sub');
+          if (cpuVal) cpuVal.textContent = `${Math.round(telem.cpu_percent)}%`;
+          if (cpuSub) cpuSub.textContent = telem.os || "Active OS";
+          if (ramVal) ramVal.textContent = `${Math.round(telem.ram_percent)}%`;
+          if (ramSub) ramSub.textContent = `${(telem.ram_used_mb / 1024).toFixed(1)} / ${(telem.ram_total_mb / 1024).toFixed(1)} GB`;
+        }
+      }
+
+      if (api.get_squad_info) {
+        const sq = await api.get_squad_info();
+        if (sq) {
+          const ollamaBadge = document.getElementById('badge-ollama');
+          const lmstudioBadge = document.getElementById('badge-lmstudio');
+          if (ollamaBadge) ollamaBadge.style.opacity = sq.ollama_online ? '1' : '0.4';
+          if (lmstudioBadge) lmstudioBadge.style.opacity = sq.lmstudio_online ? '1' : '0.4';
+
+          if (sq.roles && sq.roles.length) {
+            const roster = document.getElementById('squad-roster');
+            if (roster && !roster.dataset.rendered) {
+              roster.innerHTML = '';
+              const roleIcons = { commander: '⚡', planner: '🧠', writer: '✍️', fast: '⚡', researcher: '📚', coder: '💻', vision: '👁️', communicator: '📡' };
+              sq.roles.forEach((r, idx) => {
+                const card = document.createElement('div');
+                card.style.padding = '12px 14px'; card.style.borderRadius = '10px';
+                card.style.background = idx === 0 ? '#f5f0e8' : '#fbf2ee';
+                card.style.border = idx === 0 ? '2px solid #c85a32' : '1px solid #dec0b7';
+                card.style.cursor = 'pointer'; card.style.transition = 'all 0.2s';
+                const icon = roleIcons[r.key] || '🤖';
+                const provName = r.provider === 'lmstudio' ? 'LM Studio' : (r.provider === 'nvidia' ? 'NVIDIA' : 'Ollama');
+                card.innerHTML = `
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:16px;">${icon}</span>
+                    <span style="font-weight:600; color:#1e1b19;">${r.name || r.key}</span>
+                    <span style="font-size:10px; padding:2px 8px; border-radius:6px; background:${idx===0?'rgba(200,90,50,0.15)':'rgba(138,114,106,0.1)'}; color:${idx===0?'#c85a32':'#8a726a'}; font-weight:600;">${idx===0?'Active':'Standby'}</span>
+                  </div>
+                  <div style="font-size:12px; color:#8a726a; margin-top:4px;">${r.model} (${provName})</div>
+                  <div style="font-size:12px; color:#57423b; margin-top:2px;">${r.description || ''}</div>
+                `;
+                card.onclick = () => { if(chatInput){ chatInput.value = `Ask the ${r.name || r.key}: `; chatInput.focus(); }};
+                roster.appendChild(card);
+              });
+              roster.dataset.rendered = 'true';
+            }
+          }
+        }
+      }
+
+      if (api.get_obsidian_data) {
+        const ob = await api.get_obsidian_data();
+        if (ob) {
+          obsidianDataCache.recent_logs = ob.recent_logs || [];
+          obsidianDataCache.recent_notes = ob.recent_notes || [];
+          renderObsidianContent(currentObsidianTab);
+        }
+      }
+
+      if (api.get_vision_permissions) {
+        const perms = await api.get_vision_permissions();
+        if (perms) {
+          currentPermissions = perms;
           updateVisionUI();
-          if (api && api.set_vision_permission) {
-            await api.set_vision_permission('camera', true);
-          }
-          appendAssistantTurn("Webcam live sight engaged. You can see yourself in the HUD, and I can now inspect snapshots when you click 'Snapshot'.");
-        } catch (err) {
-          appendAssistantTurn(`Camera access could not be initialized: ${err}`);
         }
       }
+    } catch (e) {
+      console.warn("Telemetry polling:", e);
     }
+  }
 
-    function takeWebcamSnapshot() {
-      const video = document.getElementById('webcam-video');
-      if (!video || !webcamStream) {
-        appendAssistantTurn("Webcam is not active. Click 'See Me Live' in the dock first.");
-        return;
-      }
-      chatInput.value = "Inspect what you see from my webcam snapshot and describe it.";
-      sendTurn();
-    }
+  // Initial load & recurring interval
+  setTimeout(() => {
+    refreshTelemetry();
+    setInterval(refreshTelemetry, 3500);
+  }, 600);
+</script>
 
-    // ── Polling Hardware Telemetry & Squad Info ─────────────────────────
-    async function refreshTelemetry() {
-      api = api || ((window.pywebview && window.pywebview.api) ? window.pywebview.api : null);
-      if (!api) return;
-      try {
-        if (api.get_telemetry) {
-          const telem = await api.get_telemetry();
-          if (telem && !telem.error) {
-            document.getElementById('cpu-val').textContent = `${Math.round(telem.cpu_percent)}%`;
-            document.getElementById('cpu-ring').setAttribute('stroke-dasharray', `${Math.round(telem.cpu_percent)}, 100`);
-            document.getElementById('cpu-sub').textContent = telem.os || "Active OS";
-
-            document.getElementById('ram-val').textContent = `${Math.round(telem.ram_percent)}%`;
-            document.getElementById('ram-ring').setAttribute('stroke-dasharray', `${Math.round(telem.ram_percent)}, 100`);
-            document.getElementById('ram-sub').textContent = `${(telem.ram_used_mb / 1024).toFixed(1)} / ${(telem.ram_total_mb / 1024).toFixed(1)} GB`;
-          }
-        }
-
-        if (api.get_squad_info) {
-          const sq = await api.get_squad_info();
-          if (sq) {
-            const ollamaBadge = document.getElementById('badge-ollama');
-            const lmstudioBadge = document.getElementById('badge-lmstudio');
-            ollamaBadge.className = 'engine-pill ' + (sq.ollama_online ? 'online' : '');
-            lmstudioBadge.className = 'engine-pill lmstudio ' + (sq.lmstudio_online ? 'online' : '');
-
-            // Render live squad roster dynamically
-            if (sq.roles && sq.roles.length) {
-              const roster = document.getElementById('squad-roster');
-              if (roster && !roster.dataset.rendered) {
-                roster.innerHTML = '';
-                const roleIcons = {
-                  commander: '⚡',
-                  planner: '🧠',
-                  writer: '✍️',
-                  fast: '⚡',
-                  researcher: '📚',
-                  coder: '💻',
-                  vision: '👁️',
-                  communicator: '📡'
-                };
-                sq.roles.forEach((r, idx) => {
-                  const card = document.createElement('div');
-                  card.className = 'squad-card' + (idx === 0 ? ' active' : '');
-                  const icon = roleIcons[r.key] || '🤖';
-                  const provName = r.provider === 'lmstudio' ? 'LM Studio' : (r.provider === 'nvidia' ? 'NVIDIA' : 'Ollama');
-                  card.innerHTML = `
-                    <div class="squad-top">
-                      <div class="squad-identity">
-                        <div class="squad-icon">${icon}</div>
-                        <div class="squad-name">${r.name || r.key}</div>
-                      </div>
-                      <span class="squad-badge">${idx === 0 ? 'Active' : 'Standby'}</span>
-                    </div>
-                    <div class="squad-model">${r.model} (${provName})</div>
-                    <div class="squad-desc">${r.description || ''}</div>
-                  `;
-                  card.style.cursor = 'pointer';
-                  card.title = `Click to delegate task to ${r.name || r.key}`;
-                  card.onclick = () => {
-                    const input = document.getElementById('chat-input');
-                    input.value = `Ask the ${r.name || r.key}: `;
-                    input.focus();
-                  };
-                  roster.appendChild(card);
-                });
-                roster.dataset.rendered = 'true';
-              }
-            }
-          }
-        }
-
-        if (api.get_obsidian_data) {
-          const ob = await api.get_obsidian_data();
-          if (ob) {
-            obsidianDataCache.recent_logs = ob.recent_logs || [];
-            obsidianDataCache.recent_notes = ob.recent_notes || [];
-            renderObsidianContent(currentObsidianTab);
-            if (currentObsidianTab === 'graph') {
-              renderGraphNodes();
-            }
-          }
-        }
-
-        if (api.get_vision_permissions) {
-          const perms = await api.get_vision_permissions();
-          if (perms) {
-            currentPermissions = perms;
-            updateVisionUI();
-          }
-        }
-      } catch (e) {
-        console.warn("Telemetry polling note:", e);
-      }
-    }
-
-    // Initial load & recurring interval
-    setTimeout(() => {
-      refreshTelemetry();
-      setInterval(refreshTelemetry, 3500);
-    }, 600);
-  </script>
-</body>
-</html>
+</body></html>

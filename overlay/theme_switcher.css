@@ -1,0 +1,194 @@
+/* Jenna Dashboard — Theme Switcher Component */
+:root {
+  --theme-switcher-width: 280px;
+  --theme-switcher-height: 360px;
+}
+
+.jenna-theme-switcher {
+  position: fixed;
+  top: 60px;
+  right: 16px;
+  z-index: 1000;
+  width: var(--theme-switcher-width);
+  background: var(--jenna-bg-raised);
+  border: 1px solid var(--jenna-hairline);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: "Geist Sans", system-ui, sans-serif;
+  font-size: 12px;
+  color: var(--jenna-ink-1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  transform: translateX(calc(100% + 16px));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.jenna-theme-switcher.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.jenna-theme-switcher__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--jenna-hairline);
+}
+
+.jenna-theme-switcher__title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--jenna-ink-2);
+  font-weight: 600;
+}
+
+.jenna-theme-switcher__close {
+  background: none;
+  border: none;
+  color: var(--jenna-ink-3);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.jenna-theme-switcher__close:hover { color: var(--jenna-ink-1); background: var(--jenna-bg-surface); }
+
+.jenna-theme-switcher__current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--jenna-bg-surface);
+  border: 1px solid var(--jenna-hairline);
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 11px;
+}
+
+.jenna-theme-switcher__current-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--jenna-hairline-strong);
+  flex-shrink: 0;
+}
+
+.jenna-theme-switcher__current-name {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--jenna-ink-1);
+}
+
+.jenna-theme-switcher__list {
+  max-height: 240px;
+  overflow-y: auto;
+  display: grid;
+  gap: 6px;
+}
+
+.jenna-theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--jenna-bg-surface);
+  border: 1px solid var(--jenna-hairline);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.jenna-theme-option:hover {
+  border-color: var(--jenna-accent);
+  background: var(--jenna-bg-raised);
+}
+.jenna-theme-option.active {
+  border-color: var(--jenna-accent);
+  background: color-mix(in srgb, var(--jenna-accent) 12%, var(--jenna-bg-surface));
+}
+
+.jenna-theme-option__swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid var(--jenna-hairline-strong);
+  flex-shrink: 0;
+}
+
+.jenna-theme-option__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.jenna-theme-option__name {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--jenna-ink-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jenna-theme-option__meta {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--jenna-ink-3);
+}
+
+.jenna-theme-option__mode {
+  font-family: "Space Grotesk", sans-serif;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+.jenna-theme-switcher__sync {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--jenna-hairline);
+  font-size: 11px;
+  color: var(--jenna-ink-2);
+}
+
+.jenna-theme-switcher__sync-label {
+  flex: 1;
+}
+
+.jenna-theme-switcher__sync-toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background: var(--jenna-bg-surface);
+  border: 1px solid var(--jenna-hairline);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.jenna-theme-switcher__sync-toggle::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--jenna-ink-3);
+  border-radius: 50%;
+  transition: transform 0.15s, background 0.15s;
+}
+.jenna-theme-switcher__sync-toggle.active {
+  border-color: var(--jenna-accent);
+}
+.jenna-theme-switcher__sync-toggle.active::after {
+  transform: translateX(18px);
+  background: var(--jenna-accent);
+}

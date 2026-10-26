@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1512, initial-scale=1.0">
+  <title>Jenna AI OS — Executive Suite</title>
+  <!-- Google Fonts: Space Grotesk, Geist Sans (via Inter fallback/system or fontCDN), JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Geist Sans';
+      src: local('Geist Sans'), local('Geist'), local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI');
+      font-weight: 400 600;
+    }
+
+    :root {
+      --bg-base: #0A0B0D;
+      --bg-surface: #101215;
+      --bg-raised: #15181C;
+      --hairline: rgba(255, 255, 255, 0.07);
+      --hairline-strong: rgba(255, 255, 255, 0.13);
+      --ink-1: #F2F4F7;
+      --ink-2: #9AA3AE;
+      --ink-3: #5C6570;
+      --crimson: #DC143C;
+      --idle: #3F4750;
+      --listening: #22D3EE;
+      --thinking: #F59E0B;
+      --speaking: #10B981;
+      --error: #EF4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--ink-1);
+      font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      user-select: none;
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-feature-settings: "tnum" 1;
+    }
+
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: 0.08em;
+    }
+
+    /* Custom thin scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--hairline-strong);
+      border-radius: 2px;
+    }
+
+    /* Avionics Audio Core Sphere animation */
+    @keyframes orbitPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+      50% { transform: scale(1.02) rotate(180deg); opacity: 1; }
+    }
+    @keyframes waveRipple {
+      0%, 100% { transform: scale(0.97); }
+      50% { transform: scale(1.03); }
+    }
+    .anim-orbit {
+      animation: orbitPulse 12s linear infinite;
+    }
+    .anim-pulse-slow {
+      animation: waveRipple 3.6s ease-in-out infinite;
+    }
+
+    /* Spectrum bars animation */
+    @keyframes spectrumAnim {
+      0%, 100% { height: 6px; }
+      25% { height: 26px; }
+      50% { height: 14px; }
+      75% { height: 34px; }
+    }
+  </style>
+</head>
+<body class="flex flex-col bg-[#0A0B0D] text-[#F2F4F7] text-[13px] leading-[1.45] h-screen w-screen overflow-hidden">
+
+  <!-- ========================================================================= -->
+  <!-- ROW 1: TELEMETRY BAR (44px, full width, hairline bottom)                   -->
+  <!-- ========================================================================= -->
+  <header class="h-[44px] min-h-[44px] w-full bg-[#101215] border-b border-[rgba(255,255,255,0.07)] px-4 flex items-center justify-between z-30 select-none">
+    
+    <!-- Left: Brand mark + Host badge -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-[#DC143C] inline-block rounded-[1px]"></span>
+        <span class="font-display font-bold text-[12px] tracking-[0.14em] text-[#F2F4F7]">JENNA</span>
+        <span class="font-mono text-[10px] text-[#DC143C] bg-[#DC143C]/10 border border-[#DC143C]/30 px-1 py-[1px] rounded-[2px]">OS v1.4</span>
+      </div>
+      <div class="h-3 w-[1px] bg-[rgba(255,255,255,0.07)]"></div>
+      <div class="flex items-center gap-1.5 px-2 py-[2px] bg-[#15181C] border border-[rgba(255,255,255,0.07)] rounded-[3px]">
+        <i class="ph ph-cpu text-[#9AA3AE] text-[12px]"></i>
+        <span class="font-mono text-[11px] text-[#9AA3AE]">Parrot · Hyprland</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-[#10B981] ml-0.5"></span>
+      </div>
+    </div>
+
+    <!-- Centre: Dual-engine pills -->
+    <div class="flex items-center gap-2">
+      <!-- Engine 1: Ollama -->
+      <div class="flex items-center gap-2 px-2.5 py-1 bg-[#15181C] border border-[rgba(255,255,255,0.07)] rounded-[4px] hover:border-[rgba(255,255,255,0.14)] transition-colors">
+        <span class="w-[6px] h-[6px] rounded-full bg-[#10B981] shadow-[0_0_6px_#10B981]"></span>
+        <span class="font-mono text-[11px] text-[#F2F4F7]">Ollama :11434</span>
+        <span class="text-[#5C6570]">·</span>
+        <span class="font-mono text-[11px] text-[#9AA3AE]">6 models</span>
+      </div>
+
+      <!-- Engine 2: LM Studio -->
+      <div class="flex items-center gap-2 px-2.5 py-1 bg-[#15181C] border border-[rgba(255,255,255,0.07)] rounded-[4px] hover:border-[rgba(255,255,255,0.14)] transition-colors">
+        <span class="w-[6px] h-[6px] rounded-full bg-[#10B981] shadow-[0_0_6px_#10B981]"></span>
+        <span class="font-mono text-[11px] text-[#F2F4F7]">LM Studio :1234</span>
+        <span class="text-[#5C6570]">·</span>
+        <span class="font-mono text-[11px] text-[#9AA3AE]">server on</span>
+      </div>
+    </div>
+
+    <!-- Right: Telemetry Meters (CPU, RAM, DISK) + Clock -->
+    <div class="flex items-center gap-4">
+      <!-- CPU Meter -->
+      <div class="flex items-center gap-2">
+        <span class="font-display text-[10px] text-[#9AA3AE]">CPU</span>
+        <div class="flex flex-col gap-[2px]">
+          <span class="font-mono text-[11px] text-[#F2F4F7] leading-none text-right">34%</span>
+          <div class="w-[48px] h-[3px] bg-[rgba(255,255,255,0.07)] rounded-none overflow-hidden">
+            <div class="h-full bg-[#10B981]" style="width: 34%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RAM Meter (amber at 72%) -->
+      <div class="flex items-center gap-2">
+        <span class="font-display text-[10px] text-[#9AA3AE]">RAM</span>
+        <div class="flex flex-col gap-[2px]">
+          <span class="font-mono text-[11px] text-[#F59E0B] leading-none text-right">5.8/8.0 GB</span>
+          <div class="w-[48px] h-[3px] bg-[rgba(255,255,255,0.07)] rounded-none overflow-hidden">
+            <div class="h-full bg-[#F59E0B]" style="width: 72%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISK Meter -->
+      <div class="flex items-center gap-2">
+        <span class="font-display text-[10px] text-[#9AA3AE]">DISK</span>
+        <div class="flex flex-col gap-[2px]">
+          <span class="font-mono text-[11px] text-[#F2F4F7] leading-none text-right">214 GB FREE</span>
+          <div class="w-[48px] h-[3px] bg-[rgba(255,255,255,0.07)] rounded-none overflow-hidden">
+            <div class="h-full bg-[#10B981]" style="width: 48%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="h-3 w-[1px] bg-[rgba(255,255,255,0.07)]"></div>
+
+      <!-- Clock -->
+      <div class="flex items-center gap-1.5 pl-1">
+        <span class="font-mono text-[12px] font-medium text-[#F2F4F7] tracking-tight">20:41</span>
+        <span class="font-mono text-[10px] text-[#5C6570]">UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- ROW 2: THREE-COLUMN ASYMMETRIC WORKSPACE (Left 296px | Center Flex | Right 336px) -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 flex overflow-hidden relative pb-[104px]">
+
+    <!-- ========================================== -->
+    <!-- LEFT RAIL: SQUAD ROSTER (296px)            -->
+    <!-- ========================================== -->
+    <aside class="w-[296px] min-w-[296px] max-w-[296px] bg-[#101215] border-r border-[rgba(255,255,255,0.07)] flex flex-col justify-between z-10">
+      
+      <!-- Squad Roster Header -->
+      <div class="p-3 border-b border-[rgba(255,255,255,0.07)] flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="font-display font-semibold text-[11px] tracking-[0.08em] text-[#9AA3AE] uppercase">Squad Roster</span>
+          <span class="font-mono text-[10px] text-[#5C6570] bg-[#15181C] px-1.5 py-[1px] border border-[rgba(255,255,255,0.05)] rounded-[2px]">5/5 ON</span>
+        </div>
+        <div class="flex items-center gap-1 text-[#5C6570]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+          <span class="font-mono text-[10px]">LOCAL</span>
+        </div>
+      </div>
+
+      <!-- Agent Cards Stack -->
+      <div class="flex-1 overflow-y-auto px-2 py-2 flex flex-col gap-1.5">
+
+        <!-- Card 1: Commander (idle slate) -->
+        <div class="relative bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[4px] p-2.5 hover:bg-[#15181C] transition-colors cursor-pointer group">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 flex items-center justify-center text-[#9AA3AE]">
+                <i class="ph ph-shield-check text-[15px]"></i>
+              </div>
+              <span class="font-display font-semibold text-[11px] text-[#F2F4F7] tracking-[0.08em] uppercase">COMMANDER</span>
+            </div>
+            <!-- Slate idle dot -->
+            <div class="flex items-center gap-1">
+              <span class="w-[6px] h-[6px] rounded-full bg-[#3F4750]"></span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-1.5 pl-6">
+            <span class="font-mono text-[11px] text-[#9AA3AE]">Qwen3.5-0.8B</span>
+            <span class="font-mono text-[10px] text-[#5C6570] border border-[rgba(255,255,255,0.07)] px-1 rounded-[2px]">Ollama</span>
+          </div>
+          <!-- 3px bottom meter (idle) -->
+          <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-transparent">
+            <div class="h-full bg-[#3F4750]" style="width: 12%"></div>
+          </div>
+        </div>
+
+        <!-- Card 2: Engineer (emerald ready) -->
+        <div class="relative bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[4px] p-2.5 hover:bg-[#15181C] transition-colors cursor-pointer group">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 flex items-center justify-center text-[#10B981]">
+                <i class="ph ph-code text-[15px]"></i>
+              </div>
+              <span class="font-display font-semibold text-[11px] text-[#F2F4F7] tracking-[0.08em] uppercase">ENGINEER</span>
+            </div>
+            <!-- Emerald ready dot -->
+            <div class="flex items-center gap-1">
+              <span class="w-[6px] h-[6px] rounded-full bg-[#10B981] shadow-[0_0_6px_#10B981]"></span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-1.5 pl-6">
+            <span class="font-mono text-[11px] text-[#9AA3AE]">Qwen2.5-Coder-3B</span>
+            <span class="font-mono text-[10px] text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/30 px-1 rounded-[2px]">LM-Studio</span>
+          </div>
+          <!-- 3px bottom meter (emerald) -->
+          <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-transparent">
+            <div class="h-full bg-[#10B981]" style="width: 44%"></div>
+          </div>
+        </div>
+
+        <!-- Card 3: Planner (SELECTED, raised, 1px crimson left edge, expanded inspector) -->
+        <div class="relative bg-[#15181C] border border-[rgba(255,255,255,0.12)] border-l-[2px] border-l-[#DC143C] rounded-[4px] p-2.5 cursor-pointer shadow-sm">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 flex items-center justify-center text-[#DC143C]">
+                <i class="ph ph-git-fork text-[15px]"></i>
+              </div>
+              <span class="font-display font-semibold text-[11px] text-[#F2F4F7] tracking-[0.08em] uppercase">PLANNER</span>
+              <span class="font-mono text-[9px] text-[#DC143C] uppercase px-1 border border-[#DC143C]/40 rounded-[2px]">Active</span>
+            </div>
+            <!-- Amber thinking dot -->
+            <div class="flex items-center gap-1">
+              <span class="w-[6px] h-[6px] rounded-full bg-[#F59E0B] shadow-[0_0_6px_#F59E0B]"></span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between mt-1.5 pl-6">
+            <span class="font-mono text-[11px] text-[#F2F4F7] font-medium">Nemotron-30B-MoE</span>
+            <span class="font-mono text-[10px] text-[#9AA3AE] border border-[rgba(255,255,255,0.1)] px-1 rounded-[2px]">Ollama (Q4)</span>
+          </div>
+
+          <!-- Expanded Inline Inspector -->
+          <div class="mt-2.5 pt-2 border-t border-[rgba(255,255,255,0.07)] pl-2 pr-1 space-y-2">
+            <!-- Context meter -->
+            <div>
+              <div class="flex items-center justify-between text-[10px] font-mono text-[#9AA3AE] mb-1">
+                <span>context 4.2k/8k</span>
+                <span class="text-[#F59E0B]">52%</span>
+              </div>
+              <div class="w-full h-[3px] bg-[rgba(255,255,255,0.07)] overflow-hidden">
+                <div class="h-full bg-[#F59E0B]" style="width: 52%"></div>
+              </div>
+            </div>
+
+            <!-- Prompt hash + action -->
+            <div class="flex items-center justify-between pt-1">
+              <div class="flex items-center gap-1 text-[10px] font-mono text-[#5C6570]">
+                <span>hash:</span>
+                <span class="text-[#9AA3AE]">0x9f2ac1</span>
+              </div>
+              <!-- Ghost button -->
+              <button class="px-2 py-[3px] text-[10px] font-mono text-[#F2F4F7] bg-transparent border border-[rgba(255,255,255,0.14)] hover:border-[#DC143C] hover:text-[#DC143C] rounded-[2px] transition-colors">
+                Force delegate
+              </button>
+            </div>
+          </div>
+
+          <!-- 3px bottom meter -->
+          <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-transparent">
+            <div class="h-full bg-[#DC143C]" style="width: 82%"></div>
+          </div>
+        </div>
+
+        <!-- Card 4: Scholar (cyan listening) -->
+        <div class="relative bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[4px] p-2.5 hover:bg-[#15181C] transition-colors cursor-pointer group">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 flex items-center justify-center text-[#22D3EE]">
+                <i class="ph ph-books text-[15px]"></i>
+              </div>
+              <span class="font-display font-semibold text-[11px] text-[#F2F4F7] tracking-[0.08em] uppercase">SCHOLAR</span>
+            </div>
+            <!-- Cyan listening dot -->
+            <div class="flex items-center gap-1">
+              <span class="w-[6px] h-[6px] rounded-full bg-[#22D3EE] shadow-[0_0_6px_#22D3EE]"></span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-1.5 pl-6">
+            <span class="font-mono text-[11px] text-[#9AA3AE]">Ministral-3B</span>
+            <span class="font-mono text-[10px] text-[#22D3EE] bg-[#22D3EE]/10 border border-[#22D3EE]/30 px-1 rounded-[2px]">Ollama</span>
+          </div>
+          <!-- 3px bottom meter (cyan) -->
+          <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-transparent">
+            <div class="h-full bg-[#22D3EE]" style="width: 28%"></div>
+          </div>
+        </div>
+
+        <!-- Card 5: Communicator (amber thinking) -->
+        <div class="relative bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[4px] p-2.5 hover:bg-[#15181C] transition-colors cursor-pointer group">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 flex items-center justify-center text-[#F59E0B]">
+                <i class="ph ph-chat-centered-dots text-[15px]"></i>
+              </div>
+              <span class="font-display font-semibold text-[11px] text-[#F2F4F7] tracking-[0.08em] uppercase">COMMUNICATOR</span>
+            </div>
+            <!-- Amber thinking dot -->
+            <div class="flex items-center gap-1">
+              <span class="w-[6px] h-[6px] rounded-full bg-[#F59E0B] shadow-[0_0_6px_#F59E0B]"></span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-1.5 pl-6">
+            <span class="font-mono text-[11px] text-[#9AA3AE]">AgentPhone + Mail</span>
+            <span class="font-mono text-[10px] text-[#5C6570] border border-[rgba(255,255,255,0.07)] px-1 rounded-[2px]">ToolMesh</span>
+          </div>
+          <!-- 3px bottom meter (amber) -->
+          <div class="absolute bottom-0 left-0 right-0 h-[3px] bg-transparent">
+            <div class="h-full bg-[#F59E0B]" style="width: 65%"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rail Footer: Ghost Button "New delegation" -->
+      <div class="p-3 border-t border-[rgba(255,255,255,0.07)] bg-[#101215]">
+        <button class="w-full h-8 flex items-center justify-center gap-2 bg-transparent border border-[rgba(255,255,255,0.13)] hover:border-[#DC143C] hover:text-[#DC143C] text-[#F2F4F7] font-mono text-[12px] rounded-[4px] transition-colors">
+          <i class="ph ph-plus text-[12px]"></i>
+          <span>New delegation</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ========================================== -->
+    <!-- CENTER STAGE: AUDIO CORE & TRANSCRIPT      -->
+    <!-- Flexible, breathing room, biased left      -->
+    <!-- ========================================== -->
+    <section class="flex-1 flex flex-col justify-between px-8 py-5 relative overflow-hidden bg-[#0A0B0D]">
+
+      <!-- Top row: Thinking-trace chips (LangGraph) -->
+      <div class="flex items-center justify-between z-10">
+        <div class="flex items-center gap-2">
+          <span class="font-display font-semibold text-[10px] tracking-[0.08em] text-[#5C6570] uppercase">EXECUTION TRACE</span>
+          <span class="h-3 w-[1px] bg-[rgba(255,255,255,0.07)]"></span>
+          <div class="flex items-center gap-1.5">
+            <!-- Chip 1: retrieve (complete: crimson outline) -->
+            <div class="flex items-center gap-1 px-2.5 py-[3px] rounded-[3px] border border-[#DC143C] bg-[#DC143C]/10">
+              <i class="ph ph-check text-[10px] text-[#DC143C]"></i>
+              <span class="font-mono text-[10px] font-medium text-[#F2F4F7]">retrieve</span>
+            </div>
+            <i class="ph ph-caret-right text-[10px] text-[#5C6570]"></i>
+
+            <!-- Chip 2: plan (current: 14% amber fill) -->
+            <div class="flex items-center gap-1.5 px-2.5 py-[3px] rounded-[3px] border border-[#F59E0B] bg-[#F59E0B]/15">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-pulse"></span>
+              <span class="font-mono text-[10px] font-medium text-[#F59E0B]">plan</span>
+            </div>
+            <i class="ph ph-caret-right text-[10px] text-[#5C6570]"></i>
+
+            <!-- Chip 3: delegate (pending: ink-3) -->
+            <div class="flex items-center gap-1 px-2 py-[3px] rounded-[3px] border border-[rgba(255,255,255,0.07)] bg-[#101215]">
+              <span class="font-mono text-[10px] text-[#5C6570]">delegate</span>
+            </div>
+            <i class="ph ph-caret-right text-[10px] text-[#5C6570]"></i>
+
+            <!-- Chip 4: verify (pending: ink-3) -->
+            <div class="flex items-center gap-1 px-2 py-[3px] rounded-[3px] border border-[rgba(255,255,255,0.07)] bg-[#101215]">
+              <span class="font-mono text-[10px] text-[#5C6570]">verify</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Latency / Inference telemetry badge -->
+        <div class="flex items-center gap-2 font-mono text-[11px] text-[#5C6570]">
+          <span>EVAL: <span class="text-[#9AA3AE]">18.4 tok/s</span></span>
+          <span>·</span>
+          <span>TTFT: <span class="text-[#9AA3AE]">140ms</span></span>
+        </div>
+      </div>
+
+      <!-- Center Sphere: 320px particle/noise displaced sphere (biased slightly left) -->
+      <div class="my-auto flex flex-col items-center justify-center relative translate-x-[-12px]">
+        
+        <div class="relative w-[320px] h-[320px] flex items-center justify-center">
+
+          <!-- Outer Orbit Ring with state label (1px border) -->
+          <div class="absolute inset-[-18px] rounded-full border border-[rgba(245,158,11,0.25)] anim-orbit pointer-events-none flex items-start justify-center">
+            <!-- State Badge mounted on orbit ring -->
+            <div class="bg-[#101215] border border-[#F59E0B] px-2.5 py-[2px] rounded-full text-[9px] font-mono tracking-widest text-[#F59E0B] shadow-[0_0_12px_rgba(245,158,11,0.3)] translate-y-[-10px] flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+              SYNAPTIC THINKING · 2.4s
+            </div>
+          </div>
+
+          <!-- Secondary dashed alignment ring -->
+          <div class="absolute inset-2 rounded-full border border-dashed border-[rgba(255,255,255,0.05)] pointer-events-none"></div>
+
+          <!-- SVG Particle Sphere: Concentric displaced rings with soft amber rim glow -->
+          <svg class="w-full h-full anim-pulse-slow" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="amberCoreGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.18" />
+                <stop offset="65%" stop-color="#F59E0B" stop-opacity="0.04" />
+                <stop offset="100%" stop-color="#0A0B0D" stop-opacity="0" />
+              </radialGradient>
+              <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            <!-- Radial amber aura -->
+            <circle cx="160" cy="160" r="140" fill="url(#amberCoreGlow)" />
+
+            <!-- Concentric noise rings with hairlines -->
+            <!-- Ring 1 (outer) -->
+            <ellipse cx="160" cy="160" rx="146" ry="142" stroke="#F59E0B" stroke-opacity="0.45" stroke-width="1.2" stroke-dasharray="4 3" filter="url(#glowFilter)" />
+            <!-- Ring 2 -->
+            <ellipse cx="160" cy="160" rx="134" ry="136" stroke="#F59E0B" stroke-opacity="0.3" stroke-width="1" stroke-dasharray="12 6" />
+            <!-- Ring 3 -->
+            <ellipse cx="160" cy="160" rx="122" ry="118" stroke="#F59E0B" stroke-opacity="0.6" stroke-width="1.2" />
+            <!-- Ring 4 -->
+            <ellipse cx="160" cy="160" rx="108" ry="110" stroke="rgba(255,255,255,0.15)" stroke-width="0.8" stroke-dasharray="3 5" />
+            <!-- Ring 5 -->
+            <ellipse cx="160" cy="160" rx="94" ry="92" stroke="#F59E0B" stroke-opacity="0.75" stroke-width="1.4" filter="url(#glowFilter)" />
+            <!-- Ring 6 -->
+            <ellipse cx="160" cy="160" rx="80" ry="82" stroke="rgba(255,255,255,0.25)" stroke-width="0.7" />
+            <!-- Ring 7 -->
+            <ellipse cx="160" cy="160" rx="66" ry="64" stroke="#F59E0B" stroke-opacity="0.85" stroke-width="1.2" />
+            <!-- Ring 8 -->
+            <ellipse cx="160" cy="160" rx="52" ry="54" stroke="rgba(255,255,255,0.3)" stroke-width="0.8" stroke-dasharray="2 4" />
+            <!-- Ring 9 -->
+            <ellipse cx="160" cy="160" rx="38" ry="36" stroke="#F59E0B" stroke-opacity="0.9" stroke-width="1.5" />
+            <!-- Core dense ring -->
+            <circle cx="160" cy="160" r="22" stroke="#F59E0B" stroke-width="1.8" filter="url(#glowFilter)" />
+            <circle cx="160" cy="160" r="6" fill="#F59E0B" />
+
+            <!-- Particle dots orbiting / distributed along radial nodes -->
+            <circle cx="160" cy="16" r="2" fill="#F59E0B" />
+            <circle cx="280" cy="90" r="1.5" fill="#F2F4F7" opacity="0.6" />
+            <circle cx="298" cy="170" r="2" fill="#F59E0B" />
+            <circle cx="250" cy="245" r="1.5" fill="#F59E0B" opacity="0.8" />
+            <circle cx="160" cy="304" r="2.5" fill="#F59E0B" />
+            <circle cx="70" cy="260" r="1.5" fill="#F2F4F7" opacity="0.6" />
+            <circle cx="24" cy="160" r="2" fill="#F59E0B" />
+            <circle cx="65" cy="80" r="2" fill="#F59E0B" />
+            <!-- Inner orbit particles -->
+            <circle cx="160" cy="66" r="1.5" fill="#F59E0B" />
+            <circle cx="225" cy="120" r="2" fill="#F2F4F7" />
+            <circle cx="205" cy="210" r="1.5" fill="#F59E0B" />
+            <circle cx="115" cy="210" r="2" fill="#F59E0B" />
+            <circle cx="95" cy="125" r="1.5" fill="#F2F4F7" />
+          </svg>
+
+          <!-- Core avionics target reticle -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-12 h-12 border border-[rgba(245,158,11,0.2)] rounded-full"></div>
+            <div class="absolute w-2 h-[1px] bg-[#F59E0B] left-10"></div>
+            <div class="absolute w-2 h-[1px] bg-[#F59E0B] right-10"></div>
+            <div class="absolute h-2 w-[1px] bg-[#F59E0B] top-10"></div>
+            <div class="absolute h-2 w-[1px] bg-[#F59E0B] bottom-10"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Transcript Ribbon: Max three lines before scroll, mono timestamps in muted ink -->
+      <div class="w-full bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[6px] p-3 z-10 max-w-[820px] mx-auto">
+        <div class="flex items-center justify-between pb-2 mb-2 border-b border-[rgba(255,255,255,0.05)]">
+          <div class="flex items-center gap-2">
+            <i class="ph ph-waveform text-[#22D3EE] text-[13px]"></i>
+            <span class="font-display font-semibold text-[10px] text-[#9AA3AE] tracking-[0.08em] uppercase">VOICE STREAM & CONTEXT BUFFER</span>
+          </div>
+          <span class="font-mono text-[10px] text-[#5C6570]">16 kHz · Whisper.cpp (tiny.en)</span>
+        </div>
+
+        <div class="space-y-2 text-[14px] leading-[1.45] font-sans">
+          <!-- User Line -->
+          <div class="flex items-start gap-3">
+            <span class="font-mono text-[11px] text-[#5C6570] pt-[2px] select-none">20:39</span>
+            <div class="flex-1">
+              <span class="font-mono text-[11px] text-[#9AA3AE] mr-1.5 font-medium">YOU:</span>
+              <span class="text-[#F2F4F7]">"Jenna, draft the FUTA workshop invite and check my calendar"</span>
+            </div>
+          </div>
+
+          <!-- Assistant Line -->
+          <div class="flex items-start gap-3">
+            <span class="font-mono text-[11px] text-[#5C6570] pt-[2px] select-none">20:41</span>
+            <div class="flex-1">
+              <span class="font-mono text-[11px] text-[#F59E0B] mr-1.5 font-medium">JENNA:</span>
+              <span class="text-[#F2F4F7]">"Planning now — delegating the draft to Communicator, holding the calendar read until the invite exists."</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- RIGHT RAIL: MEMORY STREAM (336px)          -->
+    <!-- Tab strip Wiki/Memory/Log · Knowledge Graph -->
+    <!-- ========================================== -->
+    <aside class="w-[336px] min-w-[336px] max-w-[336px] bg-[#101215] border-l border-[rgba(255,255,255,0.07)] flex flex-col justify-between z-10">
+      
+      <!-- Tab Strip: Wiki / Memory / Log (Wiki Active) -->
+      <div class="border-b border-[rgba(255,255,255,0.07)] bg-[#101215]">
+        <div class="flex items-center px-2 pt-2 gap-1">
+          <!-- Tab 1: Wiki (Active) -->
+          <button class="px-3 py-1.5 font-display font-semibold text-[11px] uppercase tracking-[0.08em] text-[#F2F4F7] border-b-2 border-[#DC143C] bg-[#15181C] rounded-t-[3px]">
+            Wiki
+          </button>
+          <!-- Tab 2: Memory -->
+          <button class="px-3 py-1.5 font-display font-medium text-[11px] uppercase tracking-[0.08em] text-[#9AA3AE] hover:text-[#F2F4F7] border-b-2 border-transparent transition-colors">
+            Memory
+          </button>
+          <!-- Tab 3: Log -->
+          <button class="px-3 py-1.5 font-display font-medium text-[11px] uppercase tracking-[0.08em] text-[#9AA3AE] hover:text-[#F2F4F7] border-b-2 border-transparent transition-colors">
+            Log
+          </button>
+        </div>
+      </div>
+
+      <!-- Rail Body -->
+      <div class="flex-1 overflow-y-auto p-3 space-y-3">
+
+        <!-- 1. Markdown Note Card with mono frontmatter block -->
+        <div class="bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[6px] p-2.5 space-y-2">
+          <div class="flex items-center justify-between pb-1.5 border-b border-[rgba(255,255,255,0.05)]">
+            <span class="font-display font-semibold text-[10px] text-[#9AA3AE] tracking-[0.08em] uppercase">ENTITY NOTE</span>
+            <span class="font-mono text-[10px] text-[#5C6570]">wiki://futa-workshop.md</span>
+          </div>
+
+          <!-- Frontmatter block in mono -->
+          <div class="bg-[#0A0B0D] border border-[rgba(255,255,255,0.05)] rounded-[3px] p-2 font-mono text-[11px] text-[#9AA3AE] leading-tight space-y-1">
+            <div><span class="text-[#5C6570]">title:</span> <span class="text-[#F2F4F7]">FUTA Workshop</span></div>
+            <div><span class="text-[#5C6570]">tags:</span> <span class="text-[#22D3EE]">[event, campus]</span></div>
+            <div><span class="text-[#5C6570]">updated:</span> <span class="text-[#F2F4F7]">2026-10-26</span></div>
+          </div>
+
+          <!-- Body copy: 3 lines -->
+          <p class="text-[12px] text-[#9AA3AE] leading-[1.4] line-clamp-3">
+            Two-day local AI deployment seminar at Federal University of Technology Akure. Host lab requesting offline LLM inference setup for 45 student workstations.
+          </p>
+        </div>
+
+        <!-- 2. Knowledge-Graph Mini Canvas (180px tall) -->
+        <div class="bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[6px] p-2 flex flex-col">
+          <div class="flex items-center justify-between pb-1 mb-1 border-b border-[rgba(255,255,255,0.05)]">
+            <span class="font-display font-semibold text-[10px] text-[#9AA3AE] tracking-[0.08em] uppercase">KNOWLEDGE TOPOLOGY</span>
+            <span class="font-mono text-[10px] text-[#5C6570]">14 NODES · 18 EDGES</span>
+          </div>
+
+          <!-- 180px SVG Knowledge Graph -->
+          <div class="w-full h-[180px] bg-[#0A0B0D] rounded-[4px] relative overflow-hidden flex items-center justify-center border border-[rgba(255,255,255,0.04)]">
+            <svg class="w-full h-full" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="2" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+
+              <!-- Hairline Edges -->
+              <g stroke="rgba(255,255,255,0.12)" stroke-width="1">
+                <!-- Connected to crimson center entity (150, 90) -->
+                <line x1="150" y1="90" x2="80" y2="50" stroke="#DC143C" stroke-opacity="0.5" stroke-dasharray="2 2" />
+                <line x1="150" y1="90" x2="225" y2="55" stroke="#DC143C" stroke-opacity="0.5" />
+                <line x1="150" y1="90" x2="165" y2="150" />
+                <line x1="150" y1="90" x2="95" y2="135" />
+
+                <!-- Peripheral edges -->
+                <line x1="80" y1="50" x2="30" y2="40" />
+                <line x1="80" y1="50" x2="45" y2="95" />
+                <line x1="225" y1="55" x2="275" y2="40" />
+                <line x1="225" y1="55" x2="265" y2="105" />
+                <line x1="265" y1="105" x2="240" y2="155" />
+                <line x1="165" y1="150" x2="240" y2="155" />
+                <line x1="95" y1="135" x2="45" y2="150" />
+                <line x1="45" y1="95" x2="95" y2="135" />
+                <line x1="130" y1="30" x2="80" y2="50" />
+                <line x1="130" y1="30" x2="225" y2="55" />
+              </g>
+
+              <!-- Background / Secondary Nodes (5px dots) -->
+              <circle cx="30" cy="40" r="3" fill="#5C6570" />
+              <circle cx="130" cy="30" r="3" fill="#5C6570" />
+              <circle cx="275" cy="40" r="3" fill="#5C6570" />
+              <circle cx="45" cy="95" r="3" fill="#5C6570" />
+              <circle cx="265" cy="105" r="3" fill="#5C6570" />
+              <circle cx="45" cy="150" r="3" fill="#5C6570" />
+              <circle cx="95" cy="135" r="3.5" fill="#9AA3AE" />
+              <circle cx="165" cy="150" r="3" fill="#5C6570" />
+              <circle cx="240" cy="155" r="3" fill="#5C6570" />
+
+              <!-- Specific Named Linked Node 1: Invite draft -->
+              <circle cx="80" cy="50" r="4.5" fill="#22D3EE" />
+              <text x="74" y="38" fill="#9AA3AE" font-family="'JetBrains Mono', monospace" font-size="8" text-anchor="middle">Invite draft</text>
+
+              <!-- Specific Named Linked Node 2: Twilio number -->
+              <circle cx="225" cy="55" r="4.5" fill="#10B981" />
+              <text x="235" y="42" fill="#9AA3AE" font-family="'JetBrains Mono', monospace" font-size="8" text-anchor="middle">Twilio number</text>
+
+              <!-- Center Crimson Entity Node: FUTA Workshop -->
+              <circle cx="150" cy="90" r="6" fill="#DC143C" filter="url(#nodeGlow)" />
+              <circle cx="150" cy="90" r="10" stroke="#DC143C" stroke-width="1" stroke-opacity="0.4" />
+              <text x="150" y="112" fill="#F2F4F7" font-family="'Space Grotesk', sans-serif" font-weight="600" font-size="9" text-anchor="middle" letter-spacing="0.05em">FUTA Workshop</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 3. Daily Log Feed (compact timestamped list, 6 rows visible) -->
+        <div class="bg-[#101215] border border-[rgba(255,255,255,0.07)] rounded-[6px] p-2 space-y-1.5">
+          <div class="flex items-center justify-between pb-1 border-b border-[rgba(255,255,255,0.05)]">
+            <span class="font-display font-semibold text-[10px] text-[#9AA3AE] tracking-[0.08em] uppercase">SESSION LOG</span>
+            <span class="font-mono text-[10px] text-[#5C6570]">TODAY</span>
+          </div>
+
+          <div class="space-y-1 font-mono text-[11px]">
+            <!-- Row 1 -->
+            <div class="flex items-center gap-2 py-0.5 border-b border-[rgba(255,255,255,0.03)]">
+              <span class="text-[#5C6570]">20:41:04</span>
+              <span class="text-[#F59E0B]">PLAN</span>
+              <span class="text-[#9AA3AE] truncate">graph: subtask #2 dispatched</span>
+            </div>
+            <!-- Row 2 -->
+            <div class="flex items-center gap-2 py-0.5 border-b border-[rgba(255,255,255,0.03)]">
+              <span class="text-[#5C6570]">20:40:48</span>
+              <span class="text-[#22D3EE]">VAD</span>
+              <span class="text-[#9AA3AE] truncate">speech endpoint verified (1.8s)</span>
+            </div>
+            <!-- Row 3 -->
+            <div class="flex items-center gap-2 py-0.5 border-b border-[rgba(255,255,255,0.03)]">
+              <span class="text-[#5C6570]">20:39:12</span>
+              <span class="text-[#DC143C]">RECV</span>
+              <span class="text-[#F2F4F7] truncate">intent: draft invite + calendar</span>
+            </div>
+            <!-- Row 4 -->
+            <div class="flex items-center gap-2 py-0.5 border-b border-[rgba(255,255,255,0.03)]">
+              <span class="text-[#5C6570]">20:36:55</span>
+              <span class="text-[#10B981]">SYNC</span>
+              <span class="text-[#9AA3AE] truncate">chromadb collection re-indexed</span>
+            </div>
+            <!-- Row 5 -->
+            <div class="flex items-center gap-2 py-0.5 border-b border-[rgba(255,255,255,0.03)]">
+              <span class="text-[#5C6570]">20:32:10</span>
+              <span class="text-[#9AA3AE]">AUTH</span>
+              <span class="text-[#9AA3AE] truncate">whisper.cpp core warmed up</span>
+            </div>
+            <!-- Row 6 -->
+            <div class="flex items-center gap-2 py-0.5">
+              <span class="text-[#5C6570]">20:28:02</span>
+              <span class="text-[#10B981]">BOOT</span>
+              <span class="text-[#9AA3AE] truncate">squad 5/5 initialized on CPU</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Rail Footer: Solid Crimson "Quick add" button with mic glyph -->
+      <div class="p-3 border-t border-[rgba(255,255,255,0.07)] bg-[#101215]">
+        <button class="w-full h-8 flex items-center justify-center gap-2 bg-[#DC143C] hover:bg-[#b01030] text-[#0A0B0D] font-sans font-medium text-[13px] rounded-[6px] transition-colors shadow-sm">
+          <i class="ph ph-microphone text-[15px] font-bold"></i>
+          <span>Quick add</span>
+        </button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- ROW 3: FLOATING ACTION DOCK (88px, inset 16px, backdrop blur, hairline-top) -->
+  <!-- ========================================================================= -->
+  <footer class="fixed bottom-4 left-4 right-4 h-[88px] bg-[rgba(16,18,21,0.72)] backdrop-blur-[18px] border-t border-[rgba(255,255,255,0.13)] border-x border-b border-[rgba(255,255,255,0.07)] rounded-[14px] px-6 flex items-center justify-between shadow-[0_12px_32px_rgba(0,0,0,0.55)] z-40">
+    
+    <!-- Dock Left: Push-to-Talk Orb (56px) + Hotkey caption -->
+    <div class="flex items-center gap-3">
+      <div class="relative flex items-center justify-center">
+        <!-- 56px Orb button -->
+        <button class="w-[56px] h-[56px] rounded-full bg-[#15181C] border border-[#DC143C] hover:bg-[#DC143C]/20 flex items-center justify-center transition-all group relative shadow-[0_0_16px_rgba(220,20,60,0.25)]">
+          <div class="w-8 h-8 rounded-full bg-[#DC143C]/20 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <i class="ph ph-microphone text-[20px] text-[#DC143C]"></i>
+          </div>
+          <!-- subtle listening ping ring -->
+          <span class="absolute inset-0 rounded-full border border-[#DC143C] opacity-40 animate-ping"></span>
+        </button>
+      </div>
+
+      <div class="flex flex-col">
+        <span class="font-display font-semibold text-[11px] uppercase tracking-[0.08em] text-[#F2F4F7]">Push to Talk</span>
+        <span class="font-mono text-[10px] text-[#9AA3AE] bg-[#15181C] border border-[rgba(255,255,255,0.07)] px-1.5 py-[1px] rounded-[3px] mt-0.5 inline-block w-fit">
+          Ctrl+Alt+Space
+        </span>
+      </div>
+    </div>
+
+    <!-- Dock Centre: 32-Bar Live Spectrum in amber (2px bars, 2px gap) -->
+    <div class="flex flex-col items-center gap-1.5">
+      <div class="flex items-end gap-[2px] h-[36px] px-4 py-1 bg-[#101215]/80 border border-[rgba(255,255,255,0.05)] rounded-[6px]">
+        <!-- 32 bars with dynamic heights -->
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[8px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[14px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[22px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[18px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[28px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[12px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[32px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[26px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[16px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[20px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[34px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[28px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[24px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[18px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[30px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[35px]"></div>
+        <!-- symmetry peak -->
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[32px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[25px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[19px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[27px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[33px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[22px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[15px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[28px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[30px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[18px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[12px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[24px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[16px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[10px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[6px]"></div>
+        <div class="w-[2px] bg-[#F59E0B] rounded-none h-[4px]"></div>
+      </div>
+      <span class="font-mono text-[10px] text-[#5C6570] tracking-wider uppercase">60 HZ · DSP AUDIO SPECTRUM</span>
+    </div>
+
+    <!-- Dock Right: 3 Quick Tools + Model Switcher -->
+    <div class="flex items-center gap-3">
+      
+      <!-- Quick-tool tiles: AgentPhone, AgentMail, Sandbox Terminal -->
+      <div class="flex items-center gap-1.5">
+        <!-- Tile 1: AgentPhone -->
+        <button class="flex flex-col items-center justify-center w-[60px] h-[52px] bg-[#15181C] hover:bg-[#1a1e24] border border-[rgba(255,255,255,0.07)] hover:border-[#DC143C]/60 rounded-[6px] transition-colors group">
+          <i class="ph ph-phone-call text-[20px] text-[#9AA3AE] group-hover:text-[#F2F4F7]"></i>
+          <span class="text-[11px] font-sans text-[#9AA3AE] group-hover:text-[#F2F4F7] mt-0.5">Phone</span>
+        </button>
+
+        <!-- Tile 2: AgentMail -->
+        <button class="flex flex-col items-center justify-center w-[60px] h-[52px] bg-[#15181C] hover:bg-[#1a1e24] border border-[rgba(255,255,255,0.07)] hover:border-[#DC143C]/60 rounded-[6px] transition-colors group">
+          <i class="ph ph-envelope-simple text-[20px] text-[#9AA3AE] group-hover:text-[#F2F4F7]"></i>
+          <span class="text-[11px] font-sans text-[#9AA3AE] group-hover:text-[#F2F4F7] mt-0.5">Mail</span>
+        </button>
+
+        <!-- Tile 3: Sandbox Terminal -->
+        <button class="flex flex-col items-center justify-center w-[60px] h-[52px] bg-[#15181C] hover:bg-[#1a1e24] border border-[rgba(255,255,255,0.07)] hover:border-[#DC143C]/60 rounded-[6px] transition-colors group">
+          <i class="ph ph-terminal-window text-[20px] text-[#9AA3AE] group-hover:text-[#F2F4F7]"></i>
+          <span class="text-[11px] font-sans text-[#9AA3AE] group-hover:text-[#F2F4F7] mt-0.5">Terminal</span>
+        </button>
+      </div>
+
+      <div class="h-8 w-[1px] bg-[rgba(255,255,255,0.07)] mx-1"></div>
+
+      <!-- Model Switcher Select -->
+      <div class="flex flex-col gap-1">
+        <label class="font-display font-medium text-[9px] text-[#5C6570] uppercase tracking-[0.08em]">Default Model</label>
+        <div class="relative">
+          <select class="appearance-none bg-[#15181C] border border-[rgba(255,255,255,0.12)] hover:border-[#DC143C] text-[#F2F4F7] font-mono text-[11px] rounded-[4px] py-1.5 pl-2.5 pr-8 cursor-pointer focus:outline-none focus:border-[#DC143C] transition-colors">
+            <option>Qwen3.5-0.8B · fast</option>
+            <option>Qwen2.5-Coder-3B</option>
+            <option>Ministral-3B</option>
+            <option>Nemotron-30B-MoE</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#9AA3AE]">
+            <i class="ph ph-caret-down text-[10px]"></i>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </footer>
+
+</body>
+</html>

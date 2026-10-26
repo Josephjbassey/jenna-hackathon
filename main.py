@@ -343,10 +343,18 @@ def start_cli(voice: bool = False):
 def start_api():
     import uvicorn
     from fastapi import FastAPI
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
     from pydantic import BaseModel
+    from pathlib import Path
 
     app = FastAPI(title=f"{ASSISTANT_NAME} API")
     agent = build_agent()
+
+    # Serve overlay static assets (theme switcher CSS/JS)
+    static_dir = Path(__file__).parent / "overlay"
+    if static_dir.exists():
+        app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
     class TurnIn(BaseModel):
         text: str
@@ -361,6 +369,67 @@ def start_api():
     @app.get("/health")
     async def health():
         return {"status": "ok", "agent": ASSISTANT_NAME}
+
+    # Theme API endpoints
+    from jenna.themes import REGISTRY
+
+    @app.get("/api/themes")
+    async def list_themes():
+        return REGISTRY.list_themes()
+
+    @app.get("/api/themes/{theme_name}/css")
+    async def get_theme_css(theme_name: str):
+        css = REGISTRY.css_variables(theme_name, prefix="jenna")
+        from fastapi.responses import Response
+        return Response(content=css, media_type="text/css")
+
+    @app.get("/api/themes/current")
+    async def get_current_theme():
+        # Detect current Omarchy theme
+        current = REGISTRY.current_omarchy_theme()
+        return {"theme": current or "catppuccin"}
+
+    # Cross-Agent Memory API endpoints
+    from jenna.memory.cross_agent import get_cross_agent_memory
+    from pydantic import BaseModel
+    from typing import Optional
+
+    class MemorySearchIn(BaseModel):
+        query: str
+        agent: Optional[str] = None
+        days: int = 30
+        limit: int = 50
+
+    class MemoryDigestIn(BaseModel):
+        days: int = 1
+        vault_path: Optional[str] = None
+
+    @app.get("/api/memory/stats")
+    async def memory_stats():
+        mem = get_cross_agent_memory()
+        return mem.stats()
+
+    @app.post("/api/memory/ingest")
+    async def memory_ingest():
+        mem = get_cross_agent_memory()
+        return mem.ingest_all()
+
+    @app.post("/api/memory/search")
+    async def memory_search(payload: MemorySearchIn):
+        mem = get_cross_agent_memory()
+        return mem.search(payload.query, payload.agent, payload.days, payload.limit)
+
+    @app.get("/api/memory/recent")
+    async def memory_recent(agent: Optional[str] = None, days: int = 7, limit: int = 100):
+        mem = get_cross_agent_memory()
+        return mem.recent(agent, days, limit)
+
+    @app.post("/api/memory/digest")
+    async def memory_digest(payload: MemoryDigestIn):
+        mem = get_cross_agent_memory()
+        vault = Path(payload.vault_path) if payload.vault_path else Path.home() / "wiki"
+        digest_file = mem.write_daily_digest(vault, payload.days)
+        return {"digest_file": str(digest_file)}
 
     uvicorn.run(app, host=DASHBOARD_HOST, port=DASHBOARD_PORT)
 
