@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jenna — Agent</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 420px; height: 560px; background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
+    color: #e2e8f0; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center;
+    overflow: hidden;
+  }
+  .orb {
+    width: 180px; height: 180px; border-radius: 50%; margin-top: 60px;
+    background: conic-gradient(from 0deg, #00f0ff, #79c0ff, #00f0ff);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; box-shadow: 0 0 40px rgba(0,240,255,0.25); border: 2px solid #1e293b;
+  }
+  .orb-inner {
+    width: 110px; height: 110px; border-radius: 50%; background: #0f0f1a;
+    display: flex; align-items: center; justify-content: center; font-weight: 800; letter-spacing: 2px;
+    font-size: 14px; color: #00f0ff; z-index: 2;
+  }
+  .orb .pulse {
+    position: absolute; width: 100%; height: 100%; border-radius: 50%;
+    border: 2px solid #00f0ff; opacity: 0; animation: pulse 2s infinite;
+  }
+  .state-idle .pulse { animation: none; opacity: 0; }
+  .state-listening .orb { background: conic-gradient(from 0deg, #dc143c, #ff4d4d, #dc143c); box-shadow: 0 0 50px rgba(220,20,60,0.4); }
+  .state-listening .orb-inner { color: #dc143c; }
+  .state-listening .pulse { border-color: #dc143c; opacity: 0.5; animation: pulse 1.2s infinite; }
+  .state-thinking .orb { background: conic-gradient(from 0deg, #fbbf24, #fdba74, #fbbf24); box-shadow: 0 0 50px rgba(251,191,36,0.4); }
+  .state-thinking .orb-inner { color: #fbbf24; }
+  .state-thinking .pulse { border-color: #fbbf24; opacity: 0.5; animation: pulse 1.2s infinite; }
+  .state-speaking .orb { background: conic-gradient(from 0deg, #10b981, #34d399, #10b981); box-shadow: 0 0 50px rgba(16,185,129,0.4); }
+  .state-speaking .orb-inner { color: #10b981; }
+  .state-speaking .pulse { border-color: #10b981; opacity: 0.5; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.6; } 70% { transform: scale(1.15); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
+  .label { margin-top: 16px; font-size: 13px; color: #94a3b8; text-align: center; }
+  .controls { margin-top: 24px; width: 90%; display: flex; gap: 10px; justify-content: center; }
+  button {
+    flex: 1; padding: 10px 14px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0;
+    border-radius: 8px; font-size: 13px; cursor: pointer;
+  }
+  button:hover { border-color: #475569; background: #334155; }
+  button:active { background: #0f172a; }
+  .quit { flex: 1; padding: 10px 14px; border: 1px solid #334155; background: transparent; color: #94a3b8;
+    border-radius: 8px; font-size: 12px; cursor: pointer; margin-top: 8px; }
+  .quit:hover { color: #e2e8f0; border-color: #475569; }
+  .status { margin-top: 10px; font-size: 12px; color: #64748b; text-align: center; min-height: 16px; }
+</style>
+</head>
+<body class="state-idle">
+  <div class="orb">
+    <div class="pulse"></div>
+    <div class="orb-inner">J</div>
+  </div>
+  <div class="label">Jenna · Desktop AI Agent</div>
+  <div class="status" id="status">Idle — Ctrl+Alt+Space to speak</div>
+  <div class="controls">
+    <button id="btnListen">Hold to speak</button>
+  </div>
+  <div class="quit" id="btnQuit">Quit</div>
+<script>
+  const api = window.pywebview.api;
+  const body = document.body;
+  const status = document.getElementById('status');
+  const btnListen = document.getElementById('btnListen');
+  const btnQuit = document.getElementById('btnQuit');
+
+  function setState(state) {
+    body.className = 'state-' + state;
+    const map = { idle: 'Idle — Ctrl+Alt+Space to speak', listening: 'Listening…', thinking: 'Thinking…', speaking: 'Speaking…', loading: 'Loading model…' };
+    status.textContent = map[state] || state;
+  }
+  window.setState = setState;
+
+  let listening = false;
+  btnListen.addEventListener('mousedown', () => { listening = true; btnListen.textContent = 'Release to send'; });
+  btnListen.addEventListener('mouseup', () => { if (listening) { listening = false; btnListen.textContent = 'Hold to speak'; api.quit && null; } });
+  btnListen.addEventListener('mouseleave', () => { listening = false; btnListen.textContent = 'Hold to speak'; });
+
+  btnQuit.addEventListener('click', () => { api.quit(); });
+
+  // Expose term-style hooks the desktop main.py may call
+  window.termStartAssistant = () => setState('thinking');
+  window.termAppend = () => {};
+  window.termFinish = () => setState('idle');
+  window.termPrint = () => {};
+  window.showView = () => {};
+</script>
+</body>
+</html>

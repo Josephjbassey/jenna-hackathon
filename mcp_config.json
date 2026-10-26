@@ -1,0 +1,8 @@
+{
+  "filesystem": {
+    "enabled": false,
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/jabs"],
+    "timeout": 30
+  }
+}
