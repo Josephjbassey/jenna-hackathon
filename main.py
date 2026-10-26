@@ -10,6 +10,7 @@ Usage:
 """
 import argparse
 import asyncio
+import json
 import os
 import sys
 import threading
@@ -43,7 +44,12 @@ async def _build_agent_async():
     tools = load_skills()
     mcp_tools = await load_mcp_tools()
     all_tools = tools + mcp_tools
-    return Agent("fast", all_tools)
+    try:
+        from core.graph_agent import JennaGraphAgent
+        return JennaGraphAgent(all_tools)
+    except Exception as e:
+        console.print(f"[yellow]Notice: LangGraph init fallback to ReAct Agent ({e})[/yellow]")
+        return Agent("fast", all_tools)
 
 
 def build_agent():
@@ -86,15 +92,147 @@ def start_desktop():
                 window.destroy()
 
         def get_models(self):
-            from config import MODELS
-            return MODELS
+            from config import discover_all_models
+            return discover_all_models()
 
-        def switch_model(self, model_key: str):
+        def switch_model(self, model_name: str, provider: str = "ollama"):
             nonlocal agent
             set_state("loading")
-            agent = Agent(model_key, load_skills())
+            from config import MODELS
+            MODELS["fast"] = model_name
+            # Rebuild graph agent or reconfigure
+            from core.agent_core import load_skills, load_mcp_tools
+            from core.graph_agent import JennaGraphAgent
+            tools = load_skills()
+            mcp_tools = _run_coro(load_mcp_tools())
+            agent = JennaGraphAgent(tools + mcp_tools)
             set_state("idle")
-            console.print(f"[agent] switched to {model_key}")
+            console.print(f"[agent] switched active model to {model_name} ({provider})")
+            return {"status": "ok", "active": model_name, "provider": provider}
+
+        def get_available_voices(self):
+            from voice.voice_io import get_available_voices, get_current_voice
+            return {
+                "voices": get_available_voices(),
+                "current": get_current_voice(),
+            }
+
+        def set_voice(self, voice_id: str, engine: str = None):
+            from voice.voice_io import set_voice
+            return set_voice(voice_id, engine)
+
+        def get_vision_permissions(self):
+            from config import get_vision_permissions
+            return get_vision_permissions()
+
+        def set_vision_permission(self, target: str, allowed: bool):
+            from config import set_vision_permission
+            return set_vision_permission(target, allowed)
+
+        def get_hermes_learnings(self):
+            from skills.self_improvement import review_recent_learnings
+            return review_recent_learnings.invoke({"limit": 8})
+
+        def get_telemetry(self):
+            import psutil, platform, shutil
+            try:
+                vm = psutil.virtual_memory()
+                cpu = psutil.cpu_percent(interval=None)
+                path = "C:\\" if platform.system().lower() == "windows" else "/"
+                total, used, free = shutil.disk_usage(path)
+                return {
+                    "cpu_percent": cpu,
+                    "ram_used_mb": (vm.total - vm.available) // (2**20),
+                    "ram_total_mb": vm.total // (2**20),
+                    "ram_percent": vm.percent,
+                    "disk_free_gb": free // (2**30),
+                    "disk_total_gb": total // (2**30),
+                    "os": f"{platform.system()} {platform.release()}",
+                }
+            except Exception as e:
+                return {"error": str(e)}
+
+        def get_squad_info(self):
+            from config import SQUAD_ROLES, MODELS, MODEL_PROVIDERS, PROVIDER_MODELS, OLLAMA_HOST, LMSTUDIO_HOST
+            import urllib.request
+            ollama_ok = False
+            try:
+                urllib.request.urlopen(f"{OLLAMA_HOST.rstrip('/')}/api/tags", timeout=0.6)
+                ollama_ok = True
+            except Exception:
+                pass
+
+            lmstudio_ok = False
+            try:
+                urllib.request.urlopen(f"{LMSTUDIO_HOST.rstrip('/')}/models", timeout=0.6)
+                lmstudio_ok = True
+            except Exception:
+                pass
+
+            roles = []
+            for r_key, meta in SQUAD_ROLES.items():
+                prov = MODEL_PROVIDERS.get(r_key, "ollama")
+                if prov in ("nvidia", "ultramarine", "lmstudio"):
+                    model_tag = PROVIDER_MODELS.get(prov, {}).get(r_key, "default")
+                else:
+                    model_tag = MODELS.get(r_key, "default")
+                roles.append({
+                    "key": r_key,
+                    "name": meta.get("name"),
+                    "description": meta.get("description"),
+                    "model": model_tag,
+                    "provider": prov,
+                })
+
+            return {
+                "roles": roles,
+                "ollama_online": ollama_ok,
+                "lmstudio_online": lmstudio_ok,
+            }
+
+        def get_obsidian_data(self):
+            from config import OBSIDIAN_VAULT_PATH
+            log_file = OBSIDIAN_VAULT_PATH / "log.md"
+            logs = []
+            if log_file.exists():
+                try:
+                    content = log_file.read_text(encoding="utf-8")
+                    lines = [l.strip() for l in content.splitlines() if l.strip()]
+                    logs = lines[-12:]
+                except Exception:
+                    pass
+
+            notes = []
+            try:
+                for p in list(OBSIDIAN_VAULT_PATH.rglob("*.md"))[:15]:
+                    notes.append(str(p.relative_to(OBSIDIAN_VAULT_PATH)))
+            except Exception:
+                pass
+
+            return {
+                "vault_path": str(OBSIDIAN_VAULT_PATH),
+                "recent_logs": logs,
+                "recent_notes": notes,
+            }
+
+        def save_obsidian_entry(self, text: str):
+            from skills.obsidian_tools import log_to_obsidian_journal
+            return log_to_obsidian_journal.invoke({"entry": text})
+
+        def run_sandbox_command(self, cmd: str):
+            from skills.computer_tools import run_command_in_sandbox
+            return run_command_in_sandbox.invoke({"command": cmd})
+
+        def send_chat_turn(self, text: str):
+            nonlocal agent, window
+            set_state("thinking")
+            reply = _run_coro(agent.run_turn(text))
+            set_state("idle")
+            return {"reply": reply}
+
+        def trigger_voice_record(self):
+            threading.Thread(target=handle_voice_turn, daemon=True).start()
+            return {"status": "listening"}
 
     def handle_voice_turn():
         nonlocal window, agent
@@ -109,23 +247,22 @@ def start_desktop():
             set_state("idle")
             return
         console.print(f"\n[bold white]{USER_NAME}:[/bold white] {text}")
+        if window:
+            try:
+                window.evaluate_js(f"window.appendUserTurn && window.appendUserTurn({json.dumps(text)})")
+            except Exception:
+                pass
         reply = _run_coro(agent.run_turn(text))
         console.print(f"[bold magenta]{ASSISTANT_NAME}:[/bold magenta] {reply}")
+        if window:
+            try:
+                window.evaluate_js(f"window.appendAssistantTurn && window.appendAssistantTurn({json.dumps(reply)})")
+            except Exception:
+                pass
         set_state("speaking")
         speak(reply)
         play_done_tone()
         set_state("idle")
-
-    def on_press(key):
-        try:
-            current = set()
-            # track modifiers simply
-            current.add(key)
-            if HOTKEY and key in HOTKEY:
-                # require full combo via check in listener state below
-                pass
-        except Exception:
-            pass
 
     # Robust hotkey: track pressed set
     _pressed = set()
@@ -143,15 +280,16 @@ def start_desktop():
     html_path = os.path.join(overlay_dir, "index.html")
     api = Api()
     window = webview.create_window(
-        f"{ASSISTANT_NAME} — {USER_NAME}'s Agent",
+        f"{ASSISTANT_NAME} AI OS — Executive Suite",
         html_path,
         js_api=api,
-        width=420,
-        height=560,
-        resizable=False,
-        frameless=True,
+        width=1240,
+        height=780,
+        min_size=(960, 600),
+        resizable=True,
+        frameless=False,
         easy_drag=True,
-        on_top=True,
+        on_top=False,
     )
 
     listener = keyboard.Listener(on_press=on_press_kb, on_release=on_release_kb)
@@ -231,11 +369,15 @@ def main():
     parser = argparse.ArgumentParser(description=f"{ASSISTANT_NAME} — local voice AI agent")
     parser.add_argument("--desktop", action="store_true", help="Desktop orb overlay + push-to-talk")
     parser.add_argument("--cli", action="store_true", help="Terminal chat")
+    parser.add_argument("--tui", action="store_true", help="Hermes-style interactive Terminal User Interface")
     parser.add_argument("--api", action="store_true", help="FastAPI HTTP API")
     parser.add_argument("--voice", action="store_true", help="Force voice mode on CLI")
     args = parser.parse_args()
 
-    if args.api:
+    if args.tui:
+        from tui.hermes_tui import start_hermes_tui
+        start_hermes_tui(voice_playback=args.voice)
+    elif args.api:
         start_api()
     elif args.cli:
         start_cli(voice=args.voice)

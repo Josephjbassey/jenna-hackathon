@@ -3,92 +3,1903 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jenna — Agent</title>
+<title>Jenna AI OS — Executive Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Three.js: offline local bundle with fallback -->
+<script src="three.min.js"></script>
+<script>
+  if (typeof THREE === 'undefined') {
+    document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+  }
+</script>
 <style>
+  :root {
+    --bg-dark: #070b14;
+    --card-bg: rgba(14, 20, 36, 0.72);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-hover: rgba(26, 36, 62, 0.85);
+    --accent-cyan: #00f0ff;
+    --accent-violet: #8b5cf6;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-dim: #64748b;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  
   body {
-    width: 420px; height: 560px; background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1a 100%);
-    color: #e2e8f0; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center;
+    width: 100vw; height: 100vh;
+    background-color: var(--bg-dark);
+    background-image: 
+      radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 45%),
+      radial-gradient(circle at 15% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 45%);
+    color: var(--text-primary);
+    font-family: 'Outfit', -apple-system, sans-serif;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* ─── Top Telemetry Header ────────────────────────────────────────────── */
+  header {
+    height: 72px; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(11, 17, 32, 0.75);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--card-border);
+    z-index: 10;
+  }
+
+  .brand {
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  .brand-glyph {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800; color: var(--accent-cyan);
+  }
+
+  .brand-text h1 {
+    font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
+    background: linear-gradient(90deg, #fff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+
+  .brand-text p {
+    font-size: 11px; color: var(--text-dim); letter-spacing: 0.3px;
+  }
+
+  .telemetry-cluster {
+    display: flex; align-items: center; gap: 20px;
+  }
+
+  .meter-pill {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 6px 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .meter-dial {
+    width: 32px; height: 32px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+  }
+
+  .meter-dial svg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .meter-label {
+    display: flex; flex-direction: column;
+  }
+
+  .meter-label span:first-child {
+    font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 600;
+  }
+
+  .meter-label span:last-child {
+    font-size: 13px; font-weight: 600; font-family: 'JetBrains Mono', monospace; color: var(--accent-cyan);
+  }
+
+  .engine-badges {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .engine-pill {
+    padding: 5px 10px; border-radius: 8px;
+    font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--card-border);
+    transition: all 0.3s;
+  }
+
+  .engine-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--text-dim);
+  }
+
+  .engine-pill.online {
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+  .engine-pill.online .engine-dot {
+    background: var(--accent-emerald);
+    box-shadow: 0 0 8px var(--accent-emerald);
+  }
+
+  .engine-pill.lmstudio.online {
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+  .engine-pill.lmstudio.online .engine-dot {
+    background: var(--accent-violet);
+    box-shadow: 0 0 8px var(--accent-violet);
+  }
+
+  /* ─── Main Tri-Column Layout ─────────────────────────────────────────── */
+  main {
+    flex: 1; display: grid;
+    grid-template-columns: 290px 1fr 340px;
+    gap: 16px; padding: 16px 20px;
     overflow: hidden;
   }
-  .orb {
-    width: 180px; height: 180px; border-radius: 50%; margin-top: 60px;
-    background: conic-gradient(from 0deg, #00f0ff, #79c0ff, #00f0ff);
+
+  .glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(24px);
+    border-radius: 18px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  .card-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .card-header h2 {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+
+  /* ─── Left Column: Squad Roster ──────────────────────────────────────── */
+  .squad-list {
+    flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 10px;
+    overflow-y: auto;
+  }
+
+  .squad-card {
+    padding: 12px 14px; border-radius: 12px;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid var(--card-border);
+    display: flex; flex-direction: column; gap: 6px;
+    cursor: pointer; transition: all 0.25s ease;
+  }
+
+  .squad-card:hover {
+    background: var(--card-hover);
+    border-color: rgba(0, 240, 255, 0.25);
+    transform: translateY(-2px);
+  }
+
+  .squad-card.active {
+    background: rgba(0, 240, 255, 0.08);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.15);
+  }
+
+  .squad-top {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .squad-identity {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .squad-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
     display: flex; align-items: center; justify-content: center;
-    position: relative; box-shadow: 0 0 40px rgba(0,240,255,0.25); border: 2px solid #1e293b;
+    font-size: 14px;
   }
-  .orb-inner {
-    width: 110px; height: 110px; border-radius: 50%; background: #0f0f1a;
-    display: flex; align-items: center; justify-content: center; font-weight: 800; letter-spacing: 2px;
-    font-size: 14px; color: #00f0ff; z-index: 2;
+
+  .squad-name {
+    font-size: 13px; font-weight: 700; color: #fff;
   }
-  .orb .pulse {
-    position: absolute; width: 100%; height: 100%; border-radius: 50%;
-    border: 2px solid #00f0ff; opacity: 0; animation: pulse 2s infinite;
+
+  .squad-badge {
+    font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 6px;
+    background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .state-idle .pulse { animation: none; opacity: 0; }
-  .state-listening .orb { background: conic-gradient(from 0deg, #dc143c, #ff4d4d, #dc143c); box-shadow: 0 0 50px rgba(220,20,60,0.4); }
-  .state-listening .orb-inner { color: #dc143c; }
-  .state-listening .pulse { border-color: #dc143c; opacity: 0.5; animation: pulse 1.2s infinite; }
-  .state-thinking .orb { background: conic-gradient(from 0deg, #fbbf24, #fdba74, #fbbf24); box-shadow: 0 0 50px rgba(251,191,36,0.4); }
-  .state-thinking .orb-inner { color: #fbbf24; }
-  .state-thinking .pulse { border-color: #fbbf24; opacity: 0.5; animation: pulse 1.2s infinite; }
-  .state-speaking .orb { background: conic-gradient(from 0deg, #10b981, #34d399, #10b981); box-shadow: 0 0 50px rgba(16,185,129,0.4); }
-  .state-speaking .orb-inner { color: #10b981; }
-  .state-speaking .pulse { border-color: #10b981; opacity: 0.5; animation: pulse 1.2s infinite; }
-  @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.6; } 70% { transform: scale(1.15); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
-  .label { margin-top: 16px; font-size: 13px; color: #94a3b8; text-align: center; }
-  .controls { margin-top: 24px; width: 90%; display: flex; gap: 10px; justify-content: center; }
-  button {
-    flex: 1; padding: 10px 14px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0;
-    border-radius: 8px; font-size: 13px; cursor: pointer;
+
+  .squad-model {
+    font-size: 11px; font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-cyan); background: rgba(0, 0, 0, 0.25);
+    padding: 4px 8px; border-radius: 6px; width: fit-content;
   }
-  button:hover { border-color: #475569; background: #334155; }
-  button:active { background: #0f172a; }
-  .quit { flex: 1; padding: 10px 14px; border: 1px solid #334155; background: transparent; color: #94a3b8;
-    border-radius: 8px; font-size: 12px; cursor: pointer; margin-top: 8px; }
-  .quit:hover { color: #e2e8f0; border-color: #475569; }
-  .status { margin-top: 10px; font-size: 12px; color: #64748b; text-align: center; min-height: 16px; }
+
+  .squad-desc {
+    font-size: 11px; color: var(--text-dim); line-height: 1.35;
+  }
+
+  /* ─── Center Column: 3D Core & Stage ─────────────────────────────────── */
+  .center-stage {
+    position: relative; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between;
+    padding: 16px;
+  }
+
+  #canvas-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 70%;
+    z-index: 1; pointer-events: none;
+  }
+
+  .core-status-pill {
+    z-index: 2; margin-top: 12px;
+    padding: 6px 16px; border-radius: 20px;
+    background: rgba(11, 17, 32, 0.7);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    backdrop-filter: blur(16px);
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--accent-cyan);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+  }
+
+  .status-pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 10px var(--accent-cyan);
+    animation: corePulse 1.8s infinite;
+  }
+
+  @keyframes corePulse {
+    0%, 100% { transform: scale(0.9); opacity: 0.7; }
+    50% { transform: scale(1.3); opacity: 1; }
+  }
+
+  /* Live Turn Dialogue Box */
+  .dialogue-stream {
+    z-index: 2; width: 100%; max-height: 180px;
+    margin-bottom: 12px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 0 12px;
+  }
+
+  .bubble {
+    padding: 10px 14px; border-radius: 12px;
+    font-size: 13px; line-height: 1.45; max-width: 85%;
+    backdrop-filter: blur(16px);
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .bubble.user {
+    align-self: flex-end;
+    background: rgba(0, 240, 255, 0.12);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    color: #e2e8f0; border-bottom-right-radius: 2px;
+  }
+
+  .bubble.assistant {
+    align-self: flex-start;
+    background: rgba(139, 92, 246, 0.14);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #f1f5f9; border-bottom-left-radius: 2px;
+  }
+
+  .chat-input-bar {
+    z-index: 2; width: 100%; display: flex; gap: 8px;
+  }
+
+  .chat-input-bar input {
+    flex: 1; padding: 12px 16px; border-radius: 12px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--card-border);
+    color: #fff; font-family: inherit; font-size: 13px;
+    outline: none; transition: border-color 0.2s;
+  }
+
+  .chat-input-bar input:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+  }
+
+  .chat-input-bar button {
+    padding: 12px 18px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+    border: none; color: #070b14; font-weight: 700;
+    font-size: 13px; cursor: pointer; transition: all 0.2s;
+  }
+
+  .chat-input-bar button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+  }
+
+  /* ─── Right Column: Obsidian Wiki & Knowledge Graph ──────────────────── */
+  .obsidian-panel {
+    display: flex; flex-direction: column;
+  }
+
+  .tab-bar {
+    display: flex; padding: 4px; background: rgba(11, 17, 32, 0.6);
+    border-radius: 10px; margin: 12px 14px 6px; gap: 4px;
+  }
+
+  .tab-btn {
+    flex: 1; padding: 6px 8px; border-radius: 8px;
+    background: transparent; border: none;
+    font-size: 11px; font-weight: 600; color: var(--text-dim);
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+  }
+
+  .tab-content {
+    flex: 1; padding: 12px 14px; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  .obsidian-log-item {
+    padding: 8px 10px; border-radius: 8px;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid var(--card-border);
+    font-size: 11.5px; line-height: 1.4; color: var(--text-secondary);
+  }
+
+  .obsidian-log-item strong {
+    color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+  }
+
+  /* Interactive Graph SVG */
+  .graph-container {
+    width: 100%; height: 200px; border-radius: 12px;
+    background: rgba(10, 15, 28, 0.7);
+    border: 1px solid var(--card-border);
+    position: relative; overflow: hidden;
+  }
+
+  .graph-container svg {
+    width: 100%; height: 100%;
+  }
+
+  .obsidian-quick-log {
+    padding: 10px 14px; border-top: 1px solid var(--card-border);
+    display: flex; gap: 8px;
+  }
+
+  .obsidian-quick-log input {
+    flex: 1; padding: 8px 12px; border-radius: 8px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid var(--card-border);
+    color: #fff; font-size: 12px; outline: none;
+  }
+
+  .obsidian-quick-log button {
+    padding: 8px 14px; border-radius: 8px;
+    background: rgba(139, 92, 246, 0.25);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: #e2e8f0; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+
+  /* ─── Bottom Control Dock ────────────────────────────────────────────── */
+  footer {
+    height: 90px; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(11, 17, 32, 0.85);
+    backdrop-filter: blur(24px);
+    border-top: 1px solid var(--card-border);
+    z-index: 10;
+  }
+
+  .ptt-cluster {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .ptt-button {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    border: 2px solid rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 24px rgba(0, 240, 255, 0.35);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ptt-button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 32px rgba(0, 240, 255, 0.55);
+  }
+
+  .ptt-button:active, .ptt-button.recording {
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+    border-color: rgba(244, 63, 94, 0.6);
+    box-shadow: 0 0 36px rgba(244, 63, 94, 0.7);
+    transform: scale(0.96);
+  }
+
+  .ptt-button svg {
+    width: 24px; height: 24px; fill: #fff;
+  }
+
+  /* Frequency Spectrum Visualizer Bars */
+  .spectrum-visualizer {
+    display: flex; align-items: center; gap: 3px; height: 36px;
+  }
+
+  .spectrum-bar {
+    width: 4px; height: 8px; border-radius: 2px;
+    background: linear-gradient(to top, var(--accent-cyan), var(--accent-violet));
+    transition: height 0.08s ease;
+  }
+
+  .dock-actions {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .dock-btn {
+    padding: 10px 14px; border-radius: 10px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary); font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 8px; cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .dock-btn:hover {
+    background: var(--card-hover);
+    color: #fff; border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Terminal Drawer */
+  #terminal-drawer {
+    display: none; position: fixed; bottom: 92px; left: 24px; right: 24px;
+    height: 220px; background: rgba(7, 11, 20, 0.95);
+    backdrop-filter: blur(24px); border: 1px solid var(--accent-cyan);
+    border-radius: 14px; padding: 14px; z-index: 20;
+    flex-direction: column; gap: 10px;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  #terminal-output {
+    flex: 1; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #a5f3fc; white-space: pre-wrap;
+  }
+
+  #terminal-input {
+    padding: 8px 12px; border-radius: 8px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--card-border);
+    color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    outline: none;
+  }
+
+  /* ─── Model & Voice Selectors in Header ────────────────────────────── */
+  .picker-pill {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 6px 12px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11.5px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; color: var(--text-primary);
+  }
+
+  .picker-pill:hover {
+    background: var(--card-hover);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.25);
+  }
+
+  .pill-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+  }
+
+  .pill-dot.green { background: #10b981; box-shadow: 0 0 8px #10b981; }
+  .pill-dot.yellow { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+  .pill-dot.cyan { background: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
+
+  /* ─── Privacy Vision Toggles ────────────────────────────────────────── */
+  .vision-toggle-cluster {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .vision-pill {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 6px 12px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; color: var(--text-secondary);
+  }
+
+  .vision-pill.active {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #34d399;
+  }
+
+  .vision-pill.blocked {
+    background: rgba(244, 63, 94, 0.08);
+    border-color: rgba(244, 63, 94, 0.25);
+    color: #fb7185;
+  }
+
+  .vision-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #64748b;
+  }
+
+  .vision-pill.active .vision-dot {
+    background: #10b981; box-shadow: 0 0 8px #10b981;
+  }
+
+  .vision-pill.blocked .vision-dot {
+    background: #f43f5e; box-shadow: 0 0 8px #f43f5e;
+  }
+
+  /* ─── Modals (Model & Voice Selectors) ──────────────────────────────── */
+  .modal-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    align-items: center; justify-content: center;
+  }
+
+  .picker-modal {
+    width: 580px; max-width: 90vw; max-height: 80vh;
+    background: rgba(11, 17, 32, 0.95);
+    border: 1px solid var(--accent-cyan);
+    border-radius: 16px; padding: 22px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 240, 255, 0.15);
+    display: flex; flex-direction: column; gap: 14px;
+    overflow: hidden;
+  }
+
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .modal-header h3 {
+    font-size: 16px; font-weight: 700; color: #fff;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .modal-close-btn {
+    background: none; border: none; color: var(--text-dim);
+    font-size: 18px; cursor: pointer; transition: color 0.2s;
+  }
+
+  .modal-close-btn:hover { color: #fff; }
+
+  .modal-scroll-area {
+    flex: 1; overflow-y: auto; padding-right: 4px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  .picker-category {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--accent-cyan);
+    margin-bottom: 6px;
+  }
+
+  .picker-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+  }
+
+  .picker-item {
+    padding: 10px 14px; border-radius: 10px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--card-border);
+    cursor: pointer; transition: all 0.2s;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+
+  .picker-item:hover {
+    background: var(--card-hover);
+    border-color: var(--accent-cyan);
+    transform: translateY(-1px);
+  }
+
+  .picker-item.selected {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+  }
+
+  .item-title {
+    font-size: 12.5px; font-weight: 600; color: #fff;
+  }
+
+  .item-sub {
+    font-size: 10.5px; color: var(--text-dim);
+  }
+
+  /* ─── Webcam Live Sight PIP HUD ────────────────────────────────────── */
+  #webcam-pip {
+    display: none; position: fixed; bottom: 84px; right: 24px;
+    width: 260px; height: 195px; border-radius: 16px;
+    background: #000; border: 2px solid var(--accent-cyan);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.3);
+    overflow: hidden; z-index: 50; flex-direction: column;
+  }
+
+  #webcam-video {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+
+  .webcam-hud-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 6px 10px; background: rgba(7, 11, 20, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .live-indicator {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; color: #f43f5e;
+    letter-spacing: 0.5px;
+  }
+
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #f43f5e; animation: pulse 1.2s infinite;
+  }
+
+  .hud-btn {
+    padding: 3px 8px; border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff; font-size: 10px; font-weight: 600;
+    cursor: pointer;
+  }
+
+  .hud-btn:hover { background: var(--accent-cyan); color: #000; }
 </style>
 </head>
-<body class="state-idle">
-  <div class="orb">
-    <div class="pulse"></div>
-    <div class="orb-inner">J</div>
+<body>
+
+  <!-- ─── Header: Telemetry & Engine Status ─────────────────────────────── -->
+  <header>
+    <div class="brand">
+      <div class="brand-glyph">J</div>
+      <div class="brand-text">
+        <h1>Jenna AI OS</h1>
+        <p>Advanced Multi-Agent Desktop Suite</p>
+      </div>
+    </div>
+
+    <div class="telemetry-cluster">
+      <div class="meter-pill">
+        <div class="meter-dial">
+          <svg viewBox="0 0 36 36">
+            <path stroke="rgba(255,255,255,0.08)" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path id="cpu-ring" stroke="#00f0ff" stroke-width="3" stroke-dasharray="25, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <span id="cpu-val">12%</span>
+        </div>
+        <div class="meter-label">
+          <span>CPU Load</span>
+          <span id="cpu-sub">Intel Core</span>
+        </div>
+      </div>
+
+      <div class="meter-pill">
+        <div class="meter-dial">
+          <svg viewBox="0 0 36 36">
+            <path stroke="rgba(255,255,255,0.08)" stroke-width="3" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path id="ram-ring" stroke="#8b5cf6" stroke-width="3" stroke-dasharray="65, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <span id="ram-val">65%</span>
+        </div>
+        <div class="meter-label">
+          <span>RAM Pool</span>
+          <span id="ram-sub">5.1 / 7.8 GB</span>
+        </div>
+      </div>
+
+      <!-- AI Brain Model Selector -->
+      <div class="picker-pill" id="btn-model-picker" onclick="openModelPicker()" title="Click to Switch AI Brain Model">
+        <span class="pill-dot green"></span>
+        <span id="model-pill-label">🧠 qwen3.5:0.8b</span>
+        <span style="font-size: 10px; color: var(--text-dim);">▾</span>
+      </div>
+
+      <!-- Spoken Voice Selector -->
+      <div class="picker-pill" id="btn-voice-picker" onclick="openVoicePicker()" title="Click to Change Voice (Deepgram Aura / Local)">
+        <span class="pill-dot yellow"></span>
+        <span id="voice-pill-label">🔊 Asteria (Aura)</span>
+        <span style="font-size: 10px; color: var(--text-dim);">▾</span>
+      </div>
+
+      <!-- Privacy-Gated Vision Controls -->
+      <div class="vision-toggle-cluster">
+        <div class="vision-pill blocked" id="pill-screen-vision" onclick="toggleVisionPermission('screen')" title="Toggle Screen Sight Permission">
+          <span class="vision-dot"></span>
+          <span>👁️ Screen</span>
+        </div>
+        <div class="vision-pill blocked" id="pill-camera-vision" onclick="toggleVisionPermission('camera')" title="Toggle Webcam Sight Permission">
+          <span class="vision-dot"></span>
+          <span>📷 Webcam</span>
+        </div>
+      </div>
+
+      <div class="engine-badges">
+        <div class="engine-pill online" id="badge-ollama">
+          <div class="engine-dot"></div>
+          <span>Ollama (:11434)</span>
+        </div>
+        <div class="engine-pill lmstudio online" id="badge-lmstudio">
+          <div class="engine-dot"></div>
+          <span>LM Studio (:1234)</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Main Tri-Column Layout ───────────────────────────────────────── -->
+  <main>
+    <!-- Left: Squad Roster -->
+    <div class="glass-card">
+      <div class="card-header">
+        <h2>Multi-Agent Squad</h2>
+        <span style="font-size: 11px; color: var(--accent-cyan);">5 Active Roles</span>
+      </div>
+      <div class="squad-list" id="squad-roster">
+        <div class="squad-card active">
+          <div class="squad-top">
+            <div class="squad-identity">
+              <div class="squad-icon">⚡</div>
+              <div class="squad-name">Commander</div>
+            </div>
+            <span class="squad-badge">Active</span>
+          </div>
+          <div class="squad-model">qwen3.5:0.8b (Ollama)</div>
+          <div class="squad-desc">Executive coordinator, voice conversationalist & task router.</div>
+        </div>
+
+        <div class="squad-card">
+          <div class="squad-top">
+            <div class="squad-identity">
+              <div class="squad-icon">💻</div>
+              <div class="squad-name">Engineer</div>
+            </div>
+            <span class="squad-badge">Standby</span>
+          </div>
+          <div class="squad-model">qwen2.5-coder:3b</div>
+          <div class="squad-desc">Code generation, refactoring, script testing & sandbox shell.</div>
+        </div>
+
+        <div class="squad-card">
+          <div class="squad-top">
+            <div class="squad-identity">
+              <div class="squad-icon">🧠</div>
+              <div class="squad-name">Planner</div>
+            </div>
+            <span class="squad-badge">Standby</span>
+          </div>
+          <div class="squad-model">Nemotron 30B MoE (LM Studio)</div>
+          <div class="squad-desc">Strategic reasoning, decomposition, and architectural review.</div>
+        </div>
+
+        <div class="squad-card">
+          <div class="squad-top">
+            <div class="squad-identity">
+              <div class="squad-icon">📚</div>
+              <div class="squad-name">Scholar</div>
+            </div>
+            <span class="squad-badge">Standby</span>
+          </div>
+          <div class="squad-model">Ministral-3B / Qwen-2B</div>
+          <div class="squad-desc">Fact retrieval, synthesis, literature review & summaries.</div>
+        </div>
+
+        <div class="squad-card">
+          <div class="squad-top">
+            <div class="squad-identity">
+              <div class="squad-icon">📡</div>
+              <div class="squad-name">Communicator</div>
+            </div>
+            <span class="squad-badge">Standby</span>
+          </div>
+          <div class="squad-model">AgentPhone & AgentMail</div>
+          <div class="squad-desc">Telephony call handling, SMS dispatch & email pipeline.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: 3D WebGL Audio-Reactive Core -->
+    <div class="glass-card center-stage">
+      <div class="core-status-pill">
+        <div class="status-pulse-dot" id="core-dot"></div>
+        <span id="core-status-text">Core Ready · LangGraph Squad</span>
+      </div>
+
+      <div id="canvas-container"></div>
+
+      <!-- Dialogue Stream -->
+      <div class="dialogue-stream" id="dialogue-stream">
+        <div class="bubble assistant">
+          Welcome back! I am Jenna, your unified AI agent. Your LangGraph multi-agent squad, local Ollama models, and Obsidian knowledge vault are connected.
+        </div>
+      </div>
+
+      <!-- Text Chat Fallback -->
+      <div class="chat-input-bar">
+        <input type="text" id="chat-input" placeholder="Type a task or question, or hold Push-to-Talk..." />
+        <button id="btn-send">Send</button>
+      </div>
+    </div>
+
+    <!-- Right: Obsidian Wiki & Memory Stream -->
+    <div class="glass-card obsidian-panel">
+      <div class="card-header">
+        <h2>Obsidian Memory Stream</h2>
+        <span style="font-size: 11px; color: var(--accent-violet);">~/wiki</span>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchObsidianTab('daily')">Daily Log</button>
+        <button class="tab-btn" onclick="switchObsidianTab('notes')">Recent Notes</button>
+        <button class="tab-btn" onclick="switchObsidianTab('graph')">Graph Nodes</button>
+        <button class="tab-btn" onclick="switchObsidianTab('learnings')">Hermes Learnings</button>
+      </div>
+
+      <div class="tab-content" id="obsidian-content">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Interactive Graph Container (Tab: graph) -->
+      <div class="graph-container" id="graph-wrapper" style="display: none;">
+        <svg id="knowledge-graph-svg">
+          <defs>
+            <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <!-- Dynamic SVG graph generated in JS -->
+        </svg>
+      </div>
+
+      <div class="obsidian-quick-log">
+        <input type="text" id="log-input" placeholder="Quick log to ~/wiki/log.md..." />
+        <button id="btn-quick-log">Add</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ─── Terminal Drawer (Hidden by default) ───────────────────────────── -->
+  <div id="terminal-drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:700; color:var(--accent-cyan);">⚡ Sandboxed Execution Terminal (./sandbox)</span>
+      <button onclick="toggleTerminal()" style="background:none; border:none; color:#94a3b8; cursor:pointer;">✕ Close</button>
+    </div>
+    <div id="terminal-output">[Sandbox Terminal Ready. Enter safe shell commands below]</div>
+    <input type="text" id="terminal-input" placeholder="python script.py, ls, pytest..." />
   </div>
-  <div class="label">Jenna · Desktop AI Agent</div>
-  <div class="status" id="status">Idle — Ctrl+Alt+Space to speak</div>
-  <div class="controls">
-    <button id="btnListen">Hold to speak</button>
+
+  <!-- ─── Webcam PIP HUD ────────────────────────────────────────────────── -->
+  <div id="webcam-pip">
+    <video id="webcam-video" autoplay playsinline muted></video>
+    <div class="webcam-hud-bar">
+      <div class="live-indicator">
+        <div class="live-dot"></div>
+        <span>LIVE SIGHT</span>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="hud-btn" onclick="takeWebcamSnapshot()">Snapshot</button>
+        <button class="hud-btn" onclick="toggleWebcamSight()">✕</button>
+      </div>
+    </div>
   </div>
-  <div class="quit" id="btnQuit">Quit</div>
-<script>
-  const api = window.pywebview.api;
-  const body = document.body;
-  const status = document.getElementById('status');
-  const btnListen = document.getElementById('btnListen');
-  const btnQuit = document.getElementById('btnQuit');
 
-  function setState(state) {
-    body.className = 'state-' + state;
-    const map = { idle: 'Idle — Ctrl+Alt+Space to speak', listening: 'Listening…', thinking: 'Thinking…', speaking: 'Speaking…', loading: 'Loading model…' };
-    status.textContent = map[state] || state;
-  }
-  window.setState = setState;
+  <!-- ─── Model Picker Modal ────────────────────────────────────────────── -->
+  <div class="modal-backdrop" id="modal-model-picker" onclick="if(event.target===this)closeModelPicker()">
+    <div class="picker-modal">
+      <div class="modal-header">
+        <h3><span>🧠</span> Select AI Brain Model</h3>
+        <button class="modal-close-btn" onclick="closeModelPicker()">✕</button>
+      </div>
+      <div class="modal-scroll-area" id="model-picker-list">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
 
-  let listening = false;
-  btnListen.addEventListener('mousedown', () => { listening = true; btnListen.textContent = 'Release to send'; });
-  btnListen.addEventListener('mouseup', () => { if (listening) { listening = false; btnListen.textContent = 'Hold to speak'; api.quit && null; } });
-  btnListen.addEventListener('mouseleave', () => { listening = false; btnListen.textContent = 'Hold to speak'; });
+  <!-- ─── Voice Picker Modal ────────────────────────────────────────────── -->
+  <div class="modal-backdrop" id="modal-voice-picker" onclick="if(event.target===this)closeVoicePicker()">
+    <div class="picker-modal">
+      <div class="modal-header">
+        <h3><span>🔊</span> Select Spoken Voice (Deepgram Aura & Local)</h3>
+        <button class="modal-close-btn" onclick="closeVoicePicker()">✕</button>
+      </div>
+      <div class="modal-scroll-area" id="voice-picker-list">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
 
-  btnQuit.addEventListener('click', () => { api.quit(); });
+  <!-- ─── Footer: PTT & Quick Actions ───────────────────────────────────── -->
+  <footer>
+    <div class="ptt-cluster">
+      <div class="ptt-button" id="btn-ptt" title="Push-to-Talk (Hold to speak or Ctrl+Alt+Space)">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+        </svg>
+      </div>
+      <div class="spectrum-visualizer" id="spectrum-bars">
+        <!-- 24 audio bars -->
+      </div>
+    </div>
 
-  // Expose term-style hooks the desktop main.py may call
-  window.termStartAssistant = () => setState('thinking');
-  window.termAppend = () => {};
-  window.termFinish = () => setState('idle');
-  window.termPrint = () => {};
-  window.showView = () => {};
-</script>
+    <div class="dock-actions">
+      <div class="dock-btn" onclick="triggerAgentAction('phone')">
+        <span>📞</span> AgentPhone
+      </div>
+      <div class="dock-btn" onclick="triggerAgentAction('mail')">
+        <span>✉️</span> AgentMail
+      </div>
+      <div class="dock-btn" onclick="toggleTerminal()">
+        <span>💻</span> Sandbox Shell
+      </div>
+      <div class="dock-btn" onclick="triggerVisionSnapshot()">
+        <span>📷</span> Screen Vision
+      </div>
+      <div class="dock-btn" onclick="toggleWebcamSight()">
+        <span>🔴</span> See Me Live
+      </div>
+      <div class="dock-btn" onclick="quitApp()" style="color:var(--accent-rose); border-color:rgba(244,63,94,0.3);">
+        <span>✕</span> Quit
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── Logic & 3D WebGL Engine ──────────────────────────────────────── -->
+  <script>
+    let api = (window.pywebview && window.pywebview.api) ? window.pywebview.api : null;
+    window.addEventListener('pywebviewready', () => {
+      api = window.pywebview.api;
+      refreshTelemetry();
+    });
+
+    // ── Generate Spectrum Bars ──────────────────────────────────────────
+    const spectrumContainer = document.getElementById('spectrum-bars');
+    const barCount = 28;
+    const bars = [];
+    for (let i = 0; i < barCount; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'spectrum-bar';
+      spectrumContainer.appendChild(bar);
+      bars.push(bar);
+    }
+
+    let isAudioActive = false;
+    function animateAudioVisualizer() {
+      if (isAudioActive) {
+        bars.forEach(b => {
+          const h = Math.floor(Math.random() * 28) + 6;
+          b.style.height = `${h}px`;
+        });
+      } else {
+        bars.forEach(b => b.style.height = '6px');
+      }
+      requestAnimationFrame(animateAudioVisualizer);
+    }
+    animateAudioVisualizer();
+
+    // ── 3D Procedural Particle Sphere (Three.js) ────────────────────────
+    let scene, camera, renderer, particles, particleGeo, positions, originalPositions;
+    let particleCount = 2400;
+    let coreState = 'idle';
+
+    function init3DCore() {
+      const container = document.getElementById('canvas-container');
+      const w = container.clientWidth || 600;
+      const h = container.clientHeight || 400;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 1000);
+      camera.position.z = 240;
+
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      // Particle Sphere
+      particleGeo = new THREE.BufferGeometry();
+      positions = new Float32Array(particleCount * 3);
+      originalPositions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+
+      const color1 = new THREE.Color(0x00f0ff);
+      const color2 = new THREE.Color(0x8b5cf6);
+
+      for (let i = 0; i < particleCount; i++) {
+        // Uniform sphere distribution
+        const u = Math.random();
+        const v = Math.random();
+        const theta = u * 2.0 * Math.PI;
+        const phi = Math.acos(2.0 * v - 1.0);
+        const r = 70 + (Math.random() - 0.5) * 8;
+
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.sin(phi) * Math.sin(theta);
+        const z = r * Math.cos(phi);
+
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+
+        originalPositions[i * 3] = x;
+        originalPositions[i * 3 + 1] = y;
+        originalPositions[i * 3 + 2] = z;
+
+        const mixed = color1.clone().lerp(color2, Math.random());
+        colors[i * 3] = mixed.r;
+        colors[i * 3 + 1] = mixed.g;
+        colors[i * 3 + 2] = mixed.b;
+      }
+
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      // Particle Material
+      const pMaterial = new THREE.PointsMaterial({
+        size: 2.2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+      });
+
+      particles = new THREE.Points(particleGeo, pMaterial);
+      scene.add(particles);
+
+      window.addEventListener('resize', onWindowResize);
+      animateCore();
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvas-container');
+      if (!container || !renderer || !camera) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
+    let clock = new THREE.Clock();
+
+    function animateCore() {
+      requestAnimationFrame(animateCore);
+      const t = clock.getElapsedTime();
+
+      if (particles) {
+        particles.rotation.y = t * 0.25;
+        particles.rotation.x = t * 0.12;
+
+        const pos = particleGeo.attributes.position.array;
+        let speed = 1.0;
+        let amp = 3.5;
+
+        if (coreState === 'listening') {
+          speed = 2.5;
+          amp = 9.0;
+        } else if (coreState === 'thinking') {
+          speed = 3.5;
+          amp = 6.0;
+        } else if (coreState === 'speaking') {
+          speed = 2.0;
+          amp = 12.0;
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+          const idx = i * 3;
+          const ox = originalPositions[idx];
+          const oy = originalPositions[idx + 1];
+          const oz = originalPositions[idx + 2];
+
+          // Dynamic radial harmonic displacement
+          const wave = Math.sin(t * speed + ox * 0.05) * Math.cos(t * speed + oy * 0.05) * amp;
+          pos[idx] = ox + (ox / 70) * wave;
+          pos[idx + 1] = oy + (oy / 70) * wave;
+          pos[idx + 2] = oz + (oz / 70) * wave;
+        }
+        particleGeo.attributes.position.needsUpdate = true;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function initFallbackCanvasCore() {
+      const container = document.getElementById('canvas-container');
+      if (!container) return;
+      container.innerHTML = '';
+      const canvas = document.createElement('canvas');
+      canvas.width = container.clientWidth || 500;
+      canvas.height = container.clientHeight || 350;
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      container.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      const dots = [];
+      for (let i = 0; i < 200; i++) {
+        dots.push({
+          angle: Math.random() * Math.PI * 2,
+          radius: 35 + Math.random() * 70,
+          speed: (Math.random() * 0.02 + 0.008) * (Math.random() > 0.5 ? 1 : -1),
+          size: Math.random() * 2.5 + 1.2,
+          color: Math.random() > 0.4 ? '#00f0ff' : '#8b5cf6'
+        });
+      }
+
+      function drawFallback() {
+        requestAnimationFrame(drawFallback);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        let multiplier = 1;
+        if (coreState === 'listening') multiplier = 2.4;
+        else if (coreState === 'thinking') multiplier = 3.2;
+        else if (coreState === 'speaking') multiplier = 2.0;
+
+        // Core central glow
+        const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 100);
+        glow.addColorStop(0, coreState === 'listening' ? 'rgba(244,63,94,0.35)' : (coreState === 'thinking' ? 'rgba(245,158,11,0.35)' : 'rgba(0,240,255,0.25)'));
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 100, 0, Math.PI * 2);
+        ctx.fill();
+
+        dots.forEach(d => {
+          d.angle += d.speed * multiplier;
+          const x = cx + Math.cos(d.angle) * d.radius;
+          const y = cy + Math.sin(d.angle) * (d.radius * 0.72);
+          ctx.fillStyle = d.color;
+          ctx.beginPath();
+          ctx.arc(x, y, d.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+      drawFallback();
+    }
+
+    // Initialize 3D Core safely
+    try {
+      if (typeof THREE !== 'undefined') {
+        init3DCore();
+      } else {
+        initFallbackCanvasCore();
+      }
+    } catch (e) {
+      console.warn("WebGL 3D Core initialization fallback:", e);
+      initFallbackCanvasCore();
+    }
+
+    // ── Global State Updates ────────────────────────────────────────────
+    function setState(state) {
+      coreState = state;
+      const statusText = document.getElementById('core-status-text');
+      const coreDot = document.getElementById('core-dot');
+      const btnPtt = document.getElementById('btn-ptt');
+
+      const labels = {
+        idle: 'Core Ready · LangGraph Squad',
+        listening: 'Listening… (Speak now)',
+        thinking: 'Squad Thinking & Routing…',
+        speaking: 'Neural Speech Output',
+        loading: 'Loading model weights…'
+      };
+
+      statusText.textContent = labels[state] || state;
+      isAudioActive = (state === 'listening' || state === 'speaking');
+
+      if (state === 'listening') {
+        btnPtt.classList.add('recording');
+        coreDot.style.background = '#f43f5e';
+        coreDot.style.boxShadow = '0 0 12px #f43f5e';
+      } else if (state === 'thinking') {
+        btnPtt.classList.remove('recording');
+        coreDot.style.background = '#f59e0b';
+        coreDot.style.boxShadow = '0 0 12px #f59e0b';
+      } else if (state === 'speaking') {
+        btnPtt.classList.remove('recording');
+        coreDot.style.background = '#10b981';
+        coreDot.style.boxShadow = '0 0 12px #10b981';
+      } else {
+        btnPtt.classList.remove('recording');
+        coreDot.style.background = '#00f0ff';
+        coreDot.style.boxShadow = '0 0 10px #00f0ff';
+      }
+    }
+    window.setState = setState;
+
+    // ── Dialogue Chat Stream ────────────────────────────────────────────
+    function appendUserTurn(text) {
+      const stream = document.getElementById('dialogue-stream');
+      const b = document.createElement('div');
+      b.className = 'bubble user';
+      b.textContent = text;
+      stream.appendChild(b);
+      stream.scrollTop = stream.scrollHeight;
+    }
+    window.appendUserTurn = appendUserTurn;
+
+    function appendAssistantTurn(text) {
+      const stream = document.getElementById('dialogue-stream');
+      const b = document.createElement('div');
+      b.className = 'bubble assistant';
+      b.textContent = text;
+      stream.appendChild(b);
+      stream.scrollTop = stream.scrollHeight;
+    }
+    window.appendAssistantTurn = appendAssistantTurn;
+
+    // ── Input & PTT Actions ─────────────────────────────────────────────
+    const pttBtn = document.getElementById('btn-ptt');
+    pttBtn.addEventListener('click', () => {
+      setState('listening');
+      if (api && api.trigger_voice_record) {
+        api.trigger_voice_record();
+      }
+    });
+
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('btn-send');
+
+    async function sendTurn() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      chatInput.value = '';
+      appendUserTurn(text);
+
+      if (api && api.send_chat_turn) {
+        setState('thinking');
+        try {
+          const res = await api.send_chat_turn(text);
+          if (res && res.reply) {
+            appendAssistantTurn(res.reply);
+          }
+        } catch (e) {
+          appendAssistantTurn("Error processing request: " + e);
+        }
+        setState('idle');
+      } else {
+        // Simulated local fallback
+        setState('thinking');
+        setTimeout(() => {
+          appendAssistantTurn("Understood. Task processed through local LangGraph pipeline.");
+          setState('idle');
+        }, 800);
+      }
+    }
+
+    sendBtn.addEventListener('click', sendTurn);
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendTurn();
+    });
+
+    // ── Obsidian Integration ────────────────────────────────────────────
+    let currentObsidianTab = 'daily';
+    let obsidianDataCache = { recent_logs: [], recent_notes: [] };
+
+    function switchObsidianTab(tab) {
+      currentObsidianTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(tab));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const graphWrapper = document.getElementById('graph-wrapper');
+      const content = document.getElementById('obsidian-content');
+
+      if (tab === 'graph') {
+        graphWrapper.style.display = 'block';
+        content.style.display = 'none';
+        renderGraphNodes();
+      } else {
+        graphWrapper.style.display = 'none';
+        content.style.display = 'flex';
+        renderObsidianContent(tab);
+      }
+    }
+
+    function renderObsidianContent(tab) {
+      const container = document.getElementById('obsidian-content');
+      container.innerHTML = '';
+
+      if (tab === 'daily') {
+        if (!obsidianDataCache.recent_logs.length) {
+          container.innerHTML = '<div style="font-size:11.5px; color:#64748b;">No recent entries in ~/wiki/log.md. Type below to add one.</div>';
+          return;
+        }
+        obsidianDataCache.recent_logs.forEach(log => {
+          const item = document.createElement('div');
+          item.className = 'obsidian-log-item';
+          item.innerHTML = log.replace(/^###\s+([0-9-:\s]+)/, '<strong>[$1]</strong>');
+          container.appendChild(item);
+        });
+      } else if (tab === 'notes') {
+        if (!obsidianDataCache.recent_notes.length) {
+          container.innerHTML = '<div style="font-size:11.5px; color:#64748b;">No markdown notes found in ~/wiki.</div>';
+          return;
+        }
+        obsidianDataCache.recent_notes.forEach(note => {
+          const item = document.createElement('div');
+          item.className = 'obsidian-log-item';
+          item.style.cursor = 'pointer';
+          item.innerHTML = `📄 <strong>[[${note}]]</strong>`;
+          item.onclick = () => {
+            chatInput.value = `Read obsidian note ${note}`;
+            sendTurn();
+          };
+          container.appendChild(item);
+        });
+      } else if (tab === 'learnings') {
+        if (!obsidianDataCache.learnings) {
+          container.innerHTML = '<div style="font-size:11.5px; color:#64748b;">Querying Hermes self-evolution log (~/wiki/learnings.md)...</div>';
+          if (api && api.get_hermes_learnings) {
+            api.get_hermes_learnings().then(res => {
+              obsidianDataCache.learnings = res || "No learnings recorded yet. Jenna logs reflections here.";
+              renderObsidianContent('learnings');
+            });
+          }
+          return;
+        }
+        const item = document.createElement('div');
+        item.className = 'obsidian-log-item';
+        item.style.whiteSpace = 'pre-wrap';
+        item.style.fontFamily = "'JetBrains Mono', monospace";
+        item.style.fontSize = "11px";
+        item.style.lineHeight = "1.6";
+        item.textContent = obsidianDataCache.learnings;
+        container.appendChild(item);
+      }
+    }
+
+    function renderGraphNodes() {
+      const svg = document.getElementById('knowledge-graph-svg');
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.4"/>
+          </linearGradient>
+        </defs>
+      `;
+
+      const centralNode = { id: '~/wiki', fullName: 'Vault Index', x: 175, y: 110, r: 10, color: '#00f0ff' };
+      const rawNotes = (obsidianDataCache && obsidianDataCache.recent_notes && obsidianDataCache.recent_notes.length)
+        ? obsidianDataCache.recent_notes.slice(0, 6)
+        : ['Schema.md', 'log.md', 'Hermes.md', 'Agent.md', 'Notes.md'];
+
+      const colors = ['#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#38bdf8', '#a855f7'];
+      const nodes = [centralNode];
+
+      const R = 75;
+      const step = (Math.PI * 2) / rawNotes.length;
+      rawNotes.forEach((note, i) => {
+        const cleanName = note.replace(/\.md$/, '').split('/').pop();
+        const angle = i * step - Math.PI / 2;
+        nodes.push({
+          id: cleanName,
+          fullName: note,
+          x: Math.round(centralNode.x + R * Math.cos(angle)),
+          y: Math.round(centralNode.y + R * Math.sin(angle)),
+          r: 6.5,
+          color: colors[i % colors.length]
+        });
+      });
+
+      // Draw Edges
+      for (let i = 1; i < nodes.length; i++) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', nodes[0].x);
+        line.setAttribute('y1', nodes[0].y);
+        line.setAttribute('x2', nodes[i].x);
+        line.setAttribute('y2', nodes[i].y);
+        line.setAttribute('stroke', 'url(#lineGrad)');
+        line.setAttribute('stroke-width', '1.5');
+        line.setAttribute('stroke-dasharray', '3,3');
+        svg.appendChild(line);
+      }
+
+      // Draw Nodes
+      nodes.forEach((n, idx) => {
+        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.style.cursor = 'pointer';
+        g.onclick = () => {
+          if (idx === 0) {
+            chatInput.value = "Search my Obsidian vault notes";
+          } else {
+            chatInput.value = `Read obsidian note ${n.fullName || n.id}`;
+          }
+          sendTurn();
+        };
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', n.x);
+        circle.setAttribute('cy', n.y);
+        circle.setAttribute('r', n.r);
+        circle.setAttribute('fill', n.color);
+        circle.setAttribute('filter', 'drop-shadow(0px 0px 5px ' + n.color + ')');
+        g.appendChild(circle);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', n.x);
+        text.setAttribute('y', n.y + (idx === 0 ? 18 : 14));
+        text.setAttribute('fill', '#cbd5e1');
+        text.setAttribute('font-size', idx === 0 ? '11px' : '9.5px');
+        text.setAttribute('font-weight', idx === 0 ? '700' : '500');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-family', 'Outfit');
+        text.textContent = n.id;
+        g.appendChild(text);
+
+        svg.appendChild(g);
+      });
+    }
+
+    document.getElementById('btn-quick-log').addEventListener('click', async () => {
+      const input = document.getElementById('log-input');
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+
+      if (api && api.save_obsidian_entry) {
+        await api.save_obsidian_entry(val);
+        refreshTelemetry();
+      } else {
+        obsidianDataCache.recent_logs.unshift("### " + new Date().toLocaleTimeString() + " " + val);
+        renderObsidianContent(currentObsidianTab);
+      }
+    });
+
+    // ── Quick Terminal Shell Drawer ─────────────────────────────────────
+    function toggleTerminal() {
+      const drawer = document.getElementById('terminal-drawer');
+      drawer.style.display = (drawer.style.display === 'flex') ? 'none' : 'flex';
+      if (drawer.style.display === 'flex') {
+        document.getElementById('terminal-input').focus();
+      }
+    }
+
+    document.getElementById('terminal-input').addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        const input = document.getElementById('terminal-input');
+        const cmd = input.value.trim();
+        if (!cmd) return;
+        input.value = '';
+        const output = document.getElementById('terminal-output');
+        output.textContent += `\n$ ${cmd}\nRunning...`;
+
+        if (api && api.run_sandbox_command) {
+          try {
+            const res = await api.run_sandbox_command(cmd);
+            output.textContent += `\n${res}\n`;
+          } catch (err) {
+            output.textContent += `\nExecution error: ${err}\n`;
+          }
+        } else {
+          output.textContent += "\n(Completed in sandbox simulation)\n";
+        }
+        output.scrollTop = output.scrollHeight;
+      }
+    });
+
+    function triggerAgentAction(action) {
+      if (action === 'phone') {
+        chatInput.value = "Check my phone SMS logs and pending notifications.";
+        sendTurn();
+      } else if (action === 'mail') {
+        chatInput.value = "Review my AgentMail outbox and staged drafts.";
+        sendTurn();
+      }
+    }
+
+    function triggerVisionSnapshot() {
+      chatInput.value = "Capture current screen and describe what you see.";
+      sendTurn();
+    }
+
+    function quitApp() {
+      if (api && api.quit) {
+        api.quit();
+      }
+    }
+
+    // ── Model Picker Modal ──────────────────────────────────────────────
+    let cachedModels = null;
+    async function openModelPicker() {
+      const modal = document.getElementById('modal-model-picker');
+      const list = document.getElementById('model-picker-list');
+      modal.style.display = 'flex';
+      list.innerHTML = '<div style="font-size:12px; color:var(--text-dim);">Querying installed models from Ollama & LM Studio...</div>';
+
+      if (api && api.get_models) {
+        try {
+          cachedModels = await api.get_models();
+          renderModelPickerList(cachedModels);
+        } catch (e) {
+          list.innerHTML = `<div style="color:var(--accent-rose);">Error querying models: ${e}</div>`;
+        }
+      } else {
+        list.innerHTML = `<div style="color:var(--accent-amber);">Connecting to local AI engine bridge...</div>`;
+      }
+    }
+
+    function closeModelPicker() {
+      document.getElementById('modal-model-picker').style.display = 'none';
+    }
+
+    function renderModelPickerList(data) {
+      const list = document.getElementById('model-picker-list');
+      list.innerHTML = '';
+
+      // Ollama
+      if (data.ollama && data.ollama.length) {
+        const cat = document.createElement('div');
+        cat.className = 'picker-category';
+        cat.textContent = `Ollama Local Models (${data.ollama.length})`;
+        list.appendChild(cat);
+
+        const grid = document.createElement('div');
+        grid.className = 'picker-grid';
+        data.ollama.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'picker-item';
+          item.innerHTML = `
+            <div class="item-title">${m.name}</div>
+            <div class="item-sub">${m.size_gb ? m.size_gb + ' GB · Local Ollama' : 'Local Engine'}</div>
+          `;
+          item.onclick = () => selectModel(m.name, 'ollama');
+          grid.appendChild(item);
+        });
+        list.appendChild(grid);
+      }
+
+      // LM Studio
+      if (data.lmstudio && data.lmstudio.length) {
+        const cat = document.createElement('div');
+        cat.className = 'picker-category';
+        cat.textContent = `LM Studio Models (:1234)`;
+        cat.style.marginTop = '14px';
+        list.appendChild(cat);
+
+        const grid = document.createElement('div');
+        grid.className = 'picker-grid';
+        data.lmstudio.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'picker-item';
+          item.innerHTML = `
+            <div class="item-title">${m.name}</div>
+            <div class="item-sub">${m.role_hint || 'Local GGUF · LM Studio'}</div>
+          `;
+          item.onclick = () => selectModel(m.name, 'lmstudio');
+          grid.appendChild(item);
+        });
+        list.appendChild(grid);
+      }
+
+      // Cloud Providers
+      if (data.cloud && data.cloud.length) {
+        const cat = document.createElement('div');
+        cat.className = 'picker-category';
+        cat.textContent = `Cloud Providers (NVIDIA / OpenAI)`;
+        cat.style.marginTop = '14px';
+        list.appendChild(cat);
+
+        const grid = document.createElement('div');
+        grid.className = 'picker-grid';
+        data.cloud.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'picker-item';
+          item.innerHTML = `
+            <div class="item-title">${m.name}</div>
+            <div class="item-sub">${(m.provider || 'Cloud').toUpperCase()} API</div>
+          `;
+          item.onclick = () => selectModel(m.name, m.provider);
+          grid.appendChild(item);
+        });
+        list.appendChild(grid);
+      }
+    }
+
+    async function selectModel(name, provider) {
+      closeModelPicker();
+      document.getElementById('model-pill-label').textContent = `🧠 ${name}`;
+      appendAssistantTurn(`Active brain switched to **${name}** (${provider}). LangGraph routing updated.`);
+      if (api && api.switch_model) {
+        await api.switch_model(name, provider);
+        const roster = document.getElementById('squad-roster');
+        if (roster) delete roster.dataset.rendered;
+        refreshTelemetry();
+      }
+    }
+
+    // ── Voice Picker Modal ──────────────────────────────────────────────
+    let cachedVoices = null;
+    async function openVoicePicker() {
+      const modal = document.getElementById('modal-voice-picker');
+      const list = document.getElementById('voice-picker-list');
+      modal.style.display = 'flex';
+      list.innerHTML = '<div style="font-size:12px; color:var(--text-dim);">Loading available voices...</div>';
+
+      if (api && api.get_available_voices) {
+        try {
+          const data = await api.get_available_voices();
+          cachedVoices = data.voices || [];
+          renderVoicePickerList(cachedVoices, data.current);
+        } catch (e) {
+          list.innerHTML = `<div style="color:var(--accent-rose);">Error querying voices: ${e}</div>`;
+        }
+      }
+    }
+
+    function closeVoicePicker() {
+      document.getElementById('modal-voice-picker').style.display = 'none';
+    }
+
+    function renderVoicePickerList(voices, current) {
+      const list = document.getElementById('voice-picker-list');
+      list.innerHTML = '';
+
+      const deepgramVoices = voices.filter(v => v.engine === 'deepgram');
+      const localVoices = voices.filter(v => v.engine !== 'deepgram');
+
+      // Deepgram Aura Voices
+      if (deepgramVoices.length) {
+        const cat = document.createElement('div');
+        cat.className = 'picker-category';
+        cat.textContent = `Deepgram Aura Neural Voices (${deepgramVoices.length})`;
+        list.appendChild(cat);
+
+        const grid = document.createElement('div');
+        grid.className = 'picker-grid';
+        deepgramVoices.forEach(v => {
+          const item = document.createElement('div');
+          item.className = 'picker-item' + ((current && current.voice === v.id) ? ' selected' : '');
+          item.innerHTML = `
+            <div class="item-title">${v.name} (${v.gender}, ${v.accent})</div>
+            <div class="item-sub">${v.style} · Deepgram Cloud</div>
+          `;
+          item.onclick = () => selectVoice(v.id, v.name, v.engine);
+          grid.appendChild(item);
+        });
+        list.appendChild(grid);
+      }
+
+      // Local Offline Voices
+      if (localVoices.length) {
+        const cat = document.createElement('div');
+        cat.className = 'picker-category';
+        cat.textContent = `Local Offline Neural Voices`;
+        cat.style.marginTop = '14px';
+        list.appendChild(cat);
+
+        const grid = document.createElement('div');
+        grid.className = 'picker-grid';
+        localVoices.forEach(v => {
+          const item = document.createElement('div');
+          item.className = 'picker-item' + ((current && current.voice === v.id) ? ' selected' : '');
+          item.innerHTML = `
+            <div class="item-title">${v.name} (${v.gender})</div>
+            <div class="item-sub">${v.style} · Offline Local</div>
+          `;
+          item.onclick = () => selectVoice(v.id, v.name, v.engine);
+          grid.appendChild(item);
+        });
+        list.appendChild(grid);
+      }
+    }
+
+    async function selectVoice(voiceId, voiceName, engine) {
+      closeVoicePicker();
+      document.getElementById('voice-pill-label').textContent = `🔊 ${voiceName}`;
+      appendAssistantTurn(`TTS Voice updated to **${voiceName}** (${engine.toUpperCase()}).`);
+      if (api && api.set_voice) {
+        await api.set_voice(voiceId, engine);
+      }
+    }
+
+    // ── Vision Privacy & Webcam Live Sight PIP ──────────────────────────
+    let currentPermissions = { screen: false, camera: false };
+    let webcamStream = null;
+
+    async function toggleVisionPermission(target) {
+      const newVal = !currentPermissions[target];
+      currentPermissions[target] = newVal;
+      updateVisionUI();
+      if (api && api.set_vision_permission) {
+        await api.set_vision_permission(target, newVal);
+      }
+      const status = newVal ? "GRANTED" : "REVOKED";
+      appendAssistantTurn(`Privacy update: ${target.toUpperCase()} sight permission is now **${status}**.`);
+    }
+
+    function updateVisionUI() {
+      const screenPill = document.getElementById('pill-screen-vision');
+      const cameraPill = document.getElementById('pill-camera-vision');
+      if (screenPill) {
+        screenPill.className = 'vision-pill ' + (currentPermissions.screen ? 'active' : 'blocked');
+      }
+      if (cameraPill) {
+        cameraPill.className = 'vision-pill ' + (currentPermissions.camera ? 'active' : 'blocked');
+      }
+    }
+
+    async function toggleWebcamSight() {
+      const pip = document.getElementById('webcam-pip');
+      const video = document.getElementById('webcam-video');
+
+      if (webcamStream) {
+        // Stop stream and hide
+        webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
+        video.srcObject = null;
+        pip.style.display = 'none';
+        currentPermissions.camera = false;
+        updateVisionUI();
+        if (api && api.set_vision_permission) {
+          await api.set_vision_permission('camera', false);
+        }
+      } else {
+        // Start stream
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 480, height: 360 } });
+          webcamStream = stream;
+          video.srcObject = stream;
+          pip.style.display = 'flex';
+          currentPermissions.camera = true;
+          updateVisionUI();
+          if (api && api.set_vision_permission) {
+            await api.set_vision_permission('camera', true);
+          }
+          appendAssistantTurn("Webcam live sight engaged. You can see yourself in the HUD, and I can now inspect snapshots when you click 'Snapshot'.");
+        } catch (err) {
+          appendAssistantTurn(`Camera access could not be initialized: ${err}`);
+        }
+      }
+    }
+
+    function takeWebcamSnapshot() {
+      const video = document.getElementById('webcam-video');
+      if (!video || !webcamStream) {
+        appendAssistantTurn("Webcam is not active. Click 'See Me Live' in the dock first.");
+        return;
+      }
+      chatInput.value = "Inspect what you see from my webcam snapshot and describe it.";
+      sendTurn();
+    }
+
+    // ── Polling Hardware Telemetry & Squad Info ─────────────────────────
+    async function refreshTelemetry() {
+      api = api || ((window.pywebview && window.pywebview.api) ? window.pywebview.api : null);
+      if (!api) return;
+      try {
+        if (api.get_telemetry) {
+          const telem = await api.get_telemetry();
+          if (telem && !telem.error) {
+            document.getElementById('cpu-val').textContent = `${Math.round(telem.cpu_percent)}%`;
+            document.getElementById('cpu-ring').setAttribute('stroke-dasharray', `${Math.round(telem.cpu_percent)}, 100`);
+            document.getElementById('cpu-sub').textContent = telem.os || "Active OS";
+
+            document.getElementById('ram-val').textContent = `${Math.round(telem.ram_percent)}%`;
+            document.getElementById('ram-ring').setAttribute('stroke-dasharray', `${Math.round(telem.ram_percent)}, 100`);
+            document.getElementById('ram-sub').textContent = `${(telem.ram_used_mb / 1024).toFixed(1)} / ${(telem.ram_total_mb / 1024).toFixed(1)} GB`;
+          }
+        }
+
+        if (api.get_squad_info) {
+          const sq = await api.get_squad_info();
+          if (sq) {
+            const ollamaBadge = document.getElementById('badge-ollama');
+            const lmstudioBadge = document.getElementById('badge-lmstudio');
+            ollamaBadge.className = 'engine-pill ' + (sq.ollama_online ? 'online' : '');
+            lmstudioBadge.className = 'engine-pill lmstudio ' + (sq.lmstudio_online ? 'online' : '');
+
+            // Render live squad roster dynamically
+            if (sq.roles && sq.roles.length) {
+              const roster = document.getElementById('squad-roster');
+              if (roster && !roster.dataset.rendered) {
+                roster.innerHTML = '';
+                const roleIcons = {
+                  commander: '⚡',
+                  planner: '🧠',
+                  writer: '✍️',
+                  fast: '⚡',
+                  researcher: '📚',
+                  coder: '💻',
+                  vision: '👁️',
+                  communicator: '📡'
+                };
+                sq.roles.forEach((r, idx) => {
+                  const card = document.createElement('div');
+                  card.className = 'squad-card' + (idx === 0 ? ' active' : '');
+                  const icon = roleIcons[r.key] || '🤖';
+                  const provName = r.provider === 'lmstudio' ? 'LM Studio' : (r.provider === 'nvidia' ? 'NVIDIA' : 'Ollama');
+                  card.innerHTML = `
+                    <div class="squad-top">
+                      <div class="squad-identity">
+                        <div class="squad-icon">${icon}</div>
+                        <div class="squad-name">${r.name || r.key}</div>
+                      </div>
+                      <span class="squad-badge">${idx === 0 ? 'Active' : 'Standby'}</span>
+                    </div>
+                    <div class="squad-model">${r.model} (${provName})</div>
+                    <div class="squad-desc">${r.description || ''}</div>
+                  `;
+                  card.style.cursor = 'pointer';
+                  card.title = `Click to delegate task to ${r.name || r.key}`;
+                  card.onclick = () => {
+                    const input = document.getElementById('chat-input');
+                    input.value = `Ask the ${r.name || r.key}: `;
+                    input.focus();
+                  };
+                  roster.appendChild(card);
+                });
+                roster.dataset.rendered = 'true';
+              }
+            }
+          }
+        }
+
+        if (api.get_obsidian_data) {
+          const ob = await api.get_obsidian_data();
+          if (ob) {
+            obsidianDataCache.recent_logs = ob.recent_logs || [];
+            obsidianDataCache.recent_notes = ob.recent_notes || [];
+            renderObsidianContent(currentObsidianTab);
+            if (currentObsidianTab === 'graph') {
+              renderGraphNodes();
+            }
+          }
+        }
+
+        if (api.get_vision_permissions) {
+          const perms = await api.get_vision_permissions();
+          if (perms) {
+            currentPermissions = perms;
+            updateVisionUI();
+          }
+        }
+      } catch (e) {
+        console.warn("Telemetry polling note:", e);
+      }
+    }
+
+    // Initial load & recurring interval
+    setTimeout(() => {
+      refreshTelemetry();
+      setInterval(refreshTelemetry, 3500);
+    }, 600);
+  </script>
 </body>
 </html>

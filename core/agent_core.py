@@ -19,12 +19,18 @@ from typing import List
 from langchain_core.tools import BaseTool
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage, AIMessage
 from langchain_ollama import ChatOllama
-from langchain_mcp_adapters.client import MultiServerMCPClient
+try:
+    from langchain_mcp_adapters.client import MultiServerMCPClient
+    _HAS_MCP = True
+except ImportError:
+    MultiServerMCPClient = None
+    _HAS_MCP = False
 
 from config import (
     MODELS, DEFAULT_MODEL_KEY, MODEL_PROVIDERS, PROVIDER_MODELS,
     NVIDIA_API_BASE, NVIDIA_API_KEY,
     ULTRAMARINE_API_BASE, ULTRAMARINE_API_KEY,
+    LMSTUDIO_HOST, LMSTUDIO_API_KEY,
     OLLAMA_HOST, OLLAMA_OPTIONS, OLLAMA_KEEP_ALIVE,
 )
 
@@ -54,7 +60,7 @@ def load_skills() -> List[BaseTool]:
 
 async def load_mcp_tools() -> List[BaseTool]:
     """Load tools from every MCP server in mcp_config.json with enabled=true."""
-    if not MCP_CONFIG_PATH.exists():
+    if not _HAS_MCP or not MCP_CONFIG_PATH.exists():
         return []
     with open(MCP_CONFIG_PATH) as f:
         config = json.load(f)
@@ -72,17 +78,19 @@ async def load_mcp_tools() -> List[BaseTool]:
 
 def get_model_config(model_key: str) -> dict:
     provider = MODEL_PROVIDERS.get(model_key, "ollama")
-    # Cloud providers use their own model IDs; Ollama uses MODELS tags.
-    if provider in ("nvidia", "ultramarine"):
+    # Cloud & LM Studio providers use their own model IDs; Ollama uses MODELS tags.
+    if provider in ("nvidia", "ultramarine", "lmstudio"):
         model_name = PROVIDER_MODELS.get(provider, {}).get(model_key, model_key)
     else:
         model_name = MODELS.get(model_key, model_key)
     cfg = {"provider": provider, "name": model_name}
-    # Resolve base_url / api_key for OpenAI-compatible cloud providers.
+    # Resolve base_url / api_key for OpenAI-compatible providers.
     if provider == "nvidia":
         cfg.update({"base_url": NVIDIA_API_BASE, "api_key": NVIDIA_API_KEY})
     elif provider == "ultramarine":
         cfg.update({"base_url": ULTRAMARINE_API_BASE, "api_key": ULTRAMARINE_API_KEY})
+    elif provider == "lmstudio":
+        cfg.update({"base_url": LMSTUDIO_HOST, "api_key": LMSTUDIO_API_KEY or "lm-studio"})
     return cfg
 
 
@@ -100,17 +108,20 @@ class Agent:
         base_url = cfg.get("base_url", "")
         api_key = cfg.get("api_key", "")
 
-        openai_compatible = ("nvidia", "ultramarine")
+        openai_compatible = ("nvidia", "ultramarine", "lmstudio")
         if provider in openai_compatible:
             if not api_key:
-                print(f"[agent] {provider.upper()}_API_KEY not set; falling back to Ollama.")
-                provider = "ollama"
+                if provider != "lmstudio":
+                    print(f"[agent] {provider.upper()}_API_KEY not set; falling back to Ollama.")
+                    provider = "ollama"
+                else:
+                    api_key = "lm-studio"
 
         if provider in openai_compatible:
             from langchain_openai import ChatOpenAI
             base_llm = ChatOpenAI(
                 base_url=base_url,
-                api_key=api_key,
+                api_key=api_key or "lm-studio",
                 model=model_name,
                 temperature=0.0,
             )
