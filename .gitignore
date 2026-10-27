@@ -17,3 +17,5 @@ models/*.bin
 *.egg-info/
 .idea/
 .vscode/
+models/
+!models/.gitkeep

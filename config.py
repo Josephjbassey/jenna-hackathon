@@ -225,13 +225,27 @@ NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY", "")
 OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://api.openai.com/v1")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
+# ─── Meta Model API (Hackathon) ─────────────────────────────────────────
+META_MODEL_API_BASE = os.getenv("META_MODEL_API_BASE", "https://ai.meta.com/api")
+META_MODEL_API_KEY = os.getenv("META_MODEL_API_KEY", "")
+
+# Meta models for hackathon
+META_MODELS = {
+    "muse-spark-1.3": "Reasoning/agent orchestration (Planner/Commander)",
+    "muse-voice-transcribe-1.0": "Speech-to-text (voice pipeline)",
+    "muse-image-1.0": "Image generation/understanding (Scholar/vision)",
+    "sam-3.1": "Segmentation anything (vision pipeline)",
+    "muse-wonder-1.0": "Advanced reasoning",
+    "muse-code": "Code generation",
+}
+
 # Provider routing per model key (defaults to local ollama or lmstudio)
 MODEL_PROVIDERS = {
     "fast":         os.getenv("PROVIDER_FAST", "ollama"),
     "coder":        os.getenv("PROVIDER_CODER", "ollama"),
     "coder-strong": os.getenv("PROVIDER_CODER_STRONG", "ollama"),
     "writer":       os.getenv("PROVIDER_WRITER", "ollama"),
-    "planner":      os.getenv("PROVIDER_PLANNER", "ollama"),
+    "planner":      os.getenv("PROVIDER_PLANNER", "meta" if META_MODEL_API_KEY else "ollama"),
     "researcher":   os.getenv("PROVIDER_RESEARCHER", "ollama"),
 }
 
@@ -253,6 +267,13 @@ PROVIDER_MODELS = {
     "ultramarine": {
         "fast": "qwen3.5-0.8b",
         "coder": "qwen2.5-coder-7b",
+    },
+    "meta": {
+        "planner": "muse-spark-1.3",
+        "commander": "muse-spark-1.3",
+        "writer": "muse-spark-1.3",
+        "coder": "muse-code",
+        "researcher": "muse-wonder-1.0",
     },
 }
 
