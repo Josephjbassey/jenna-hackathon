@@ -65,12 +65,12 @@ async def process_store_scan_json_endpoint(
 ) -> PipelineResponse:
     try:
         image_b64 = payload.get("image_base64", "")
-        context_data = payload.get("merchant_context", {})
+        context_data = payload.get("merchant_context") if isinstance(payload.get("merchant_context"), dict) else payload
         context = MerchantContext(
-            store_name=context_data.get("store_name", "Mama Cass Market"),
-            currency=context_data.get("currency", "NGN"),
-            location=context_data.get("location", "Akure, Nigeria"),
-            whatsapp_number=context_data.get("whatsapp_number", "+2348012345678"),
+            store_name=context_data.get("store_name", payload.get("store_name", "Mama Cass Market")),
+            currency=context_data.get("currency", payload.get("currency", "NGN")),
+            location=context_data.get("location", payload.get("location", "Akure Central Market, Nigeria")),
+            whatsapp_number=context_data.get("whatsapp_number", payload.get("whatsapp_number", "+2348012345678")),
         )
         return await meta_service.process_store_scan(
             image_base64=image_b64,

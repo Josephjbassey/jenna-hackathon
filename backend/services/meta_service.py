@@ -40,8 +40,8 @@ class MetaModelService:
         self,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
-        timeout: float = 60.0,
-        max_retries: int = 3,
+        timeout: float = 30.0,
+        max_retries: int = 1,
     ):
         self.api_key = api_key or os.getenv("META_MODEL_API_KEY") or os.getenv("MODEL_API_KEY", "")
         self.base_url = (base_url or os.getenv("META_MODEL_API_BASE") or "https://api.meta.ai/v1").rstrip("/")
@@ -95,7 +95,7 @@ class MetaModelService:
                 response = await client.send(req, stream=stream)
 
                 if response.status_code in (429, 500, 502, 503, 504) and attempt < self.max_retries:
-                    wait_time = (2 ** attempt) + random.uniform(0.1, 0.5)
+                    wait_time = (0.3 * (2 ** attempt)) + random.uniform(0.05, 0.15)
                     logger.warning(
                         f"Request to {path} returned {response.status_code}. Retrying in {wait_time:.2f}s..."
                     )
@@ -107,7 +107,7 @@ class MetaModelService:
             except (httpx.RequestError, httpx.HTTPStatusError) as exc:
                 last_error = exc
                 if attempt < self.max_retries:
-                    wait_time = (2 ** attempt) + random.uniform(0.1, 0.5)
+                    wait_time = (0.3 * (2 ** attempt)) + random.uniform(0.05, 0.15)
                     logger.warning(f"Connection error to {path}: {exc}. Retrying in {wait_time:.2f}s...")
                     await asyncio.sleep(wait_time)
                 else:

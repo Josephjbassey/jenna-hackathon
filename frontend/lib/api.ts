@@ -7,8 +7,17 @@
  *   - Muse Code: Agentic software synthesis & Next.js 14 / Tailwind storefront generation
  */
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+export const getApiBaseUrl = (): string => {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, "");
+  }
+  if (typeof window !== "undefined") {
+    return "/api/v1";
+  }
+  return "http://127.0.0.1:8000/api/v1";
+};
+
+export const API_BASE_URL = getApiBaseUrl();
 
 // ─── Interfaces & Schemas ───────────────────────────────────────────────────
 
@@ -205,14 +214,31 @@ export async function scanStore(
  */
 export async function scanStoreJson(
   imageBase64: string,
-  context: MerchantContext
+  contextOrStoreName: MerchantContext | string,
+  currency?: string,
+  location?: string,
+  whatsapp_number?: string
 ): Promise<PipelineResponse> {
+  const context: MerchantContext =
+    typeof contextOrStoreName === "string"
+      ? {
+          store_name: contextOrStoreName,
+          currency: currency || "NGN",
+          location: location || "Akure Central Market, Nigeria",
+          whatsapp_number: whatsapp_number || "+2348012345678",
+        }
+      : contextOrStoreName;
+
   const res = await fetch(`${API_BASE_URL}/scan/json`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       image_base64: imageBase64,
       merchant_context: context,
+      store_name: context.store_name,
+      currency: context.currency,
+      location: context.location,
+      whatsapp_number: context.whatsapp_number,
     }),
   });
 
@@ -228,21 +254,37 @@ export async function scanStoreJson(
  * Generate Next.js Storefront code via Muse Code
  */
 export async function generateStorefrontCode(
-  storeSchema: StorefrontSchema,
+  input:
+    | StorefrontSchema
+    | {
+        store_schema: StorefrontSchema;
+        target_framework?: string;
+        features?: string[];
+      },
   targetFramework: string = "nextjs14_tailwind"
 ): Promise<CodeGenerateResponse> {
+  const schema = "store_schema" in input ? input.store_schema : input;
+  const framework =
+    "target_framework" in input && input.target_framework
+      ? input.target_framework
+      : targetFramework;
+  const features =
+    "features" in input && input.features
+      ? input.features
+      : [
+          "mobile_first_grid",
+          "whatsapp_checkout_integration",
+          "inventory_counter",
+          "pwa_offline_ready",
+        ];
+
   const res = await fetch(`${API_BASE_URL}/code/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      target_framework: targetFramework,
-      store_schema: storeSchema,
-      features: [
-        "mobile_first_grid",
-        "whatsapp_checkout_integration",
-        "inventory_counter",
-        "pwa_offline_ready"
-      ]
+      target_framework: framework,
+      store_schema: schema,
+      features,
     }),
   });
 

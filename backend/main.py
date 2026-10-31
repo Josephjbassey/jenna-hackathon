@@ -65,7 +65,7 @@ allowed_origins = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
-if allowed_origins_env:
+if allowed_origins_env and allowed_origins_env != "*":
     for origin in allowed_origins_env.split(","):
         cleaned = origin.strip()
         if cleaned and cleaned not in allowed_origins:
@@ -73,7 +73,8 @@ if allowed_origins_env:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"] if allowed_origins_env == "*" else allowed_origins,
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|.*\.vercel\.app)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

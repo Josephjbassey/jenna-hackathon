@@ -2,8 +2,19 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Jenna AI Assistant — Multimodal Agentic OS",
-  description: "Next.js + FastAPI decoupled architecture with SAM 3.1 & Muse Spark 1.3",
+  title: "OmniStore AI — Physical-to-Digital Micro-Commerce Engine",
+  description:
+    "Instant physical storefront and inventory digitization with Meta SAM 3.1, Muse Spark 1.3, and Muse Code. Built for the Meta Global AI Developer Hackathon.",
+  keywords: [
+    "OmniStore AI",
+    "SAM 3.1",
+    "Muse Spark",
+    "Muse Code",
+    "Micro-Commerce",
+    "Meta Global AI Hackathon",
+    "Build for Your World",
+  ],
+  authors: [{ name: "Joseph John Bassey" }],
 };
 
 export default function RootLayout({
@@ -25,7 +36,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-[#0b0f17] text-slate-100 antialiased selection:bg-cyan-500 selection:text-black">
+      <body className="min-h-screen bg-[#090b0e] text-slate-100 antialiased selection:bg-emerald-500 selection:text-black">
         {children}
       </body>
     </html>
