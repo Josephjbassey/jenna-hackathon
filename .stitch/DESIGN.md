@@ -1,108 +1,80 @@
-# Jenna AI OS — Executive Suite · DESIGN.md
+# OmniStore AI — Semantic Design System · DESIGN.md
+*Theme: "Build for Your World" · High-Agency Physical-to-Digital Micro-Commerce*
 
-Design contract for the Jenna unified local voice agent dashboard. Every screen inherits
-these tokens. Single-surface desktop application, dark-first, no light theme in v1.
+This document defines the strict visual language, spatial architecture, color calibration, and motion standards for OmniStore AI. All frontend screens, canvas overlays, and generated micro-storefront components must adhere to these directives.
 
-## Product frame
+---
 
-A command console for a five-agent local squad on an 8 GB CPU laptop. It must read like
-avionics, not like a SaaS marketing page: dense, monospaced numerals, hairline structure,
-one accent color doing all the emphasis. Nothing on screen that does not carry state.
+## 1. Product Frame & Atmosphere
 
-Target canvas: 1512 × 945 desktop, min 1240 × 780. Grid: 4 px base, 12 px rail gutters.
+- **Context:** An autonomous physical-to-digital inventory compiler empowering market stall keepers, kiosk vendors, and non-technical traders in emerging economies (Lagos, Nairobi, Accra, São Paulo).
+- **Aesthetic Stance:** Tactical, high-density, editorial utility. Reads like a field-grade logistics tool meets modern Swiss typography — NOT a generic AI neon dashboard.
+- **Atmosphere Calibration:**
+  - **Density:** 7/10 (Cockpit Balanced — high information density, compact data chips, tabular numerals).
+  - **Variance:** 6/10 (Asymmetric split — visual perception canvas on the left, cognitive market reasoning on the right).
+  - **Motion:** 5/10 (Subtle, purposeful spring physics — 120ms to 180ms easing, no sluggish transitions).
+- **Anti-Patterns Banned:**
+  - ❌ Neon purple/cyan glow buttons or AI gradient borders.
+  - ❌ Pure black backgrounds (`#000000`).
+  - ❌ Floating decorative shapes or cartoon illustrations.
+  - ❌ Flashing status rings.
 
-## Palette
+---
 
-Surfaces
-- `--bg-base` #0A0B0D — app background, never pure black
-- `--bg-surface` #101215 — rails, cards
-- `--bg-raised` #15181C — hovered/selected rows, popovers
-- `--hairline` rgba(255,255,255,0.07) — 1px dividers, card borders
-- `--hairline-strong` rgba(255,255,255,0.13) — focused edges, dock top edge
+## 2. Color Calibration
 
-Ink
-- `--ink-1` #F2F4F7 — primary text
-- `--ink-2` #9AA3AE — secondary labels, captions
-- `--ink-3` #5C6570 — disabled, axis ticks, placeholders
+Strict single-accent system grounded in neutral carbon and agricultural commerce:
 
-Accent (use sparingly — under 5% of any screen)
-- `--crimson` #DC143C — primary action, active selection, focus ring, brand mark
+| Role | Token | Hex | Usage |
+|---|---|---|---|
+| **Base Surface** | `--bg-base` | `#090B0E` | Main application background (never `#000000`). |
+| **Panel Surface** | `--bg-surface` | `#11141A` | Bounded containers, canvas viewport, and inspector drawers. |
+| **Card / Row Surface** | `--bg-raised` | `#161B23` | Active item rows, table cells, and elevated cards. |
+| **Hairline Dividers** | `--border-subtle` | `rgba(255, 255, 255, 0.08)` | 1px clean grid dividers and element borders. |
+| **Hairline Strong** | `--border-strong` | `rgba(255, 255, 255, 0.16)` | Selected cards, focus outlines, and active tab indicators. |
+| **Primary Ink** | `--ink-1` | `#F1F3F5` | Primary headlines, active numbers, and SKU titles. |
+| **Secondary Ink** | `--ink-2` | `#96A0AD` | Descriptions, metadata, and table subtext. |
+| **Tertiary Ink** | `--ink-3` | `#58626F` | Inactive labels, placeholder text, and axis marks. |
+| **Singular Accent** | `--accent-palm` | `#10B981` | Action buttons, active badges, and WhatsApp checkout (calibrated 70% saturation). |
+| **Currency / Valuation** | `--accent-gold` | `#E5A93C` | Local currency figures (`NGN`, `KES`, `GHS`), total shelf value. |
+| **Visual Eye (SAM 3.1)** | `--sam-eye` | `#38BDF8` | Bounding box spatial overlays and coordinate tags. |
 
-State hues (reserved meaning, never decorative)
-- `--idle` #3F4750 — dormant, disconnected
-- `--listening` #22D3EE — mic open, capture active
-- `--thinking` #F59E0B — inference in flight, LangGraph planning
-- `--speaking` #10B981 — TTS playback, completed write-back
-- `--error` #EF4444 — engine down, refusal, overrun
+---
 
-Tint rule: state hues render at 12–18% alpha for fills, 100% for 1–2px strokes and dots.
-Never fill a whole panel in a state hue.
+## 3. Typographic Architecture
 
-## Typography
+- **Primary Interface:** Modern clean sans-serif (`Geist Sans` / `Outfit` / `Inter-tight`).
+- **Numerals & Metrics:** Monospaced tabular figures (`JetBrains Mono` / `Geist Mono`) for all prices, stock counts, and timestamps.
+- **Scale:**
+  - Display Title: 18px (600 weight, -0.02em letter spacing).
+  - Section Headers: 13px (600 weight, uppercase, +0.05em tracking).
+  - Body: 13px (400 weight, 1.4 leading).
+  - Telemetry & Badges: 10–11px monospace.
 
-- Display / zone labels: **Space Grotesk** 600, 11 px, uppercase, tracking +0.08em
-- UI body: **Geist Sans** 400/500, 13 px (rows), 14 px (transcript), line-height 1.45
-- Numerals, model tags, paths, hotkeys: **JetBrains Mono** 400, 11–12 px, tabular figures
-- Headings inside panels: Geist Sans 500, 15 px — no bold display type in the console
-- Self-hosted fonts only (zero CDN). Latin + full OpenType numerals.
+---
 
-## Layout — five zones, asymmetric
+## 4. Visual Perception Canvas & Spatial Overlays
 
-Row 1 — Telemetry bar, 44 px, full width, `--bg-surface`, hairline bottom.
-Left: brand mark + OS/host badge. Center: dual-engine pills (Ollama :11434, LM Studio
-:1234) each with a 6 px state dot and model count. Right: CPU / RAM / disk as three
-compact meter groups (label, mono value, 48 px micro-bar) + clock.
+The canvas visualizes physical goods on wooden market stall shelves:
+- **Shelf Rendering:** Renders high-fidelity vector stall architecture with physical goods (Yam tubers, Tomato baskets, Garri tubs, Palm oil bottles, Plantains) using clean SVG elements and reliable data encoding.
+- **Bounding Boxes:**
+  - Hairline 1.5px stroke with translucent fill (12% opacity).
+  - Hover state: Stroke brightens, fill lifts to 24% opacity.
+  - Active selection: Solid white 2px stroke with high-contrast label pill.
+- **Labels:** Crisp monospace pill positioned at the top-left of each bounding box displaying semantic label + confidence IOU.
 
-Row 2 — three columns, unequal: left rail 296 px, center stage flexible, right rail 336 px.
-The center stage is deliberately the widest and is the only place with breathing room.
+---
 
-Left rail — Squad roster. Five stacked agent cards, 72 px each: role glyph (16 px),
-role name in Space Grotesk caps, model tag in JetBrains Mono, provider chip, 3 px
-activity meter along the card's bottom edge, state dot top-right. Selected card lifts to
-`--bg-raised` with a 1px crimson left edge and expands an inline inspector (context tokens
-used, last prompt hash, force-delegate action). Rail footer: "New delegation" ghost button.
+## 5. Mobile Storefront Simulator (The Hands)
 
-Center stage — Audio core. Off-centre, biased slightly left of optical centre. A
-particle/noise-displaced sphere, 320 px diameter, rendered as concentric displaced rings
-with a soft rim glow in the current state hue; a thin 1px orbit ring carries the state
-label. Beneath it the transcript ribbon: last user line, then assistant line, mono
-timestamps in `--ink-3`, 14 px body, max 3 lines before scroll. Above the sphere: a row of
-thinking-trace chips (retrieve → plan → delegate → verify) — completed chips crimson-outlined,
-current chip amber-filled at 15%, pending chips `--ink-3`.
+- **Device Frame:** Sleek 380px mobile device mockup with subtle edge reflection and top sensor notch.
+- **Storefront Theme:** Mobile-first, low-bandwidth optimized for 3G/4G connections.
+- **Instant Commerce Action:** Sticky bottom drawer with cart tally and a 1-click `#25D366` WhatsApp order button that generates an encoded WhatsApp chat URL.
 
-Right rail — Memory stream. Tab strip: Wiki / Memory / Log. Active tab shows a markdown
-note card (frontmatter block in mono, 3 lines of body), then a knowledge-graph mini canvas
-(180 px tall: nodes as 5 px dots, edges as hairlines, one crimson node = current entity),
-then the daily log feed as a compact timestamped list, 6 rows visible. Rail footer: solid
-crimson "Quick add" button with mic glyph.
+---
 
-Row 3 — Action dock, 88 px, floating, inset 16 px from the app edges, single
-`backdrop-filter: blur(18px)` layer over `rgba(16,18,21,0.72)`, 14 px radius, hairline-top,
-only shadow in the app: 0 12px 32px rgba(0,0,0,0.55).
-Left: push-to-talk orb, 56 px, with hotkey caption `Ctrl+Alt+Space`. Center: 32-bar live
-spectrum, bars 2 px wide, 2 px gap, state-hued. Right: three quick-tool tiles (AgentPhone,
-AgentMail, Sandbox Terminal) as 20 px icon + 11 px label, then a model switcher select.
+## 6. Vercel Architecture
 
-## Components
-
-- Chips: 3 px radius, 1px stroke in their hue at 100%, fill at 14%, 10 px mono label
-- Cards: 10 px radius, `--bg-surface`, 1px `--hairline`, no shadow
-- Buttons primary: crimson fill, `#0A0B0D` text, 6 px radius, 13 px Geist 500, 32 px tall
-- Buttons ghost: transparent, 1px `--hairline-strong`, `--ink-1` text
-- Meters: 48 × 3 px track `--hairline`, fill in state hue, square caps
-- Focus ring: 1px crimson offset 2 px — always visible, never removed
-- Scrollbars: 4 px, `--hairline-strong` thumb, invisible track
-- Icons: Phosphor, 16 px in rails, 20 px in dock, regular weight; duotone only for state
-
-## Motion
-
-120–180 ms ease-out on hover/selection. Sphere pulse 2.4 s loop while listening; spectrum
-runs at 60 Hz while capture is open; trace chips advance with a 160 ms cross-fade.
-`prefers-reduced-motion: reduce` → static rings, frozen spectrum at last amplitude, no pulse.
-
-## Anti-patterns (reject on sight)
-
-No purple/blue gradients, no rainbow conic-gradient orb, no glass on more than the dock,
-no rounded-2xl cards, no emoji glyphs, no three-equal-feature-card row, no centred hero,
-no Inter or Roboto, no drop shadows except the dock, no all-caps body text, no percentage
-values without their meter.
+- **Frontend:** Next.js 14 App Router, dynamic server rendering, pre-rendered static assets.
+- **Backend API:** Python FastAPI deployed as a Vercel Serverless Function via `@vercel/python` or proxy rewrites to `/api/v1`.
+- **Environment:** Seamless variable binding (`META_MODEL_API_KEY`, `ALLOWED_ORIGINS`).

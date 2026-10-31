@@ -171,7 +171,7 @@ export default function Home() {
   const inventoryCount = storeSchema?.inventory?.length || 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#080d16] text-slate-100">
+    <div className="flex flex-col min-h-screen bg-[#090b0e] text-slate-100">
       <Navbar
         backendConnected={backendConnected}
         activeTab={activeTab}
@@ -183,21 +183,21 @@ export default function Home() {
         {/* TAB 1: PIPELINE STUDIO (SAM 3.1 Eyes + Muse Spark Brain) */}
         {activeTab === "pipeline" && (
           <div className="space-y-6">
-            {/* Context & Info Banner */}
-            <div className="bg-gradient-to-r from-emerald-950/40 via-cyan-950/30 to-indigo-950/40 border border-emerald-900/40 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center space-x-3">
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                  <Sparkles className="w-5 h-5" />
+            {/* Tactical Status Banner */}
+            <div className="bg-[#0d1117] border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center space-x-3.5">
+                <div className="w-8 h-8 rounded-lg bg-[#161b22] border border-white/10 flex items-center justify-center text-emerald-400">
+                  <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold text-slate-100 flex items-center space-x-2">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-100 font-mono flex items-center space-x-2">
                     <span>Physical-to-Digital Micro-Commerce Pipeline</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/50">
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60 font-mono">
                       Active
                     </span>
                   </h2>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    1. <span className="text-cyan-400 font-mono">SAM 3.1</span> isolates items on stall shelves → 2. <span className="text-purple-400 font-mono">Muse Spark</span> infers pricing & catalog → 3. <span className="text-emerald-400 font-mono">Muse Code</span> builds web app.
+                  <p className="text-xs text-slate-400 mt-0.5 font-mono">
+                    1. <span className="text-cyan-400">SAM 3.1</span> isolates items on stall shelves → 2. <span className="text-amber-400">Muse Spark</span> infers pricing &amp; catalog → 3. <span className="text-emerald-400">Muse Code</span> builds web app.
                   </p>
                 </div>
               </div>
@@ -205,7 +205,7 @@ export default function Home() {
               {inventoryCount > 0 && (
                 <button
                   onClick={() => setActiveTab("storefront")}
-                  className="flex items-center justify-center space-x-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-lg shadow-emerald-900/40 transition-all self-start md:self-auto"
+                  className="flex items-center justify-center space-x-2 px-3.5 py-1.5 bg-white hover:bg-slate-200 text-black font-semibold rounded-lg text-xs transition-all active:translate-y-0.5 self-start md:self-auto"
                 >
                   <span>View Mobile Storefront ({inventoryCount} items)</span>
                   <ChevronRight className="w-4 h-4" />
@@ -257,32 +257,32 @@ export default function Home() {
         )}
       </main>
 
-      {/* Floating Agent Assistant Toggle */}
+      {/* Floating Tactical Agent Assistant Toggle */}
       <div className="fixed bottom-6 right-6 z-40">
         {!chatOpen ? (
           <button
             onClick={() => setChatOpen(true)}
-            className="flex items-center space-x-2 px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-2xl shadow-2xl shadow-emerald-900/60 border border-emerald-400/30 transition-all transform hover:scale-105"
+            className="flex items-center space-x-2 px-4 py-2.5 bg-[#161b22] hover:bg-[#21262d] text-slate-100 rounded-xl shadow-2xl border border-white/15 active:translate-y-0.5 transition-all"
           >
-            <Bot className="w-5 h-5 text-emerald-200" />
-            <span className="text-xs font-bold">Ask AI Advisor</span>
+            <Bot className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs font-semibold">Ask AI Advisor</span>
           </button>
         ) : (
-          <div className="w-[390px] sm:w-[460px] h-[580px] bg-[#0b101b] rounded-2xl border border-slate-800 shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl animate-in fade-in slide-in-from-bottom-6 duration-200">
+          <div className="w-[390px] sm:w-[460px] h-[580px] bg-[#0d1117] rounded-2xl border border-white/15 shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl animate-in fade-in slide-in-from-bottom-6 duration-200">
             {/* Chat Drawer Header */}
-            <div className="p-3.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+            <div className="p-3.5 bg-[#161b22] border-b border-white/10 flex items-center justify-between">
               <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                  <Bot className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-[#0d1117] border border-white/10 flex items-center justify-center text-emerald-400">
+                  <Bot className="w-3.5 h-3.5" />
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-slate-100">OmniStore AI Assistant</h3>
-                  <p className="text-[10px] text-slate-400">Powered by Muse Spark 1.3</p>
+                  <p className="text-[10px] font-mono text-slate-400">Powered by Muse Spark 1.3</p>
                 </div>
               </div>
               <button
                 onClick={() => setChatOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-slate-800"
+                className="p-1.5 text-slate-400 hover:text-slate-200 rounded-lg hover:bg-white/5"
               >
                 <X className="w-4 h-4" />
               </button>
