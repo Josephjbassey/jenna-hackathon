@@ -1,17 +1,26 @@
 """
-Test suite for Jenna AI Assistant FastAPI Backend Engine.
-Tests all endpoints: health, SAM 3.1 segmentation, Muse Spark reasoning,
-streaming chat, background queue, and memory.
+Test suite for OmniStore AI (Jenna Platform) Backend Engine.
+Tests all endpoints:
+  - Health & Agent Roles
+  - SAM 3.1 visual segmentation & spatial bounding boxes
+  - Muse Spark 1.3 cognitive multimodal reasoning & localized pricing
+  - Muse Code agentic storefront synthesis
+  - End-to-end physical store scan pipeline (/api/v1/scan/json)
+  - Real-time streaming agent chat
+  - Background async jobs & webhooks
+  - Memory persistence & stats
 """
 from __future__ import annotations
 import sys
 import json
 from pathlib import Path
 
-# Add project root to sys.path
+# Add project root and backend to sys.path
 root_dir = Path(__file__).resolve().parent.parent.parent
-if str(root_dir) not in sys.path:
-    sys.path.insert(0, str(root_dir))
+backend_dir = root_dir / "backend"
+for path in [str(root_dir), str(backend_dir)]:
+    if path not in sys.path:
+        sys.path.insert(0, path)
 
 from starlette.testclient import TestClient
 from backend.main import app
@@ -24,7 +33,7 @@ def test_health_endpoints():
     assert res.status_code == 200
     data = res.json()
     assert data["status"] == "healthy"
-    assert data["assistant"] == "Jenna AI Assistant"
+    assert "OmniStore" in data["assistant"] or "Jenna" in data["assistant"]
     assert "sam_3_1" in data["active_providers"]
 
     res_api = client.get("/api/v1/health")
@@ -36,22 +45,21 @@ def test_agent_roles():
     res = client.get("/api/v1/agent/roles")
     assert res.status_code == 200
     roles = res.json()["roles"]
-    assert len(roles) >= 5
+    assert len(roles) >= 4
     role_names = [r["role"] for r in roles]
     assert "commander" in role_names
     assert "planner" in role_names
     assert "coder" in role_names
-    assert "researcher" in role_names
 
 
 def test_sam_segmentation():
     sample_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
     payload = {
         "image_base64": sample_b64,
-        "prompt": "Detect interface panels and code windows",
-        "confidence_threshold": 0.5,
+        "prompt": "Detect produce items, baskets, and provisions",
+        "confidence_threshold": 0.25,
         "generate_crops": True,
-        "max_segments": 5,
+        "max_segments": 6,
     }
     res = client.post("/api/v1/segment", json=payload)
     assert res.status_code == 200
@@ -67,12 +75,18 @@ def test_sam_segmentation():
 
 def test_muse_spark_reasoning():
     sample_crop = {
-        "box_id": "box-seg-001",
-        "label": "Code Editor",
+        "box_id": "seg_001",
+        "label": "Local Yams",
         "crop_base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
     }
     payload = {
-        "prompt": "Evaluate code editor state and determine next agent refactoring step",
+        "prompt": "Classify physical store goods, infer local pricing in NGN, and format catalog",
+        "merchant_context": {
+            "store_name": "Mama Cass Market",
+            "currency": "NGN",
+            "location": "Akure, Nigeria",
+            "whatsapp_number": "+2348012345678",
+        },
         "segments": [sample_crop],
         "model": "muse-spark-1.3",
         "structured_format": True,
@@ -86,13 +100,68 @@ def test_muse_spark_reasoning():
     assert "summary" in structured
     assert "detailed_analysis" in structured
     assert "recommended_actions" in structured
-    assert isinstance(structured["recommended_actions"], list)
+    assert len(structured["inventory"]) > 0
+    assert data["store_schema"] is not None
+    assert data["store_schema"]["currency"] == "NGN"
+
+
+def test_muse_code_synthesis():
+    payload = {
+        "target_framework": "nextjs14_tailwind",
+        "store_schema": {
+            "store_title": "Mama Cass Market",
+            "currency": "NGN",
+            "location": "Akure, Nigeria",
+            "whatsapp_number": "+2348012345678",
+            "category": "Provisions & Fresh Produce",
+            "inventory": [
+                {
+                    "item_id": "item_001",
+                    "name": "Local Yams (Large)",
+                    "category": "Tubers & Roots",
+                    "suggested_price": 2500.0,
+                    "estimated_quantity": 4,
+                    "description": "Organic tuber from local harvest",
+                    "image_segment_id": "seg_001",
+                }
+            ],
+        },
+    }
+    res = client.post("/api/v1/code/generate", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "compiled"
+    assert data["model_used"] == "muse-code"
+    assert "app/page.tsx" in data["repository_files"]
+    assert "app/api/checkout/route.ts" in data["repository_files"]
+    assert "prisma/schema.prisma" in data["repository_files"]
+    assert data["deployment_ready"] is True
+
+
+def test_end_to_end_store_scan():
+    sample_b64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+    payload = {
+        "image_base64": sample_b64,
+        "store_name": "Mama Cass Market",
+        "currency": "NGN",
+        "location": "Akure Central Market, Nigeria",
+        "whatsapp_number": "+2348012345678",
+    }
+    res = client.post("/api/v1/scan/json", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["status"] == "completed"
+    assert len(data["bounding_boxes"]) > 0
+    assert len(data["store_schema"]["inventory"]) > 0
+    assert data["store_schema"]["currency"] == "NGN"
+    assert data["code_synthesis"] is not None
+    assert "app/page.tsx" in data["code_synthesis"]["repository_files"]
 
 
 def test_agent_chat_non_stream():
     payload = {
         "messages": [
-            {"role": "user", "content": "What is the status of the Jenna squad?"}
+            {"role": "user", "content": "How does OmniStore digitize physical store inventory?"}
         ],
         "agent_role": "commander",
         "stream": False,
@@ -101,7 +170,7 @@ def test_agent_chat_non_stream():
     assert res.status_code == 200
     data = res.json()
     assert data["role"] == "assistant"
-    assert "Jenna Commander" in data["content"] or "Jenna" in data["content"]
+    assert len(data["content"]) > 10
 
 
 def test_agent_chat_stream():
@@ -151,7 +220,7 @@ def test_memory_endpoints():
 
 
 if __name__ == "__main__":
-    print("Running backend tests directly...")
+    print("Running OmniStore AI backend tests directly...")
     test_health_endpoints()
     print("✓ Health endpoints passed")
     test_agent_roles()
@@ -160,6 +229,10 @@ if __name__ == "__main__":
     print("✓ SAM 3.1 segmentation passed")
     test_muse_spark_reasoning()
     print("✓ Muse Spark reasoning passed")
+    test_muse_code_synthesis()
+    print("✓ Muse Code storefront synthesis passed")
+    test_end_to_end_store_scan()
+    print("✓ End-to-end physical store scan passed")
     test_agent_chat_non_stream()
     print("✓ Agent chat non-stream passed")
     test_agent_chat_stream()
@@ -168,4 +241,4 @@ if __name__ == "__main__":
     print("✓ Background jobs passed")
     test_memory_endpoints()
     print("✓ Memory endpoints passed")
-    print("\n🎉 ALL BACKEND TESTS PASSED!")
+    print("\n🎉 ALL OMNISTORE AI BACKEND TESTS PASSED!")

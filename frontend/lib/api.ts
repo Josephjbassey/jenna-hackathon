@@ -1,7 +1,10 @@
 /**
- * Strongly-typed API client for Jenna AI Assistant FastAPI Backend Engine.
- * Integrates SAM 3.1 segmentation, Muse Spark reasoning, Web Streams streaming chat,
- * async job queues, and cross-agent memory.
+ * Strongly-typed API client for OmniStore AI (by Jenna AI Platform).
+ * Physical-to-Digital Micro-Commerce Engine (Build for Your World).
+ * Integrates:
+ *   - SAM 3.1: Visual perception, spatial segmentation & product extraction
+ *   - Muse Spark 1.3: Cognitive multimodal reasoning, catalog creation & local pricing
+ *   - Muse Code: Agentic software synthesis & Next.js 14 / Tailwind storefront generation
  */
 
 export const API_BASE_URL =
@@ -16,6 +19,7 @@ export interface BoundingBox {
   bbox: [number, number, number, number]; // [ymin, xmin, ymax, xmax] (0.0 - 1.0)
   polygon_mask?: [number, number][];
   description?: string;
+  area?: number;
 }
 
 export interface SegmentCrop {
@@ -36,6 +40,34 @@ export interface SegmentResponse {
   total_segments: number;
 }
 
+export interface MerchantContext {
+  store_name: string;
+  currency: string;
+  location: string;
+  whatsapp_number?: string;
+}
+
+export interface InventoryItem {
+  item_id: string;
+  name: string;
+  category: string;
+  suggested_price: number;
+  estimated_quantity: number;
+  description: string;
+  image_segment_id: string;
+  crop_base64?: string;
+}
+
+export interface StorefrontSchema {
+  store_title: string;
+  currency: string;
+  location: string;
+  whatsapp_number?: string;
+  category: string;
+  inventory: InventoryItem[];
+  generated_at?: string;
+}
+
 export interface EntityObservation {
   entity: string;
   box_id?: string;
@@ -45,6 +77,7 @@ export interface EntityObservation {
 
 export interface StructuredReasoningOutput {
   summary: string;
+  inventory?: InventoryItem[];
   entities_detected: EntityObservation[];
   detailed_analysis: string;
   recommended_actions: string[];
@@ -56,8 +89,30 @@ export interface ReasonResponse {
   success: boolean;
   model_used: string;
   structured_output: StructuredReasoningOutput;
+  store_schema?: StorefrontSchema;
   raw_response?: string;
   processing_time_ms: number;
+}
+
+export interface CodeGenerateResponse {
+  status: string;
+  model_used: string;
+  repository_files: Record<string, string>;
+  preview_url?: string;
+  deployment_ready: boolean;
+  files_generated: number;
+  processing_time_ms: number;
+}
+
+export interface PipelineResponse {
+  status: string;
+  store_schema: StorefrontSchema;
+  deploy_url?: string;
+  generated_files_count: number;
+  segments_found: number;
+  processing_time_ms: number;
+  bounding_boxes: BoundingBox[];
+  code_synthesis?: CodeGenerateResponse;
 }
 
 export interface ChatMessage {
@@ -78,7 +133,7 @@ export interface SquadRoleInfo {
 
 export interface BackgroundJob {
   job_id: string;
-  job_type: "segmentation" | "multimodal_reasoning" | "full_pipeline";
+  job_type: "segmentation" | "multimodal_reasoning" | "full_pipeline" | "storefront_scan";
   status: "queued" | "processing" | "completed" | "failed";
   progress: number;
   result?: any;
@@ -112,6 +167,89 @@ export async function getHealth(): Promise<HealthStatus> {
 export async function getSquadRoles(): Promise<{ roles: SquadRoleInfo[] }> {
   const res = await fetch(`${API_BASE_URL}/agent/roles`);
   if (!res.ok) throw new Error(`Failed to fetch squad roles: ${res.statusText}`);
+  return res.json();
+}
+
+/**
+ * End-to-end Store Scan: Upload store image -> SAM 3.1 -> Muse Spark -> Muse Code
+ */
+export async function scanStore(
+  file: File,
+  context: MerchantContext
+): Promise<PipelineResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("store_name", context.store_name);
+  formData.append("currency", context.currency);
+  formData.append("location", context.location);
+  if (context.whatsapp_number) {
+    formData.append("whatsapp_number", context.whatsapp_number);
+  }
+
+  const res = await fetch(`${API_BASE_URL}/scan`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Store scan failed: ${res.statusText}`);
+  }
+
+  return res.json();
+}
+
+/**
+ * End-to-end Store Scan from base64 data
+ */
+export async function scanStoreJson(
+  imageBase64: string,
+  context: MerchantContext
+): Promise<PipelineResponse> {
+  const res = await fetch(`${API_BASE_URL}/scan/json`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      image_base64: imageBase64,
+      merchant_context: context,
+    }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Store scan failed: ${res.statusText}`);
+  }
+
+  return res.json();
+}
+
+/**
+ * Generate Next.js Storefront code via Muse Code
+ */
+export async function generateStorefrontCode(
+  storeSchema: StorefrontSchema,
+  targetFramework: string = "nextjs14_tailwind"
+): Promise<CodeGenerateResponse> {
+  const res = await fetch(`${API_BASE_URL}/code/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      target_framework: targetFramework,
+      store_schema: storeSchema,
+      features: [
+        "mobile_first_grid",
+        "whatsapp_checkout_integration",
+        "inventory_counter",
+        "pwa_offline_ready"
+      ]
+    }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Code generation failed: ${res.statusText}`);
+  }
+
   return res.json();
 }
 
@@ -212,9 +350,9 @@ export async function streamAgentChat({
  */
 export async function segmentImage(
   imageBase64: string,
-  prompt: string = "",
+  prompt: string = "inventory products",
   confidenceThreshold: number = 0.25,
-  maxSegments: number = 10
+  maxSegments: number = 15
 ): Promise<SegmentResponse> {
   const res = await fetch(`${API_BASE_URL}/segment`, {
     method: "POST",
@@ -237,42 +375,18 @@ export async function segmentImage(
 }
 
 /**
- * Upload file directly for SAM 3.1 segmentation
- */
-export async function uploadAndSegment(
-  file: File,
-  prompt: string = "",
-  confidenceThreshold: number = 0.25
-): Promise<SegmentResponse> {
-  const formData = new FormData();
-  formData.append("file", file);
-  if (prompt) formData.append("prompt", prompt);
-  formData.append("confidence_threshold", confidenceThreshold.toString());
-
-  const res = await fetch(`${API_BASE_URL}/segment/upload`, {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.detail || `Upload segmentation failed: ${res.statusText}`);
-  }
-
-  return res.json();
-}
-
-/**
  * Multimodal reasoning with Muse Spark 1.3
  */
 export async function reasonMultimodal({
   prompt,
+  merchantContext,
   segments,
   fullImageBase64,
   model = "muse-spark-1.3",
   temperature = 0.2,
 }: {
   prompt: string;
+  merchantContext?: MerchantContext;
   segments?: SegmentCrop[];
   fullImageBase64?: string;
   model?: string;
@@ -283,6 +397,7 @@ export async function reasonMultimodal({
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       prompt,
+      merchant_context: merchantContext,
       segments,
       full_image_base64: fullImageBase64,
       model,
@@ -303,7 +418,7 @@ export async function reasonMultimodal({
  * Background Task Queue Management
  */
 export async function submitBackgroundJob(
-  jobType: "segmentation" | "multimodal_reasoning" | "full_pipeline",
+  jobType: "segmentation" | "multimodal_reasoning" | "full_pipeline" | "storefront_scan",
   payload: Record<string, any>,
   webhookUrl?: string
 ): Promise<BackgroundJob> {

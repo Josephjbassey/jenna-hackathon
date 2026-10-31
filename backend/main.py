@@ -36,11 +36,13 @@ from backend.routers import vision, agent, jobs, memory
 async def lifespan(app: FastAPI):
     # Startup: Start background queue worker
     queue_mgr = get_queue_manager()
-    print("\n" + "=" * 60)
-    print(" 🚀 Jenna AI Assistant FastAPI Backend Engine v2.0")
-    print(" 📡 Meta Models: SAM 3.1, Muse Spark 1.3, Muse Code")
+    print("\n" + "=" * 65)
+    print(" 🏪 OmniStore AI Engine — Build for Your World (v2.1)")
+    print(" 👁️  Eyes:    SAM 3.1 (Visual Perception & Spatial Segmentation)")
+    print(" 🧠 Brain:   Muse Spark 1.3 (Cognitive Reasoning & Pricing)")
+    print(" ✋ Hands:   Muse Code (Agentic Web Storefront Synthesis)")
     print(" ⚡ Ready on http://localhost:8000 (CORS -> http://localhost:3000)")
-    print("=" * 60 + "\n")
+    print("=" * 65 + "\n")
     yield
     # Shutdown: Stop worker and close HTTP client sessions
     await queue_mgr.stop()
@@ -49,9 +51,9 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Jenna AI Assistant Engine",
-    description="Next-generation agentic multimodal backend powering Jenna AI OS with SAM 3.1 and Muse Spark 1.3.",
-    version="2.0.0",
+    title="OmniStore AI Orchestrator",
+    description="Physical-to-Digital Micro-Commerce Engine (Build for Your World) integrating SAM 3.1, Muse Spark 1.3, and Muse Code.",
+    version="2.1.0",
     lifespan=lifespan,
 )
 
@@ -101,17 +103,23 @@ app.include_router(memory.router)
 @app.get("/", tags=["General"])
 async def root():
     return {
-        "name": "Jenna AI Assistant API",
-        "version": "2.0.0",
+        "name": "OmniStore AI Orchestrator",
+        "theme": "Build for Your World (Meta Global AI Developer Hackathon)",
+        "version": "2.1.0",
         "docs_url": "/docs",
         "health_check": "/api/v1/health",
-        "architecture": "Next.js + FastAPI decoupled agentic system",
+        "pipeline": {
+            "eyes": "SAM 3.1 (Visual Perception & Segmentation)",
+            "brain": "Muse Spark 1.3 (Cognitive Reasoning & Local Pricing)",
+            "hands": "Muse Code (Agentic Web Synthesis & WhatsApp Checkout)",
+        },
         "endpoints": {
-            "segmentation": "POST /api/v1/segment",
-            "reasoning": "POST /api/v1/reason",
-            "streaming_chat": "POST /api/v1/agent/chat",
+            "end_to_end_scan": "POST /api/v1/scan",
+            "visual_segmentation": "POST /api/v1/segment",
+            "multimodal_reasoning": "POST /api/v1/reason",
+            "storefront_code_gen": "POST /api/v1/code/generate",
+            "streaming_assistant": "POST /api/v1/agent/chat",
             "background_jobs": "POST /api/v1/jobs",
-            "memory_search": "POST /api/v1/memory/search",
         },
     }
 
@@ -122,8 +130,8 @@ async def health_check():
     meta_key = bool(os.getenv("META_MODEL_API_KEY") or os.getenv("MODEL_API_KEY"))
     return HealthResponse(
         status="healthy",
-        assistant="Jenna AI Assistant",
-        version="2.0.0",
+        assistant="OmniStore AI (Jenna Platform)",
+        version="2.1.0",
         active_providers={
             "meta_model_api": meta_key,
             "sam_3_1": True,
