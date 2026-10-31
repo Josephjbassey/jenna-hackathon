@@ -77,6 +77,7 @@ export interface EntityObservation {
 
 export interface StructuredReasoningOutput {
   summary: string;
+  store_meta?: Record<string, any>;
   inventory?: InventoryItem[];
   entities_detected: EntityObservation[];
   detailed_analysis: string;
