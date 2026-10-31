@@ -1,0 +1,47 @@
+# Vercel Deployment Exclusions
+# Keep function bundle size minimal (< 5 MB)
+
+.git/
+.github/
+.venv/
+.venv-linux/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Binary weights and models
+*.onnx
+*.bin
+backend/models/tts/
+backend/models/wakeword/
+
+# Local caches & logs
+logs/
+*.log
+*.db
+memory/*.db
+memory/long_term.json
+
+# Design & testing artifacts
+.stitch/
+dashboard_design_preview.md
+.pytest_cache/
+*.egg-info/
+.idea/
+.vscode/
+
+# Docker files (not needed on Vercel)
+docker-compose.yml
+Dockerfile
+backend/Dockerfile
+frontend/Dockerfile
+
+# Node / Next.js
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+*.tsbuildinfo
+.vercel/

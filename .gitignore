@@ -31,3 +31,4 @@ frontend/.next/
 frontend/out/
 frontend/.env.local
 *.tsbuildinfo
+.vercel
