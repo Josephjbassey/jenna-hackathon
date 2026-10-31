@@ -21,7 +21,6 @@ import {
 } from "@/lib/api";
 import {
   Bot,
-  MessageSquare,
   Sparkles,
   Store,
   Layers,
