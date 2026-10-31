@@ -1,8 +1,10 @@
 .venv/
+.venv-linux/
 venv/
 __pycache__/
 *.pyc
 .env
+.env.local
 *.db
 *.log
 logs/
@@ -17,5 +19,13 @@ models/*.bin
 *.egg-info/
 .idea/
 .vscode/
-models/
-!models/.gitkeep
+/models/
+!/models/.gitkeep
+
+# Node / Next.js
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+*.tsbuildinfo

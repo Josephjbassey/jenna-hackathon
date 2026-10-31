@@ -32,6 +32,7 @@ from config import (
     ULTRAMARINE_API_BASE, ULTRAMARINE_API_KEY,
     LMSTUDIO_HOST, LMSTUDIO_API_KEY,
     OLLAMA_HOST, OLLAMA_OPTIONS, OLLAMA_KEEP_ALIVE,
+    META_MODEL_API_BASE, META_MODEL_API_KEY,
 )
 
 TOOLS_DIR = Path(__file__).parent.parent / "skills"
@@ -79,7 +80,7 @@ async def load_mcp_tools() -> List[BaseTool]:
 def get_model_config(model_key: str) -> dict:
     provider = MODEL_PROVIDERS.get(model_key, "ollama")
     # Cloud & LM Studio providers use their own model IDs; Ollama uses MODELS tags.
-    if provider in ("nvidia", "ultramarine", "lmstudio"):
+    if provider in ("nvidia", "ultramarine", "lmstudio", "meta"):
         model_name = PROVIDER_MODELS.get(provider, {}).get(model_key, model_key)
     else:
         model_name = MODELS.get(model_key, model_key)
@@ -91,6 +92,8 @@ def get_model_config(model_key: str) -> dict:
         cfg.update({"base_url": ULTRAMARINE_API_BASE, "api_key": ULTRAMARINE_API_KEY})
     elif provider == "lmstudio":
         cfg.update({"base_url": LMSTUDIO_HOST, "api_key": LMSTUDIO_API_KEY or "lm-studio"})
+    elif provider == "meta":
+        cfg.update({"base_url": META_MODEL_API_BASE, "api_key": META_MODEL_API_KEY})
     return cfg
 
 
@@ -108,7 +111,7 @@ class Agent:
         base_url = cfg.get("base_url", "")
         api_key = cfg.get("api_key", "")
 
-        openai_compatible = ("nvidia", "ultramarine", "lmstudio")
+        openai_compatible = ("nvidia", "ultramarine", "lmstudio", "meta")
         if provider in openai_compatible:
             if not api_key:
                 if provider != "lmstudio":

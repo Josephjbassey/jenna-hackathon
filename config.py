@@ -283,16 +283,25 @@ SQUAD_ROLES = {
         "name": "Jenna Commander",
         "description": "Executive coordinator, voice conversationalist, and task decomposer.",
         "model_key": "fast",
+        "meta_model": "muse-spark-1.3",
+    },
+    "planner": {
+        "name": "Jenna Planner",
+        "description": "Multi-step reasoning, structured task planning, agent orchestration.",
+        "model_key": "planner",
+        "meta_model": "muse-spark-1.3",
     },
     "coder": {
         "name": "Jenna Engineer",
         "description": "Code generation, debugging, refactoring, terminal tasks.",
         "model_key": "coder",
+        "meta_model": "muse-code",
     },
     "researcher": {
         "name": "Jenna Scholar",
-        "description": "Web research, factual aggregation, documentation.",
+        "description": "Web research, factual aggregation, documentation, vision analysis.",
         "model_key": "researcher",
+        "meta_model": "muse-wonder-1.0",
     },
     "desktop": {
         "name": "Jenna Operator",
