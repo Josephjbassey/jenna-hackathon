@@ -19,10 +19,14 @@ router = APIRouter(prefix="/api/v1/memory", tags=["Cross-Agent Memory"])
 
 def _get_memory_instance():
     try:
-        from jenna.memory.cross_agent import get_cross_agent_memory
+        from backend.jenna.memory.cross_agent import get_cross_agent_memory
         return get_cross_agent_memory()
-    except Exception as e:
-        return None
+    except Exception:
+        try:
+            from jenna.memory.cross_agent import get_cross_agent_memory
+            return get_cross_agent_memory()
+        except Exception:
+            return None
 
 
 @router.get("/stats", summary="Get cross-agent memory statistics")

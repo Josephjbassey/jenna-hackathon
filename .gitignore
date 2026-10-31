@@ -10,10 +10,12 @@ __pycache__/
 logs/
 memory/memory.db
 memory/long_term.json
+*.onnx
+*.bin
 sandbox/*
 !sandbox/.gitkeep
-models/*.onnx
-models/*.bin
+backend/sandbox/*
+!backend/sandbox/.gitkeep
 .DS_Store
 .pytest_cache/
 *.egg-info/

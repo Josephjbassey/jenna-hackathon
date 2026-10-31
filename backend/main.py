@@ -135,11 +135,49 @@ async def health_check():
     )
 
 
-def start():
-    port = int(os.getenv("PORT", "8000"))
-    host = os.getenv("HOST", "0.0.0.0")
-    uvicorn.run("backend.main:app", host=host, port=port, reload=True)
+def start_cli(voice: bool = False):
+    from backend.core.agent_core import Agent, load_skills
+    agent = Agent("fast", load_skills())
+    print("\n[Jenna AI Assistant CLI] Type your prompt, or Ctrl+C to exit.\n")
+    while True:
+        try:
+            user_input = input("User> ")
+            if not user_input.strip():
+                continue
+            import asyncio
+            reply = asyncio.run(agent.run_turn(user_input))
+            print(f"Jenna> {reply}\n")
+        except (KeyboardInterrupt, EOFError):
+            print("\nExiting CLI...")
+            break
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Jenna AI Assistant Engine")
+    parser.add_argument("--api", action="store_true", help="Start FastAPI HTTP Engine (default)")
+    parser.add_argument("--cli", action="store_true", help="Terminal chat mode")
+    parser.add_argument("--tui", action="store_true", help="Interactive Terminal UI")
+    parser.add_argument("--desktop", action="store_true", help="Desktop orb overlay")
+    parser.add_argument("--voice", action="store_true", help="Enable voice mode")
+    args, _ = parser.parse_known_args()
+
+    if args.cli:
+        start_cli(voice=args.voice)
+    elif args.tui:
+        try:
+            from backend.tui.hermes_tui import start_hermes_tui
+            start_hermes_tui(voice_playback=args.voice)
+        except Exception as e:
+            print(f"Could not start TUI: {e}")
+    elif args.desktop:
+        try:
+            print("Starting Desktop Orb...")
+        except Exception as e:
+            print(f"Desktop mode error: {e}")
+    else:
+        start()
 
 
 if __name__ == "__main__":
-    start()
+    main()

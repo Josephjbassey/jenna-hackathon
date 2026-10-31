@@ -10,6 +10,7 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=8000
+      - PYTHONPATH=/app:/app/backend
       - META_MODEL_API_KEY=${META_MODEL_API_KEY:-}
       - META_MODEL_API_BASE=${META_MODEL_API_BASE:-https://api.meta.ai/v1}
       - ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000

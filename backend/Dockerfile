@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 # Copy source code
 COPY . /app/
 
-ENV PYTHONPATH=/app
+ENV PYTHONPATH=/app:/app/backend
 ENV PORT=8000
 ENV HOST=0.0.0.0
 
